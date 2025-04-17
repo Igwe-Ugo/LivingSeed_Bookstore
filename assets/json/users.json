@@ -1,0 +1,154 @@
+[
+    {
+        "fullname": "Nwamadi Elijah",
+        "emailAddress": "elijahnwamadi1@gmail.com",
+        "password":"passkey2000",
+        "telephone":"07085272812",
+        "gender":"Male",
+        "userImage":"assets/images/avatar.png",
+        "dateOfBirth":"21-Dec-2001",
+        "role":"Admin",
+        "cart":[
+            {
+                "bookTitle":"Becoming like Jesus",
+                "coverImage":"assets/images/becoming_like_jesus.png",
+                "bookAuthor":"Gbile Akanni",
+                "amount":1000
+            }
+        ],
+        "bookPurchased":[
+            {
+                "bookTitle":"Raising Agents of Transformation",
+                "coverImage":"assets/images/agents_of_transformation.png",
+                "bookAuthor":"Gbile Akanni",
+                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
+                "date": 2013
+            }
+        ],
+        "transactionHistory":[
+            {
+                "receiptNo": 1,
+                "transactionTitle": "Books Transaction History",
+                "transactionDate": "12th - March - 2023",
+                "transactionTime": "10:45pm",
+                "description": [
+                    {
+                        "bookName": "Becoming like Jesus",
+                        "unitCost": 1000,
+                        "quantity": 1,
+                        "totalCost": 1000
+                    },
+                    {
+                        "bookName": "Dignity of Manhood",
+                        "unitCost": 1000,
+                        "quantity": 10,
+                        "totalCost": 10000
+                    }
+                ]
+            },
+            {
+                "receiptNo": 2,
+                "transactionTitle": "Books Transaction History",
+                "transactionDate": "14th - September - 2023",
+                "transactionTime": "9:52am",
+                "description": [
+                    {
+                        "bookName": "No More Two",
+                        "unitCost": 1500,
+                        "quantity": 10,
+                        "totalCost": 15000
+                    },
+                    {
+                        "bookName": "Dignity of Manhood",
+                        "unitCost": 1000,
+                        "quantity": 4,
+                        "totalCost": 10000
+                    },
+                    {
+                        "bookName": "Becoming like Jesus",
+                        "unitCost": 1000,
+                        "quantity": 2,
+                        "totalCost": 10000
+                    },
+                    {
+                        "bookName": "Encountering, exploring and engaging God",
+                        "unitCost": 1000,
+                        "quantity": 5,
+                        "totalCost": 10000
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "fullname": "Yakubu Hamzat",
+        "emailAddress": "hamzat300@yahoo.com",
+        "password":"password000",
+        "telephone":"09123512570",
+        "gender":"Female",
+        "userImage":"assets/images/avatar.png",
+        "dateOfBirth":"19-Feb-1987",
+        "role":"Regular",
+        "cart":[
+            {
+                "bookTitle":"Raising Agents of Transformation",
+                "coverImage":"assets/images/agents_of_transformation.png",
+                "bookAuthor":"Gbile Akanni",
+                "amount":800
+            }
+        ],
+        "bookPurchased":[
+            {
+                "bookTitle":"The Dignity of Manhood",
+                "coverImage":"assets/images/dignity_of_manhood.png",
+                "bookAuthor":"Gbile Akanni",
+                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
+                "date": 2007
+            }
+        ],
+        "transactionHistory":[
+            {
+                "receiptNo": 3,
+                "transactionTitle": "Books Transaction History",
+                "transactionDate": "24th - May - 2023",
+                "transactionTime": "1:23pm",
+                "description": [
+                    {
+                        "bookName": "Rasing Agents of transformation",
+                        "unitCost": 1000,
+                        "quantity": 3,
+                        "totalCost": 3000
+                    }
+                ]
+            },
+            {
+                "receiptNo": 4,
+                "transactionTitle": "Books Transaction History",
+                "transactionDate": "2nd - June - 2023",
+                "transactionTime": "8:01am",
+                "description": [
+                    {
+                        "bookName": "Tapping God's resources for life and ministry",
+                        "unitCost": 1500,
+                        "quantity": 2,
+                        "totalCost": 3000
+                    }
+                ]
+            },
+            {
+                "receiptNo": 5,
+                "transactionTitle": "Books Transaction History",
+                "transactionDate": "3rd - August - 2023",
+                "transactionTime": "6:17pm",
+                "description": [
+                    {
+                        "bookName": "Encountering, exploring and engaging God",
+                        "unitCost": 1200,
+                        "quantity": 1,
+                        "totalCost": 1200
+                    }
+                ]
+            }
+        ]
+    }
+]

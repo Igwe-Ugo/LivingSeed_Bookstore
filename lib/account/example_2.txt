@@ -1,0 +1,195 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
+
+class Receipt extends StatelessWidget {
+  final Users user;
+  const Receipt({super.key, required this.user});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () {
+            GoRouter.of(context).pop();
+          },
+          icon: const Icon(Iconsax.arrow_left_2, size: 17),
+        ),
+        title: Text(
+          "Receipt",
+          style: const TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header with Logo and Receipt Info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Image.asset(
+                  'assets/icons/LSeed-Logo-1.png',
+                  height: 80,
+                  width: 80,
+                  fit: BoxFit.contain,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text(
+                      'Receipt',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24,
+                      ),
+                    ),
+                    Text('Receipt No: ${user.receiptNo}'),
+                    Text('Receipt Date: ${user.transactionDate}'),
+                    Text('Due: ${user.transactionDueDate}'),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Billing & Sender Info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _infoSection("From", "Saldo Apps", "John Smith",
+                    "wiz@saldoapps.com", "Chicago, USA"),
+                _infoSection("Bill to", "Shepard Corp.", "shepard@mail.com",
+                    "North Str. 32, Chicago, USA"),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Table
+            _buildReceiptTable(),
+
+            const SizedBox(height: 20),
+
+            // Payment Instructions
+            const Text(
+              "Payment Instruction",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            _paymentDetails(),
+
+            const SizedBox(height: 20),
+
+            // Summary Section
+            _summarySection(),
+
+            const SizedBox(height: 20),
+
+            // Notes Section
+            const Text(
+              "Notes",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const Text(
+              "Prototype-based programming is a style of object-oriented programming in which behavior reuse (inheritance) is performed via a process of cloning existing objects that serve as prototypes.",
+              style: TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _infoSection(String title, String company, String contact, String email, String address) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(company, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+        Text(contact, style: const TextStyle(fontSize: 12)),
+        Text(email, style: const TextStyle(fontSize: 12)),
+        Text(address, style: const TextStyle(fontSize: 12)),
+      ],
+    );
+  }
+
+  Widget _buildReceiptTable() {
+    return DataTable(
+      columns: const [
+        DataColumn(label: Text('Description', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Rate', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Qty', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Tax', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Disc', style: TextStyle(fontWeight: FontWeight.bold))),
+        DataColumn(label: Text('Amount', style: TextStyle(fontWeight: FontWeight.bold))),
+      ],
+      rows: [
+        _buildTableRow('Prototype', '20,230', '2000', '20.50%', '20.50%', '20,230'),
+        _buildTableRow('Design', '20,230', '2000', '20.50%', '20.50%', '20,230'),
+      ],
+    );
+  }
+
+  DataRow _buildTableRow(
+      String desc, String rate, String qty, String tax, String disc, String amount) {
+    return DataRow(cells: [
+      DataCell(Text(desc)),
+      DataCell(Text(rate)),
+      DataCell(Text(qty)),
+      DataCell(Text(tax)),
+      DataCell(Text(disc)),
+      DataCell(Text(amount)),
+    ]);
+  }
+
+  Widget _paymentDetails() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text("PayPal Email: wiz@saldoapps.com"),
+        Text("Make checks payable to: John Smith"),
+        Text("Bank Transfer Routing (ABA): 061120084"),
+      ],
+    );
+  }
+
+  Widget _summarySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: const [
+        _summaryRow("Subtotal:", "USD 8000.00"),
+        _summaryRow("Discount (20%):", "USD 0.00"),
+        _summaryRow("Shipping Cost:", "USD 0.00"),
+        _summaryRow("Sales Tax:", "USD 450.00"),
+        Divider(),
+        _summaryRow("Total:", "USD 8,480.00", bold: true),
+        _summaryRow("Amount Paid:", "USD 0.00"),
+        SizedBox(height: 10),
+        Text(
+          "Balance Due: USD 8,480.00",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red),
+        ),
+      ],
+    );
+  }
+
+  static Widget _summaryRow(String label, String value, {bool bold = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+          Text(value, style: TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal)),
+        ],
+      ),
+    );
+  }
+}

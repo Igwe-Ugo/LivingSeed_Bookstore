@@ -1,0 +1,146 @@
+[
+    {
+        "title": "The Kingdom Lifestyle",
+        "coverImage": "assets/images/kingdom_lifestyle.JPG",
+        "amount": 1200,
+        "subTitle": "A collection of Bible Study outlines from Peace House Discipleship work",
+        "pdfLink": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
+        "chapterNum": 19,
+        "contents": [
+            {
+                "chapterNum": 1,
+                "chapterTitle": "On the mount with the Lord"
+            },
+            {
+                "chapterNum": 2,
+                "chapterTitle": "Who is a disciple"
+            },
+            {
+                "chapterNum": 3,
+                "chapterTitle": "Blessed are the poor in spirit"
+            },
+            {
+                "chapterNum": 4,
+                "chapterTitle": "Blessed are those who mourn"
+            },
+            {
+                "chapterNum": 5,
+                "chapterTitle": "Blessed are the meek"
+            },
+            {
+                "chapterNum": 6,
+                "chapterTitle": "They who hunger & thirst after righteousness"
+            },
+            {
+                "chapterNum": 7,
+                "chapterTitle": "Blessed are the meek"
+            },
+            {
+                "chapterNum": 8,
+                "chapterTitle": "Blessed are the pure in heart"
+            },
+            {
+                "chapterNum": 9,
+                "chapterTitle": "Blessed are the peacemakers"
+            },
+            {
+                "chapterNum": 10,
+                "chapterTitle": "Blessed are they which are persecuted"
+            },
+            {
+                "chapterNum": 11,
+                "chapterTitle": "You are the salt of the earth"
+            },
+            {
+                "chapterNum": 12,
+                "chapterTitle": "You are the light of the world"
+            },
+            {
+                "chapterNum": 13,
+                "chapterTitle": "The believer's righteousness"
+            },
+            {
+                "chapterNum": 14,
+                "chapterTitle": "The believer's acts of righteousness"
+            },
+            {
+                "chapterNum": 15,
+                "chapterTitle": "Necessary instructions for Kingdom living"
+            },
+            {
+                "chapterNum": 16,
+                "chapterTitle": "Further instructions for kingdom living"
+            },
+            {
+                "chapterNum": 17,
+                "chapterTitle": "The great warnings of the Master"
+            },
+            {
+                "chapterNum": 18,
+                "chapterTitle": "Further warnings from the Master"
+            },
+            {
+                "chapterNum": 19,
+                "chapterTitle": "Standing against the storms of life"
+            }
+        ]
+    },
+    {
+        "title": "Understanding the concept and conditions for discipleship",
+        "coverImage": "assets/images/concepts_discipleship.JPG",
+        "amount": 1200,
+        "subTitle": "A collection of Bible Study outlines from Peace House Discipleship work",
+        "pdfLink": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
+        "chapterNum": 12,
+        "contents": [
+            {
+                "chapterNum": 1,
+                "chapterTitle": "God's great offer"
+            },
+            {
+                "chapterNum": 2,
+                "chapterTitle": "Definition, concept and basis of discipleship"
+            },
+            {
+                "chapterNum": 3,
+                "chapterTitle": "Understanding the conditions for discipleship"
+            },
+            {
+                "chapterNum": 4,
+                "chapterTitle": "Let him deny himself"
+            },
+            {
+                "chapterNum": 5,
+                "chapterTitle": "Victory over Self"
+            },
+            {
+                "chapterNum": 6,
+                "chapterTitle": "Not I but Christ"
+            },
+            {
+                "chapterNum": 7,
+                "chapterTitle": "Take up your cross daily"
+            },
+            {
+                "chapterNum": 8,
+                "chapterTitle": "...And follow Me"
+            },
+            {
+                "chapterNum": 9,
+                "chapterTitle": "Steps unto following Jesus"
+            },
+            {
+                "chapterNum": 10,
+                "chapterTitle": "Following in His steps"
+            },
+            {
+                "chapterNum": 11,
+                "chapterTitle": "Examples of discipleship relationships in the Bible"
+            },
+            {
+                "chapterNum": 12,
+                "chapterTitle": "Examples of discipleship relationships with human disciplers"
+            }
+        ]
+    }
+]

@@ -1,0 +1,56 @@
+{
+    "generalNotifications":[
+        {
+            "notificationImage":"assets/images/mlr_2024_flier.jpeg",
+            "notificationTitle":"MLR 2024",
+            "notificationMessage":"The global landscape is characterized by linguistic diversity, with approximately 7,000 languages spoken worldwide. However, many of these languages, including Igbo, face challenges such as limited technological support and dwindling usage among younger generations. The creation of robust TTS systems for these languages is imperative to ensure they remain relevant and accessible. Research indicates that over 80% of the world's population speaks a language that is not represented in mainstream digital platforms. This gap highlights the urgent need for TTS systems that cater to these languages, offering native speakers the opportunity to engage with technology in their mother tongue.",
+            "notificationDate": "21 - Nov - 2024",
+            "notificationTime": "4:00pm",
+            "isRead": false
+        },
+        {
+            "notificationImage":"assets/images/mlr_2024_flier.jpeg",
+            "notificationTitle":"Couple's retreat 2024",
+            "notificationMessage":"The development of multilingual text-to-speech (TTS) systems holds significant importance, particularly for underrepresented languages such as Igbo. As technology continues to advance, the ability to effectively communicate in one's native language becomes increasingly crucial. TTS systems not only facilitate communication but also enhance accessibility for native speakers, thereby promoting inclusivity in the digital landscape.",
+            "notificationDate": "7 - July - 2024",
+            "notificationTime": "11:34am",
+            "isRead": false
+        },
+        {
+            "notificationImage":"assets/images/mlr_2024_flier.jpeg",
+            "notificationTitle":"SAYCO 2024",
+            "notificationMessage":"Technological advancements have the potential to bridge communication gaps, particularly in educational and professional settings. For instance, studies have shown that individuals who interact with technology in their native language exhibit improved comprehension and retention rates. By developing TTS systems for Igbo, we can empower speakers to access educational resources, governmental services, and digital content more effectively. This technological inclusion fosters a sense of belonging and cultural pride among speakers of underrepresented languages.",
+            "notificationDate": "12 - April - 2024",
+            "notificationTime": "5:20pm",
+            "isRead": false
+        },
+        {
+            "notificationImage":"assets/images/mlr_2024_flier.jpeg",
+            "notificationTitle":"Discple's Prayer watch 2023",
+            "notificationMessage":"The absence of effective TTS systems hampers the preservation of the Igbo language. With limited technological resources dedicated to Igbo, there is a risk of language attrition, particularly among younger generations who may gravitate towards more widely supported languages. As these individuals engage predominantly with content in languages like English or French, the Igbo language may gradually diminish in daily use, leading to a potential loss of linguistic heritage.",
+            "notificationDate": "29 - Dec - 2022",
+            "notificationTime": "10:19am",
+            "isRead": false
+        }
+    ],
+    "personalNotifications": {
+        "elijahnwamadi1@gmail.com": [
+            {
+                "notificationTitle": "Purchase Confirmed",
+                "notificationMessage": "You successfully purchased 'Becoming Like Jesus'.",
+                "notificationDate": "26-Nov-2023",
+                "notificationTime": "1:00 PM",
+                "notificationImage": "assets/images/book_frame.png",
+                "isRead": false
+            },
+            {
+                "notificationTitle": "Download Complete",
+                "notificationMessage": "You downloaded 'Tapping God's Resources'.",
+                "notificationDate": "26-Nov-2023",
+                "notificationTime": "3:00 PM",
+                "notificationImage": "assets/images/sigin.png",
+                "isRead": false
+            }
+        ]
+    }
+}

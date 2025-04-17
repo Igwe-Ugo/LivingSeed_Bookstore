@@ -1,0 +1,63 @@
+[
+    {
+        "magazineTitle": "Serving God after the due order",
+        "issue": "October 2008",
+        "coverImage": "assets/images/magazine.jpeg",
+        "publisher": "Peace house publications",
+        "price": 150,
+        "subTitle": "Sanctify them through thy truth: thy word is truth. - John 17:17",
+        "editorsDesk": {
+          "title": "Editorial",
+          "editor": "Kofoworola Obasuyi",
+          "pageNumber": 14
+        },
+        "contents": [
+          {
+            "chapterNumber": 1,
+            "chapterTitle": "Serving God after the due order",
+            "chapterAuthor": "Gbile Akanni",
+            "pageNumber": 3
+          },
+          {
+            "chapterNumber": 2,
+            "chapterTitle": "Bedrocks... Help him up",
+            "chapterAuthor": "Sade Akanni",
+            "pageNumber": 15
+          },
+          {
+            "chapterNumber": 3,
+            "chapterTitle": "Quiet service... Divine bait for increase in christian life",
+            "chapterAuthor": "Terwase Targema",
+            "pageNumber": 20
+          },
+          {
+            "chapterNumber": 4,
+            "chapterTitle": "Missions:Kibaku - Our Father's heritage that must not be lost",
+            "chapterAuthor": "Amos olayinka",
+            "pageNumber": 25
+          },
+          {
+            "chapterNumber": 5,
+            "chapterTitle": "The savor of His Name",
+            "chapterAuthor": "editorial team",
+            "pageNumber": 26
+          },
+          {
+            "chapterNumber": 6,
+            "chapterTitle": "Principles of divine provisions",
+            "chapterAuthor": "Joseph Jato",
+            "pageNumber": 28
+          },
+          {
+            "chapterNumber": 7,
+            "chapterTitle": "A personal experience ...Those who do such things",
+            "chapterAuthor": "Tersungwe Gumnor",
+            "pageNumber": 32
+          }
+        ],
+        "bibleStudy": {
+          "title": "How to maximize our opportunities to make Christ known",
+          "keyVerses": ["Matt. 28:18-20", "Phil. 3:20"]
+        }
+      }    
+]

@@ -1,0 +1,341 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_bookstore/models/users_model.dart';
+
+class Receipt extends StatelessWidget {
+  final Users user;
+  final TransactionHistory transaction;
+  
+  const Receipt({
+    super.key, 
+    required this.user,
+    required this.transaction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double totalAmount = transaction.description.fold(0, (sum, item) => sum + item.totalCost);
+    
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => GoRouter.of(context).pop(),
+          icon: const Icon(Iconsax.arrow_left_2, size: 17),
+        ),
+        title: Text(
+          transaction.transactionTitle,
+          style: const TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Header with logo and receipt info
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    height: 120,
+                    width: 120,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: AssetImage('assets/icons/LSeed-Logo-1.png'),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Receipt',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold, 
+                          fontSize: 25
+                        ),
+                      ),
+                      Text(
+                        'Receipt No: ${transaction.receiptNo}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          fontSize: 12
+                        ),
+                      ),
+                      Text(
+                        'Date: ${transaction.transactionDate}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          fontSize: 12
+                        ),
+                      ),
+                      Text(
+                        'Time: ${transaction.transactionTime}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600, 
+                          fontSize: 12
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              
+              // From/To sections
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // From (Company info)
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'FROM',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 12
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'PEACE HOUSE PUBLICATIONS',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 14
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Peace House, P.O.Box 971',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const Text(
+                          'Gboko, Benue State, Nigeria',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 8),
+                        const Text(
+                          'Contact: +234 123 456 7890',
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        Text(
+                          'Email: contact@peacehouse.com',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // To (User info)
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'TO',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 12
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user.fullname.toUpperCase(),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold, 
+                            fontSize: 14
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Email: ${user.emailAddress}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        Text(
+                          'Phone: ${user.telephone}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Gender: ${user.gender}',
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        Text(
+                          'DOB: ${user.dateOfBirth}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 24),
+              const Divider(thickness: 1),
+              const SizedBox(height: 16),
+              
+              // Transaction items header
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      'ITEM',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'QTY',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'PRICE',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      'TOTAL',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        textAlign: TextAlign.right,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 8),
+              const Divider(thickness: 1),
+              const SizedBox(height: 8),
+              
+              // Transaction items list
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: transaction.description.length,
+                itemBuilder: (context, index) {
+                  final item = transaction.description[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            item.bookName,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            item.quantity.toString(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '₦${item.unitCost.toStringAsFixed(2)}',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            '₦${item.totalCost.toStringAsFixed(2)}',
+                            textAlign: TextAlign.right,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              
+              const SizedBox(height: 16),
+              const Divider(thickness: 1),
+              const SizedBox(height: 8),
+              
+              // Total amount
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'TOTAL AMOUNT:',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Text(
+                      '₦${totalAmount.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 24),
+              const Text(
+                'Thank you for your purchase!',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'For any inquiries, please contact our support team',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
