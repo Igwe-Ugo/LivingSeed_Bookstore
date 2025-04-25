@@ -72,9 +72,9 @@ class _ProfileState extends State<Profile> {
                   children: [
                     CircleAvatar(
                       radius: 35,
-                      child: _profileImage == null
-                          ? Image.asset(user.userImage)
-                          : Image.asset(_profileImage!.path.toString()),
+                      backgroundImage: _profileImage == null
+                          ? AssetImage(user.userImage)
+                          : AssetImage(_profileImage!.path.toString()),
                     ),
                     const SizedBox(
                       height: 20,
