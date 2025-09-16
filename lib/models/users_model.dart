@@ -59,7 +59,7 @@ class PurchasedBooksItems {
       'bookTitle': bookTitle,
       'coverImage': coverImage,
       'bookAuthor': bookAuthor,
-      'readBookPath': readBookPath
+      'readBookPath': readBookPath,
     };
   }
 }

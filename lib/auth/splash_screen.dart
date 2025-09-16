@@ -48,14 +48,14 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Center(
                 child: Icon(
-                  Icons.auto_stories,
+                  Icons.video_collection,
                   size: 150.0,
                   color: Colors.white,
                 ),
               ),
               const SizedBox(height: 25),
               Text(
-                "Living Seed\nBook Store".toUpperCase(),
+                "Living Seed Media".toUpperCase(),
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

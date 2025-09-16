@@ -59,7 +59,7 @@ class LandingPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Living Seed Book Store',
+                    'Living Seed Media',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class LandingPage extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    "Let's read books with Living Seed Store",
+                    "Let's explore God's resources with Living Seed Media",
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,

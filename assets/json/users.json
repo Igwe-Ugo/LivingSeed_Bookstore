@@ -21,8 +21,7 @@
                 "bookTitle":"Raising Agents of Transformation",
                 "coverImage":"assets/images/agents_of_transformation.png",
                 "bookAuthor":"Gbile Akanni",
-                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
-                "date": 2013
+                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf"
             }
         ],
         "transactionHistory":[
@@ -102,8 +101,7 @@
                 "bookTitle":"The Dignity of Manhood",
                 "coverImage":"assets/images/dignity_of_manhood.png",
                 "bookAuthor":"Gbile Akanni",
-                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf",
-                "date": 2007
+                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf"
             }
         ],
         "transactionHistory":[

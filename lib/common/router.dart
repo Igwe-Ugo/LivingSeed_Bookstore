@@ -273,6 +273,24 @@ class LivingSeedMediaRouter {
                       path: accountPath,
                       builder: (context, state) => const Account(),
                       routes: [
+                        // books purchased
+                        GoRoute(
+                          path: booksPurchasedPath,
+                          builder: (context, state) {
+                            final user = state.extra;
+                            if (user is Users) {
+                              return BookPurchased(
+                                user: user,
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                    'No Recent Announcements to be reviewed'),
+                              );
+                            }
+                          },
+                        ),
+
                         // transaction history
                         GoRoute(
                             path: transactionHistoryPath,
