@@ -67,7 +67,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   children: [
                     GestureDetector(
                       onTap: () => GoRouter.of(context)
-                          .go(LivingSeedBookStoreRouter.signinPath),
+                          .go(LivingSeedMediaRouter.signinPath),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Container(

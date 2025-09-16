@@ -4,3 +4,4 @@ export 'bible_study.dart';
 export 'magazine_model.dart';
 export 'notification_model.dart';
 export 'events_model.dart';
+export 'audio_model.dart';

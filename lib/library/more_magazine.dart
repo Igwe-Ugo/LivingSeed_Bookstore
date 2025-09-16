@@ -6,14 +6,13 @@ import 'package:livingseed_bookstore/services/widget.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
-class MoreBibleStudy extends StatelessWidget {
-  const MoreBibleStudy({super.key});
+class MoreMagazine extends StatelessWidget {
+  const MoreMagazine({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: IconButton(
             onPressed: () {
               GoRouter.of(context).pop();
@@ -23,7 +22,7 @@ class MoreBibleStudy extends StatelessWidget {
               size: 17,
             )),
         title: const Text(
-          'All Bible Study Materials',
+          'All Magazines',
           style: TextStyle(
             fontFamily: 'Playfair',
             fontSize: 20,
@@ -31,32 +30,21 @@ class MoreBibleStudy extends StatelessWidget {
           ),
         ),
       ),
-      body: FutureBuilder<List<BibleStudyMaterial>>(
-        future: Provider.of<BibleStudyProvider>(context, listen: false)
-            .bibleStudyFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Center(child: Text("Error loading books"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("No books available"));
-          }
-
-          List<BibleStudyMaterial> bibleStudy = snapshot.data!;
-
+      body: Consumer<MagazineProvider>(
+        builder: (context, magazineProvider, child) {
           return Padding(
             padding: const EdgeInsets.all(10),
             child: GridView.builder(
-              itemCount: bibleStudy.length,
+              itemCount: magazineProvider.magazines.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, // Two books per row
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 5,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
                 childAspectRatio: 0.7, // Adjust book card size
               ),
               itemBuilder: (context, index) {
-                return _buildBookItem(context, bibleStudy[index]);
+                return _buildBookItem(
+                    context, magazineProvider.magazines[index]);
               },
             ),
           );
@@ -65,11 +53,11 @@ class MoreBibleStudy extends StatelessWidget {
     );
   }
 
-  Widget _buildBookItem(BuildContext context, BibleStudyMaterial bibleStudy) {
+  Widget _buildBookItem(BuildContext context, MagazineModel magazine) {
     return GestureDetector(
       onTap: () => GoRouter.of(context).go(
-          '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.aboutBibleStudyPath}',
-          extra: bibleStudy),
+          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+          extra: magazine),
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -81,7 +69,8 @@ class MoreBibleStudy extends StatelessWidget {
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
                 child: Image.asset(
-                  bibleStudy.coverImage,
+                  height: 500,
+                  magazine.coverImage,
                   width: double.infinity,
                   fit: BoxFit.cover,
                 ),
@@ -93,19 +82,19 @@ class MoreBibleStudy extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    bibleStudy.title,
+                    magazine.magazineTitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    bibleStudy.subTitle,
+                    magazine.subTitle,
                     maxLines: 2,
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    '₦ ${bibleStudy.amount.toString()}',
+                    '₦ ${magazine.price.toString()}',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],

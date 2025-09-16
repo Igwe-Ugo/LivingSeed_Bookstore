@@ -81,7 +81,7 @@ class LandingPage extends StatelessWidget {
                     height: 60,
                     child: ElevatedButton(
                       onPressed: () => GoRouter.of(context)
-                          .go(LivingSeedBookStoreRouter.signinPath),
+                          .go(LivingSeedMediaRouter.signinPath),
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                         backgroundColor: Theme.of(context).primaryColor,

@@ -269,7 +269,7 @@ class _AdminNotificationsState extends State<AdminNotifications> {
         InkWell(
           onTap: () {
             GoRouter.of(context).go(
-                '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.dashboardPath}/${LivingSeedBookStoreRouter.manageNotificationsPath}/${LivingSeedBookStoreRouter.anouncementsPath}',
+                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageNotificationsPath}/${LivingSeedMediaRouter.anouncementsPath}',
                 extra: notificationData);
           },
           child: SizedBox(

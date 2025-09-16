@@ -29,6 +29,7 @@ dependencies:
   choice: ^2.3.2
   collection: ^1.19.0
   just_audio: ^0.10.5
+  connectivity_plus: ^7.0.0
 
 dev_dependencies:
   flutter_test:

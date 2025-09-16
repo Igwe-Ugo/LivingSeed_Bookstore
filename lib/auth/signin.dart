@@ -58,7 +58,7 @@ class _SignInState extends State<SignIn> {
                                       .dividerColor
                                       .withOpacity(0.45))),
                           onPressed: () => GoRouter.of(context)
-                              .go(LivingSeedBookStoreRouter.landingPagePath),
+                              .go(LivingSeedMediaRouter.landingPagePath),
                           label: Icon(
                             Icons.arrow_back_ios_outlined,
                             size: 18,
@@ -125,7 +125,7 @@ class _SignInState extends State<SignIn> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () => GoRouter.of(context)
-                            .go(LivingSeedBookStoreRouter.forgotPasswordPath),
+                            .go(LivingSeedMediaRouter.forgotPasswordPath),
                         child: Text(
                           'Forgot password?',
                           style: TextStyle(
@@ -159,7 +159,7 @@ class _SignInState extends State<SignIn> {
                                 emailController.text, passwordController.text);
                         if (authenticatedUser != null) {
                           GoRouter.of(context)
-                              .go(LivingSeedBookStoreRouter.homePath);
+                              .go(LivingSeedMediaRouter.homePath);
                         } else {
                           setState(() {
                             errorMessage = 'Invalid EmailAddress or password';
@@ -257,7 +257,7 @@ class _SignInState extends State<SignIn> {
                         ),
                         TextButton(
                           onPressed: () => GoRouter.of(context)
-                              .go(LivingSeedBookStoreRouter.signupPath),
+                              .go(LivingSeedMediaRouter.signupPath),
                           child: Text('Sign up',
                               style: TextStyle(
                                 color: Theme.of(context).primaryColorDark,

@@ -113,7 +113,7 @@ class EventsCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         GoRouter.of(context).go(
-            '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.upcomingEventsPath}/${LivingSeedBookStoreRouter.viewUpcomingEventsPath}',
+            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.upcomingEventsPath}/${LivingSeedMediaRouter.viewUpcomingEventsPath}',
             extra: upcomingEvents);
       },
       child: Card(

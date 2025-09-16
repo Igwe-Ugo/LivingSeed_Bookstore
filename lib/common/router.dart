@@ -4,19 +4,25 @@ import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_bookstore/account/widget.dart';
 import 'package:livingseed_bookstore/admin/widget.dart';
 import 'package:livingseed_bookstore/auth/widget.dart';
-import 'package:livingseed_bookstore/home/widget.dart';
+import 'package:livingseed_bookstore/home/home.dart';
+import 'package:livingseed_bookstore/library/widget.dart';
+import 'package:livingseed_bookstore/media/media.dart';
 import 'package:livingseed_bookstore/models/widget.dart';
 import 'package:livingseed_bookstore/notification/widget.dart';
 import 'widget.dart';
 
-class LivingSeedBookStoreRouter {
-  static final LivingSeedBookStoreRouter _instance =
-      LivingSeedBookStoreRouter._internal();
-  static LivingSeedBookStoreRouter get instance => _instance;
+class LivingSeedMediaRouter {
+  static final LivingSeedMediaRouter _instance =
+      LivingSeedMediaRouter._internal();
+  static LivingSeedMediaRouter get instance => _instance;
   static late final GoRouter router;
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
-  static final GlobalKey<NavigatorState> homeTabNavigatorKey =
+  static final GlobalKey<NavigatorState> homeTabNavigationKey =
+      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> libraryTabNavigationKey =
+      GlobalKey<NavigatorState>();
+  static final GlobalKey<NavigatorState> mediaTabNavigationKey =
       GlobalKey<NavigatorState>();
   static final GlobalKey<NavigatorState> notificationTabNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -28,7 +34,7 @@ class LivingSeedBookStoreRouter {
   GoRouteInformationParser get routeInformationParser =>
       router.routeInformationParser;
 
-  factory LivingSeedBookStoreRouter() {
+  factory LivingSeedMediaRouter() {
     return _instance;
   }
 
@@ -41,6 +47,9 @@ class LivingSeedBookStoreRouter {
 
   // home pages
   static const String homePath = '/home';
+
+  // books pages
+  static const String libraryPath = '/library';
   static const String aboutBookPath = 'about_book';
   static const String reviewsPath = 'reviews';
   static const String writeReviewPath = 'write_review';
@@ -49,6 +58,10 @@ class LivingSeedBookStoreRouter {
   static const String aboutBibleStudyPath = 'about_bible_study';
   static const String aboutMagazinePath = 'about_magazine';
   static const String moreMagazinePath = 'more_magazine';
+
+  // media pages
+  static const String mediaPath = '/media';
+  static const String audioPath = 'audio';
 
   // account pages
   static const String accountPath = '/account';
@@ -79,7 +92,7 @@ class LivingSeedBookStoreRouter {
   static const String userProfilePath = 'user_profile';
   static const String addEventPath = 'add_event';
 
-  LivingSeedBookStoreRouter._internal() {
+  LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
       GoRoute(
         path: splashscreenPath,
@@ -108,11 +121,19 @@ class LivingSeedBookStoreRouter {
           },
           branches: <StatefulShellBranch>[
             StatefulShellBranch(
-                navigatorKey: homeTabNavigatorKey,
+                navigatorKey: homeTabNavigationKey,
                 routes: <RouteBase>[
                   GoRoute(
-                      path: homePath,
-                      builder: (context, state) => const Home(),
+                    path: homePath,
+                    builder: (context, state) => Home(),
+                  ),
+                ]),
+            StatefulShellBranch(
+                navigatorKey: libraryTabNavigationKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                      path: libraryPath,
+                      builder: (context, state) => const Library(),
                       routes: [
                         GoRoute(
                           path: moreBooksPath,
@@ -190,6 +211,31 @@ class LivingSeedBookStoreRouter {
                             } else {
                               return const Center(
                                   child: Text("No book data available"));
+                            }
+                          },
+                        ),
+                      ]),
+                ]),
+            StatefulShellBranch(
+                navigatorKey: mediaTabNavigationKey,
+                routes: <RouteBase>[
+                  GoRoute(
+                      path: mediaPath,
+                      builder: (context, state) => MediaPage(),
+                      routes: [
+                        GoRoute(
+                          path: audioPath,
+                          builder: (context, state) {
+                            final anouncement = state.extra;
+                            if (anouncement is NotificationItems) {
+                              return Announcements(
+                                announcement: anouncement,
+                              );
+                            } else {
+                              return Center(
+                                child: Text(
+                                    'No Recent Announcements to be reviewed'),
+                              );
                             }
                           },
                         ),

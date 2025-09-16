@@ -73,7 +73,7 @@ class _AccountState extends State<Account> {
                     borderRadius: const BorderRadius.all(Radius.circular(15))),
                 child: InkWell(
                   onTap: () => GoRouter.of(context).go(
-                      '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.profilePath}'),
+                      '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.profilePath}'),
                   child: Column(
                     children: [
                       CircleAvatar(
@@ -127,7 +127,7 @@ class _AccountState extends State<Account> {
                     ),
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
-                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.cartPath}',
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.cartPath}',
                           extra: user),
                       leading: const Icon(Icons.shopping_cart_outlined),
                       title: Text(
@@ -139,7 +139,7 @@ class _AccountState extends State<Account> {
                     ),
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
-                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.booksPurchasedPath}',
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.booksPurchasedPath}',
                           extra: user),
                       leading: const Icon(Iconsax.document_download),
                       title: Text(
@@ -150,11 +150,9 @@ class _AccountState extends State<Account> {
                       trailing: const Icon(Icons.keyboard_arrow_right_outlined),
                     ),
                     ListTile(
-                      onTap:
-                          () => GoRouter.of(context).go(
-                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.transactionHistoryPath}',
-                          extra: user)
-                      ,
+                      onTap: () => GoRouter.of(context).go(
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}',
+                          extra: user),
                       leading: const Icon(Icons.history_outlined),
                       title: Text(
                         'Transaction History',
@@ -167,7 +165,7 @@ class _AccountState extends State<Account> {
                         ? ListTile(
                             onTap: () {
                               GoRouter.of(context).go(
-                                  '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.dashboardPath}');
+                                  '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}');
                             },
                             leading:
                                 const Icon(Icons.admin_panel_settings_outlined),
@@ -216,7 +214,7 @@ class _AccountState extends State<Account> {
                     ),
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
-                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.upcomingEventsPath}'),
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.upcomingEventsPath}'),
                       leading: const Icon(Iconsax.calendar),
                       title: Text(
                         'Upcoming meetings',
@@ -272,7 +270,7 @@ class _AccountState extends State<Account> {
                     ),
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
-                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.changePasswordPath}'),
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.changePasswordPath}'),
                       leading: const Icon(Iconsax.lock_1),
                       title: Text(
                         'Change Password',
@@ -349,7 +347,7 @@ Future<void> showLogoutDialog(BuildContext context) {
           onPressed: () {
             Provider.of<UsersAuthProvider>(context, listen: false).signout();
             Navigator.of(context).pop();
-            GoRouter.of(context).go(LivingSeedBookStoreRouter.signinPath);
+            GoRouter.of(context).go(LivingSeedMediaRouter.signinPath);
             showMessage('Logged Out!', context);
           },
           child: Text(

@@ -62,7 +62,9 @@ class _BooksPageState extends State<BooksPage> {
     return GestureDetector(
       onTap: () {
         if (widget.aboutBooks != null) {
-          GoRouter.of(context).go('${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.aboutBookPath}', extra: widget.aboutBooks);
+          GoRouter.of(context).go(
+              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+              extra: widget.aboutBooks);
         }
       },
       child: Container(

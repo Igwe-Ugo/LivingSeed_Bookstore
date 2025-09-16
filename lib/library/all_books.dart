@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:livingseed_bookstore/common/router.dart';
-import 'package:livingseed_bookstore/home/widget.dart';
+import 'package:livingseed_bookstore/library/widget.dart';
 import 'package:livingseed_bookstore/services/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +48,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.moreBooksPath}'),
+                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreBooksPath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,
@@ -99,7 +99,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.moreBibleStudyPath}'),
+                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreBibleStudyPath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,
@@ -150,7 +150,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.moreMagazinePath}'),
+                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreMagazinePath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,

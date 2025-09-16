@@ -83,7 +83,7 @@ class _ReviewsState extends State<Reviews> {
               onPressed: () {
                 if (widget.aboutBooks != null) {
                   GoRouter.of(context).go(
-                      '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.aboutBookPath}/${LivingSeedBookStoreRouter.reviewsPath}/${LivingSeedBookStoreRouter.writeReviewPath}',
+                      '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}/${LivingSeedMediaRouter.reviewsPath}/${LivingSeedMediaRouter.writeReviewPath}',
                       extra: widget.aboutBooks);
                 }
               },

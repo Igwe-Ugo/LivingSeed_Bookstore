@@ -54,7 +54,7 @@ class _SignUpState extends State<SignUp> {
                                   .dividerColor
                                   .withOpacity(0.45))),
                       onPressed: () => GoRouter.of(context)
-                          .go(LivingSeedBookStoreRouter.landingPagePath),
+                          .go(LivingSeedMediaRouter.landingPagePath),
                       label: Icon(
                         Icons.arrow_back_ios_outlined,
                         size: 18,
@@ -230,7 +230,7 @@ class _SignUpState extends State<SignUp> {
                     ),
                     TextButton(
                       onPressed: () => GoRouter.of(context)
-                          .go(LivingSeedBookStoreRouter.signinPath),
+                          .go(LivingSeedMediaRouter.signinPath),
                       child: Text('Sign In',
                           style: TextStyle(
                             color: Theme.of(context).primaryColorDark,

@@ -107,7 +107,7 @@ class _CartState extends State<Cart> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       GoRouter.of(context).go(
-                                          '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.cartPath}/${LivingSeedBookStoreRouter.makePaymentPath}',
+                                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.cartPath}/${LivingSeedMediaRouter.makePaymentPath}',
                                           extra: snapshot.data!);
                                     },
                                     style: ElevatedButton.styleFrom(

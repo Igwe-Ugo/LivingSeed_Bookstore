@@ -67,7 +67,7 @@ class MoreBooks extends StatelessWidget {
   Widget _buildBookItem(BuildContext context, AboutBooks book) {
     return GestureDetector(
       onTap: () => GoRouter.of(context).go(
-          '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.aboutBookPath}',
+          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
           extra: book),
       child: Card(
         elevation: 2,

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  LivingSeedBookStoreRouter.instance;
+  LivingSeedMediaRouter.instance;
   runApp(const LivingSeedBookStoreApp());
 }
 
@@ -71,9 +71,9 @@ class _LivingSeedBookStoreAppState extends State<LivingSeedBookStoreApp> {
         builder: (context, themeData, child) {
           return MaterialApp.router(
             debugShowCheckedModeBanner: false,
-            title: 'Living Seed Book Store',
+            title: 'Living Seed Media',
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            routerConfig: LivingSeedBookStoreRouter.router,
+            routerConfig: LivingSeedMediaRouter.router,
           );
         },
       ),

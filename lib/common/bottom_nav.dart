@@ -33,6 +33,14 @@ class _LivingSeedNavBarState extends State<LivingSeedNavBar> {
             label: 'Home',
           ),
           NavigationDestination(
+            icon: Icon(Iconsax.book_1),
+            label: 'Library',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.perm_media_outlined),
+            label: 'Media',
+          ),
+          NavigationDestination(
             icon: NotificationBadge(),
             label: 'Notifications',
           ),

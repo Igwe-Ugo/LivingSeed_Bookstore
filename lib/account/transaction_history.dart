@@ -73,8 +73,11 @@ Container _transactionHistoryItems(
       elevation: 0,
       child: InkWell(
         onTap: () => GoRouter.of(context).go(
-            '${LivingSeedBookStoreRouter.accountPath}/${LivingSeedBookStoreRouter.transactionHistoryPath}/${LivingSeedBookStoreRouter.transactionDescriptionPath}',
-            extra: {'user': user, 'transactionHistory': user.transactionHistory[index]}),
+            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}/${LivingSeedMediaRouter.transactionDescriptionPath}',
+            extra: {
+              'user': user,
+              'transactionHistory': user.transactionHistory[index]
+            }),
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(

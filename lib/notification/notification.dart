@@ -205,7 +205,7 @@ class NotificationCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         GoRouter.of(context).go(
-            '${LivingSeedBookStoreRouter.notificationPath}/${LivingSeedBookStoreRouter.anouncementsPath}',
+            '${LivingSeedMediaRouter.notificationPath}/${LivingSeedMediaRouter.anouncementsPath}',
             extra: notification);
         if (!notification.isRead) {
           Provider.of<NotificationProvider>(context, listen: false)

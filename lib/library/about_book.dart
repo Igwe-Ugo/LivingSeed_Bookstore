@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_bookstore/common/widget.dart';
-import 'package:livingseed_bookstore/home/widget.dart';
+import 'package:livingseed_bookstore/library/widget.dart';
 import 'package:livingseed_bookstore/models/widget.dart';
 import 'package:livingseed_bookstore/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -265,7 +265,7 @@ class _AboutBookState extends State<AboutBook> {
                           onPressed: () {
                             if (widget.aboutBooks != null) {
                               GoRouter.of(context).go(
-                                  '${LivingSeedBookStoreRouter.homePath}/${LivingSeedBookStoreRouter.aboutBookPath}/${LivingSeedBookStoreRouter.reviewsPath}',
+                                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}/${LivingSeedMediaRouter.reviewsPath}',
                                   extra: widget.aboutBooks);
                             }
                           },
