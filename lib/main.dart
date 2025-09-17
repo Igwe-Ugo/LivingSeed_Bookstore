@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:livingseed_bookstore/common/widget.dart';
-import 'package:livingseed_bookstore/services/widget.dart';
+import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LivingSeedMediaRouter.instance;
-  runApp(const LivingSeedBookStoreApp());
+  runApp(const LivingSeedMedia());
 }
 
-class LivingSeedBookStoreApp extends StatefulWidget {
-  const LivingSeedBookStoreApp({super.key});
+class LivingSeedMedia extends StatefulWidget {
+  const LivingSeedMedia({super.key});
 
   @override
-  State<LivingSeedBookStoreApp> createState() => _LivingSeedBookStoreAppState();
+  State<LivingSeedMedia> createState() => _LivingSeedMediaState();
 }
 
-class _LivingSeedBookStoreAppState extends State<LivingSeedBookStoreApp> {
+class _LivingSeedMediaState extends State<LivingSeedMedia> {
   late DarkThemeProvider themeChangeProvider;
   late UsersAuthProvider usersAuthProvider;
   late NotificationProvider notificationProvider;

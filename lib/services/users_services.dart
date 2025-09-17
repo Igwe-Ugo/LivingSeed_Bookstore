@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:livingseed_bookstore/models/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 import 'package:path_provider/path_provider.dart';
 
 class UsersAuthProvider extends ChangeNotifier {

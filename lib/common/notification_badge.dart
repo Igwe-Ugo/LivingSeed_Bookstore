@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_bookstore/services/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
-
 import '../models/users_model.dart';
 
 class NotificationBadge extends StatelessWidget {

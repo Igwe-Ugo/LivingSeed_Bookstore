@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:livingseed_bookstore/common/router.dart';
-import 'package:livingseed_bookstore/library/widget.dart';
-import 'package:livingseed_bookstore/services/widget.dart';
+import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/library/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 
 class AllBooks extends StatelessWidget {

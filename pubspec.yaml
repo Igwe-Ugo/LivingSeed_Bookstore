@@ -1,5 +1,5 @@
-name: livingseed_bookstore
-description: "Living Seed Bookstore."
+name: livingseed_media
+description: "Living Seed Media."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
@@ -45,6 +45,7 @@ flutter:
     - assets/icons/
     - assets/json/
     - assets/pdfs/
+    - assets/audios/
 
   fonts:
     - family: Satoshi

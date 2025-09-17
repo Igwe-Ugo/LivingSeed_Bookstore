@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
-import 'package:livingseed_bookstore/services/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {

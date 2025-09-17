@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-import 'package:livingseed_bookstore/common/widget.dart';
+import 'package:livingseed_media/common/widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

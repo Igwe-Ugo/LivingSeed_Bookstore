@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_bookstore/account/widget.dart';
-import 'package:livingseed_bookstore/admin/widget.dart';
-import 'package:livingseed_bookstore/auth/widget.dart';
-import 'package:livingseed_bookstore/home/home.dart';
-import 'package:livingseed_bookstore/library/widget.dart';
-import 'package:livingseed_bookstore/media/media.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
-import 'package:livingseed_bookstore/notification/widget.dart';
+import 'package:livingseed_media/account/widget.dart';
+import 'package:livingseed_media/admin/widget.dart';
+import 'package:livingseed_media/auth/widget.dart';
+import 'package:livingseed_media/home/home.dart';
+import 'package:livingseed_media/library/widget.dart';
+import 'package:livingseed_media/media/media.dart';
+import 'package:livingseed_media/models/widget.dart';
+import 'package:livingseed_media/notification/widget.dart';
 import 'widget.dart';
 
 class LivingSeedMediaRouter {

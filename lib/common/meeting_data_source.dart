@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class MeetingDataSource extends CalendarDataSource {

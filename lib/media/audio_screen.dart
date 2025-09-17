@@ -2,8 +2,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:livingseed_bookstore/media/widget.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
+import 'package:livingseed_media/media/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 
 class AudioScreen extends StatefulWidget {
   final AudioMessage audioSongs;

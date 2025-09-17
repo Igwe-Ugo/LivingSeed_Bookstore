@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_bookstore/common/widget.dart';
+import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 //import 'package:livingseed_bookstore/common/widget.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
-import 'package:livingseed_bookstore/services/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 //import 'package:livingseed_bookstore/services/widget.dart';
 //import 'package:provider/provider.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:livingseed_bookstore/models/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AddEventProvider extends ChangeNotifier {
