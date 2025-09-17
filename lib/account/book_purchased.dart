@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../models/widget.dart';
 
 class BookPurchased extends StatelessWidget {
@@ -34,8 +35,7 @@ class BookPurchased extends StatelessWidget {
         itemCount: user.bookPurchased.length,
         itemBuilder: (context, index) {
           return user != null && user.bookPurchased.isNotEmpty
-              ? _booksPurchasedItems(
-                  context, user.bookPurchased[index], user, index)
+              ? _booksPurchasedItems(context, user.bookPurchased[index])
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,41 +64,52 @@ class BookPurchased extends StatelessWidget {
 }
 
 Container _booksPurchasedItems(
-    BuildContext context, PurchasedBooksItems bookPurchased, Users user, int index) {
+    BuildContext context, PurchasedBooksItems bookPurchased) {
   return Container(
     padding: const EdgeInsets.all(8),
     width: MediaQuery.of(context).size.width,
     child: Card(
       elevation: 0,
       child: InkWell(
-        /* onTap: () => GoRouter.of(context).go(
-            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}/${LivingSeedMediaRouter.transactionDescriptionPath}',
-            extra: {
-              'user': user,
-              'transactionHistory': user.transactionHistory[index]
-            }), */
+        onTap: () => ReadBook(bookUrl: bookPurchased.readBookPath),
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Text(
-                bookPurchased.bookTitle,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 15,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(7.0),
+                child: Image.asset(
+                  bookPurchased.coverImage,
+                  height: 70,
+                  width: 50,
+                  fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
-                height: 10,
+              const SizedBox(
+                width: 10,
               ),
-              Text(
-                bookPurchased.bookAuthor,
-                style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    bookPurchased.bookTitle,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 15,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    bookPurchased.bookAuthor,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -106,4 +117,16 @@ Container _booksPurchasedItems(
       ),
     ),
   );
+}
+
+class ReadBook extends StatelessWidget {
+  final String bookUrl;
+  const ReadBook({super.key, required this.bookUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SfPdfViewer.asset(bookUrl),
+    );
+  }
 }

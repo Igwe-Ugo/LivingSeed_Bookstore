@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/common/widget.dart';
 import '../models/widget.dart';
 
 class AudioMessages extends StatefulWidget {
@@ -28,9 +30,9 @@ class _AudioMessagesState extends State<AudioMessages> {
     List<AudioMessage> audio = AudioMessage.audioMessage;
 
     void navigateToAudioScreen(AudioMessage audio) {
-      // GoRouter.of(context).go(
-      //     '${LivingSeedMediaRouter.mediaPath}/${LivingSeedMediaRouter.audioScreenPath}',
-      //     extra: audio);
+      GoRouter.of(context).go(
+          '${LivingSeedMediaRouter.mediaPath}/${LivingSeedMediaRouter.audioScreenPath}',
+          extra: audio);
     }
 
     return SingleChildScrollView(

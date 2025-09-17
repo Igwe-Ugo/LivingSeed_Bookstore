@@ -18,18 +18,18 @@ dependencies:
   flutter_svg: ^2.0.17
   percent_indicator: ^4.2.4
   dio: ^5.8.0+1
-  flutter_pdfview: ^1.4.0
   iconsax: ^0.0.8
   file_picker: ^9.2.3
   pdf: ^3.11.3
   path_provider: ^2.1.5
   syncfusion_flutter_calendar: ^29.1.33
-  carousel_slider: ^5.0.0
+  carousel_slider: ^5.1.1
   image_picker: ^1.1.2
   choice: ^2.3.2
   collection: ^1.19.0
   just_audio: ^0.10.5
   connectivity_plus: ^7.0.0
+  syncfusion_flutter_pdfviewer: ^29.1.38
 
 dev_dependencies:
   flutter_test:

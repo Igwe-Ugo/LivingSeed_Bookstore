@@ -55,7 +55,7 @@ class DecibelNoiseMeterState extends State<DecibelNoiseMeter>
                   return Container(
                     height: 50 * level,
                     width: 10,
-                    color: Colors.green,
+                    color: Colors.blueAccent,
                   );
                 },
               ),

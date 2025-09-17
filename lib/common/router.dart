@@ -7,6 +7,7 @@ import 'package:livingseed_media/auth/widget.dart';
 import 'package:livingseed_media/home/home.dart';
 import 'package:livingseed_media/library/widget.dart';
 import 'package:livingseed_media/media/media.dart';
+import 'package:livingseed_media/media/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/notification/widget.dart';
 import 'widget.dart';
@@ -61,7 +62,7 @@ class LivingSeedMediaRouter {
 
   // media pages
   static const String mediaPath = '/media';
-  static const String audioPath = 'audio';
+  static const String audioScreenPath = 'audio';
 
   // account pages
   static const String accountPath = '/account';
@@ -224,18 +225,14 @@ class LivingSeedMediaRouter {
                       builder: (context, state) => MediaPage(),
                       routes: [
                         GoRoute(
-                          path: audioPath,
+                          path: audioScreenPath,
                           builder: (context, state) {
-                            final anouncement = state.extra;
-                            if (anouncement is NotificationItems) {
-                              return Announcements(
-                                announcement: anouncement,
-                              );
+                            final audio = state.extra as AudioMessage?;
+                            if (audio != null) {
+                              return AudioScreen(audioSongs: audio);
                             } else {
-                              return Center(
-                                child: Text(
-                                    'No Recent Announcements to be reviewed'),
-                              );
+                              return const Center(
+                                  child: Text("No audio data available"));
                             }
                           },
                         ),
