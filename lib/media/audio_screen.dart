@@ -50,10 +50,9 @@ class _AudioScreenState extends State<AudioScreen>
   }
 
   void setupPlaylist() {
-    // Assuming audioSongs is a list of AudioMessage objects
     playlist = ConcatenatingAudioSource(children: [
-      AudioSource.uri(Uri.parse(widget.audioSongs.audioUrl)),
-      // Add more AudioSource items if there are multiple songs
+      AudioSource.asset(widget.audioSongs.audioUrl),
+      // Add more assets if needed
     ]);
     loadMusic();
   }
