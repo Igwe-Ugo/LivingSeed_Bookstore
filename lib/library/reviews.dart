@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -78,18 +77,6 @@ class _ReviewsState extends State<Reviews> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                if (widget.aboutBooks != null) {
-                  GoRouter.of(context).go(
-                      '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}/${LivingSeedMediaRouter.reviewsPath}/${LivingSeedMediaRouter.writeReviewPath}',
-                      extra: widget.aboutBooks);
-                }
-              },
-              icon: const Icon(Iconsax.edit_2),
-            ),
-          ],
         ),
         body: SingleChildScrollView(
           child: Column(

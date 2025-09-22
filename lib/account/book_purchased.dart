@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
+import '../common/widget.dart';
 import '../models/widget.dart';
 
 class BookPurchased extends StatelessWidget {
@@ -191,6 +192,16 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
             IconButton(
                 icon: const Icon(Icons.view_sidebar_outlined),
                 onPressed: () => _toggleThumbnails(),),
+                IconButton(
+              onPressed: () {
+                if (widget.bookPurchased != null) {
+                  GoRouter.of(context).go(
+                      '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.booksPurchasedPath}/${LivingSeedMediaRouter.writeReviewPath}',
+                      extra: widget.bookPurchased);
+                }
+              },
+              icon: const Icon(Iconsax.edit_2),
+            ),
           ],
         ),
         floatingActionButton: AnimatedOpacity(

@@ -13,4 +13,3 @@ export 'about_biblestudy.dart';
 export 'about_book.dart';
 export 'about_magazine.dart';
 export 'reviews.dart';
-export 'write_review.dart';

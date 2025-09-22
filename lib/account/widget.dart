@@ -7,3 +7,4 @@ export 'view_upcoming_event.dart';
 export 'transaction_history.dart';
 export 'receipt.dart';
 export 'book_purchased.dart';
+export 'write_review.dart';

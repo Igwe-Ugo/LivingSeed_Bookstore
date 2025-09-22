@@ -2,9 +2,11 @@ import 'package:choice/choice.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/models/widget.dart';
 
 class WriteReview extends StatefulWidget {
-  const WriteReview({super.key});
+  final PurchasedBooksItems bookPurchased;
+  const WriteReview({super.key, required this.bookPurchased});
 
   @override
   State<WriteReview> createState() => _WriteReviewState();
@@ -47,56 +49,49 @@ class _WriteReviewState extends State<WriteReview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => GoRouter.of(context).pop(),
+          icon: const Icon(
+            Iconsax.arrow_left_2,
+            size: 17,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {},
+            child: Text(
+              'Submit Review',
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 15,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : Colors.black),
+            ),
+          ),
+        ],
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 20, 10, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        GoRouter.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Iconsax.arrow_left_2,
-                        size: 17,
-                      )),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Submit Review',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15,
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black),
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: Column(
                 children: [
                   Container(
-                    height: 180,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 120,
-                    ),
-                    child: Container(
-                      width: 130,
-                      height: 200,
-                      decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
-                          image: DecorationImage(
-                              image: AssetImage(
-                                  'assets/images/becoming_like_jesus.png'),
-                              fit: BoxFit.fill)),
-                    ),
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: 250,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(7)),
+                        image: DecorationImage(
+                            image: AssetImage(widget.bookPurchased.coverImage),
+                            fit: BoxFit.fill)),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   const Text('Writing a review...',
                       style: TextStyle(

@@ -53,7 +53,6 @@ class LivingSeedMediaRouter {
   static const String libraryPath = '/library';
   static const String aboutBookPath = 'about_book';
   static const String reviewsPath = 'reviews';
-  static const String writeReviewPath = 'write_review';
   static const String moreBooksPath = 'more_books';
   static const String moreBibleStudyPath = 'more_bible_study';
   static const String aboutBibleStudyPath = 'about_bible_study';
@@ -69,6 +68,7 @@ class LivingSeedMediaRouter {
   static const String editAccountPath = 'editAccount';
   static const String cartPath = 'cart';
   static const String changePasswordPath = 'change_password';
+  static const String writeReviewPath = 'write_review';
 
   // transaction histories
   static const String transactionHistoryPath = 'transaction_history';
@@ -178,27 +178,19 @@ class LivingSeedMediaRouter {
                             },
                             routes: [
                               GoRoute(
-                                  path: reviewsPath,
-                                  builder: (context, state) {
-                                    final aboutBooks =
-                                        state.extra as AboutBooks?;
-                                    if (aboutBooks != null) {
-                                      return Reviews(
-                                        aboutBooks: aboutBooks,
-                                      );
-                                    } else {
-                                      return const Center(
-                                          child:
-                                              Text("No book data available"));
-                                    }
-                                  },
-                                  routes: [
-                                    GoRoute(
-                                      path: writeReviewPath,
-                                      builder: (context, state) =>
-                                          const WriteReview(),
-                                    ),
-                                  ]),
+                                path: reviewsPath,
+                                builder: (context, state) {
+                                  final aboutBooks = state.extra as AboutBooks?;
+                                  if (aboutBooks != null) {
+                                    return Reviews(
+                                      aboutBooks: aboutBooks,
+                                    );
+                                  } else {
+                                    return const Center(
+                                        child: Text("No book data available"));
+                                  }
+                                },
+                              ),
                             ]),
                         GoRoute(
                           path: aboutMagazinePath,
@@ -272,21 +264,36 @@ class LivingSeedMediaRouter {
                       routes: [
                         // books purchased
                         GoRoute(
-                          path: booksPurchasedPath,
-                          builder: (context, state) {
-                            final user = state.extra;
-                            if (user is Users) {
-                              return BookPurchased(
-                                user: user,
-                              );
-                            } else {
-                              return Center(
-                                child: Text(
-                                    'No Recent Announcements to be reviewed'),
-                              );
-                            }
-                          },
-                        ),
+                            path: booksPurchasedPath,
+                            builder: (context, state) {
+                              final user = state.extra;
+                              if (user is Users) {
+                                return BookPurchased(
+                                  user: user,
+                                );
+                              } else {
+                                return Center(
+                                  child: Text(
+                                      'No Recent Announcements to be reviewed'),
+                                );
+                              }
+                            },
+                            routes: [
+                              GoRoute(
+                                path: writeReviewPath,
+                                builder: (context, state) {
+                                  final bookPurchased = state.extra;
+                                  if (bookPurchased is PurchasedBooksItems){
+                                    return  WriteReview(bookPurchased: bookPurchased,);
+                                  } else {
+                                    return Center(
+                                  child: Text(
+                                      'Books cannot be reviewed'),
+                                );
+                                  }
+                                }
+                              ),
+                            ]),
 
                         // transaction history
                         GoRoute(
