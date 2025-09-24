@@ -22,6 +22,12 @@
                 "coverImage":"assets/images/agents_of_transformation.png",
                 "bookAuthor":"Gbile Akanni",
                 "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf"
+            },
+            {
+                "bookTitle":"No More Two",
+                "coverImage":"assets/images/no_more_two.jpeg",
+                "bookAuthor":"Gbile Akanni",
+                "readBookPath": "assets/pdfs/Tempered Steel_ How God_Shapes_A_Man's_Heart_through_Adversity_Steve_Farrar.pdf"
             }
         ],
         "transactionHistory":[
@@ -101,7 +107,7 @@
                 "bookTitle":"The Dignity of Manhood",
                 "coverImage":"assets/images/dignity_of_manhood.png",
                 "bookAuthor":"Gbile Akanni",
-                "readBookPath": "assets/pdfs/Bunyan_Grace_Abounding.pdf"
+                "readBookPath": "assets/pdfs/Tempered Steel_ How God_Shapes_A_Man's_Heart_through_Adversity_Steve_Farrar.pdf"
             }
         ],
         "transactionHistory":[

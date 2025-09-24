@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
@@ -11,9 +12,42 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final CarouselSliderController _carouselController =
+      CarouselSliderController();
+  bool _isPlaying = true;
+
+  void _showInfoDialog(AboutBooks book) {
+    // pause slider when tapped
+    setState(() {
+      _isPlaying = false;
+    });
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: Text(book.bookTitle),
+            content: Text(book.author),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    setState(() {
+                      _isPlaying = true;
+                    });
+                  },
+                  child: const Text('close'))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<UsersAuthProvider>(builder: (context, userProvider, child) {
+    return Consumer2<UsersAuthProvider, BookProvider>(
+        builder: (context, userProvider, bookProvider, child) {
       // Ensure userData is not null before accessing it
       if (userProvider.userData == null) {
         // Return a login screen or another appropriate widget
@@ -30,6 +64,8 @@ class _HomeState extends State<Home> {
         );
       }
       Users user = userProvider.userData!;
+      List<AboutBooks> books = bookProvider.allBooks;
+
       return Scaffold(
         body: SingleChildScrollView(
           child: Padding(
@@ -49,7 +85,7 @@ class _HomeState extends State<Home> {
                           width: 5,
                         ),
                         const Text(
-                          'Livingseed Media',
+                          'Livingseed',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontFamily: 'Playfair',
@@ -83,6 +119,123 @@ class _HomeState extends State<Home> {
                       backgroundImage: AssetImage(user.userImage),
                     ),
                   ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Livingseed Publications',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                    child: CarouselSlider.builder(
+                  carouselController: _carouselController,
+                  itemCount: books.length,
+                  options: CarouselOptions(
+                    height: 250,
+                    autoPlay: _isPlaying,
+                    autoPlayInterval: const Duration(
+                        seconds:
+                            15), // rotates every 15 seconds enlargeCenterPage: true,
+                    viewportFraction: 0.8,
+                  ),
+                  itemBuilder: (context, index, realIndex) {
+                    final bookItems = books[index];
+                    return GestureDetector(
+                      onTap: () => _showInfoDialog(bookItems),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black45,
+                              blurRadius: 6,
+                              offset: Offset(0, 4),
+                            )
+                          ],
+                          image: DecorationImage(
+                            image: AssetImage(bookItems.coverImage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            gradient: LinearGradient(
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.84),
+                                  Colors.transparent,
+                                ]),
+                          ),
+                          alignment: Alignment.bottomLeft,
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Text(
+                                bookItems.bookTitle,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontFamily: 'Playfair',
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                bookItems.author,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )),
+                SizedBox(
+                  height: 10,
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'View more in the Library section',
+                    style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Livingseed Videos',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             ),

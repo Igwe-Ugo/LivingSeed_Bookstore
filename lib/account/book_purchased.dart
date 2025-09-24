@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:pdfx/pdfx.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../common/widget.dart';
 import '../models/widget.dart';
@@ -267,7 +265,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                       ),
 
                       // thumbsnails list
-                      Expanded(
+                      /* Expanded(
                         child: Builder(
                           builder: (context) {
                             final totalPages = _pdfViewerController.pageCount;
@@ -279,7 +277,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                             return PdfThumbnailGrid(pdfPath: widget.bookPurchased.readBookPath);
                           },
                         ),
-                      ),
+                      ), */
                     ],
                   ),
                 ),
@@ -288,93 +286,5 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
           ),
         )
       );
-  }
-}
-
-class PdfThumbnailGrid extends StatefulWidget {
-  final String pdfPath;
-  const PdfThumbnailGrid({super.key, required this.pdfPath});
-
-  @override
-  State<PdfThumbnailGrid> createState() => _PdfThumbnailGridState();
-}
-
-class _PdfThumbnailGridState extends State<PdfThumbnailGrid> {
-  PdfDocument? _pdfDocument; // make it nullable
-  bool _isLoading = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadPdf();
-  }
-
-  Future<void> _loadPdf() async {
-  try {
-    final document = await loadDocument(widget.pdfPath);
-    setState(() {
-      _pdfDocument = document;
-      _isLoading = false;
-    });
-  } catch (e) {
-    print("Error loading PDF: $e");
-  }
-}
-
-
-  Future<PdfDocument> loadDocument(String path) async {
-  try {
-    if (path.startsWith('http')) {
-      // Load from URL
-      return await PdfDocument.openData(
-        (await NetworkAssetBundle(Uri.parse(path)).load(path)).buffer.asUint8List(),
-      );
-    } else if (path.startsWith('/') || path.contains('/storage/')) {
-      // Load from local file system
-      return await PdfDocument.openFile(path);
-    } else {
-      // Load from bundled assets
-      return await PdfDocument.openAsset(path);
-    }
-  } catch (e) {
-    throw Exception("Failed to load PDF: $e");
-  }
-}
-
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isLoading || _pdfDocument == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return GridView.builder(
-      padding: const EdgeInsets.all(8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // two columns
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-      ),
-      itemCount: _pdfDocument!.pagesCount,
-      itemBuilder: (context, index) {
-        return FutureBuilder<PdfPageImage?>(
-          future: _pdfDocument!
-              .getPage(index + 1)
-              .then((page) => page.render(
-                    width: 100,
-                    height: 140,
-                    format: PdfPageImageFormat.png,
-                  )),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError || snapshot.data == null) {
-              return const Icon(Icons.error, color: Colors.red);
-            }
-            return Image.memory(snapshot.data!.bytes, fit: BoxFit.cover);
-          },
-        );
-      },
-    );
   }
 }
