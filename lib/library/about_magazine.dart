@@ -66,9 +66,9 @@ class AboutMagazine extends StatelessWidget {
                     const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: () {
-                        NotificationProvider notificationId = NotificationProvider();
+                        NotificationDropDownServices notificationId = NotificationDropDownServices();
 
-                  NotificationProvider.showNotification(
+                  NotificationDropDownServices.showNotification(
                       id: notificationId.getNextId(),
                       title: 'Magazine Added to cart',
                       body:

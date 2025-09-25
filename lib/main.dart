@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   LivingSeedMediaRouter.instance;
+  NotificationDropDownServices.initNotificationsDropDown();
   runApp(const LivingSeedMedia());
 }
 

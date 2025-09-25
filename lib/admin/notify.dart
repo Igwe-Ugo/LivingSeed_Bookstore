@@ -244,13 +244,13 @@ class _AdminNotificationsState extends State<AdminNotifications> {
           "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
     );
 
-    NotificationProvider notificationId = NotificationProvider();
+    NotificationDropDownServices notificationId = NotificationDropDownServices();
 
     bool success =
         await Provider.of<NotificationProvider>(context, listen: false)
             .sendGeneralNotification(newNotification);
     if (success) {
-      NotificationProvider.showNotification(
+      NotificationDropDownServices.showNotification(
           id: notificationId.getNextId(),
           title: "Notification sent!",
           body: _notificationMessageController.text.substring(0, 5));

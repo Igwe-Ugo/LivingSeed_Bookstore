@@ -8,62 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationProvider extends ChangeNotifier {
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  static int _counter = 0;
-  List<NotificationItems> _generalNotifications = [];
+    List<NotificationItems> _generalNotifications = [];
   Map<String, List<NotificationItems>> _personalNotifications = {};
-
-  // initialize the notification plugin
-  static Future<void> init() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings(
-            '@mipmap/ic_launcher'); // replace with app icon
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings();
-
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
-
-    await _notificationsPlugin.initialize(initializationSettings);
-  }
-
-  // notifications ids generated
-  int getNextId() {
-    _counter++;
-    return _counter;
-  }
-
-  // show notification
-  static Future<void> showNotification({
-    required int id,
-    required String title,
-    required String body,
-  }) async {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'main_channel',
-      'Main Channel',
-      channelDescription: 'Main notification channel',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(),
-    );
-
-    await _notificationsPlugin.show(id, title, body, details);
-  }
-
-  // cancel notification
-  static Future<void> cancelNotification(int id) async {
-    await _notificationsPlugin.cancel(id);
-  }
 
   List<NotificationItems> get generalNotifications => _generalNotifications;
   Map<String, List<NotificationItems>> get personalNotifications =>
@@ -384,5 +330,61 @@ class NotificationProvider extends ChangeNotifier {
       }
     }
     return false;
+  }
+}
+
+class NotificationDropDownServices {
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  static int _counter = 0;
+  
+  // initialize the notification plugin
+  static Future<void> initNotificationsDropDown() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings(
+            '@mipmap/ic_launcher'); // replace with app icon
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings();
+
+    final InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+
+    await _notificationsPlugin.initialize(initializationSettings);
+  }
+
+  // notifications ids generated
+  int getNextId() {
+    _counter++;
+    return _counter;
+  }
+
+  // show notification
+  static Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      'main_channel',
+      'Main Channel',
+      channelDescription: 'Main notification channel',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails details = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+    );
+
+    await _notificationsPlugin.show(id, title, body, details);
+  }
+
+  // cancel notification
+  static Future<void> cancelNotification(int id) async {
+    await _notificationsPlugin.cancel(id);
   }
 }

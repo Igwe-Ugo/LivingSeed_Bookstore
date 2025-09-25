@@ -123,10 +123,10 @@ class _AboutBookState extends State<AboutBook> {
                           .sendPersonalNotification(
                               user.emailAddress, newNotification);
 
-                      NotificationProvider notificationId =
-                          NotificationProvider();
+                      NotificationDropDownServices notificationId =
+                          NotificationDropDownServices();
 
-                      NotificationProvider.showNotification(
+                      NotificationDropDownServices.showNotification(
                           id: notificationId.getNextId(),
                           title: 'Book Added to cart',
                           body:

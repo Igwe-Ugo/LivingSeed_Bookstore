@@ -88,9 +88,9 @@ class AboutBibleStudy extends StatelessWidget {
                       .sendPersonalNotification(
                           user.emailAddress, newNotification);
 
-                  NotificationProvider notificationId = NotificationProvider();
+                  NotificationDropDownServices notificationId = NotificationDropDownServices();
 
-                  NotificationProvider.showNotification(
+                  NotificationDropDownServices.showNotification(
                       id: notificationId.getNextId(),
                       title: 'Bible Study added to cart',
                       body:

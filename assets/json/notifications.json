@@ -40,7 +40,7 @@
                 "notificationMessage": "You successfully purchased 'Becoming Like Jesus'.",
                 "notificationDate": "26-Nov-2023",
                 "notificationTime": "1:00 PM",
-                "notificationImage": "assets/images/book_frame.png",
+                "notificationImage": "assets/images/becoming_like_jesus.png",
                 "isRead": false
             },
             {
@@ -48,7 +48,7 @@
                 "notificationMessage": "You downloaded 'Tapping God's Resources'.",
                 "notificationDate": "26-Nov-2023",
                 "notificationTime": "3:00 PM",
-                "notificationImage": "assets/images/sigin.png",
+                "notificationImage": "assets/images/tapping_god's_resources.jpeg",
                 "isRead": false
             }
         ]
