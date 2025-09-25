@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/models/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
 
 class AboutMagazine extends StatelessWidget {
   final MagazineModel magazine;
@@ -64,7 +65,16 @@ class AboutMagazine extends StatelessWidget {
                     ),
                     const SizedBox(height: 15),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        NotificationProvider notificationId = NotificationProvider();
+
+                  NotificationProvider.showNotification(
+                      id: notificationId.getNextId(),
+                      title: 'Magazine Added to cart',
+                      body:
+                          "The Magazine with the name ${magazine.magazineTitle} has been added to your cart"
+                              .substring(0, 5));
+                      },
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                         backgroundColor: Theme.of(context).primaryColor,
