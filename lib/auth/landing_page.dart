@@ -8,104 +8,121 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(25.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Center(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Backmost book (most rotated)
-                          Positioned(
-                            left: 80,
-                            child: Transform.rotate(
-                              angle: 0.6,
-                              child: bookImage(
-                                  'assets/images/no_more_two.jpeg', 170),
-                            ),
-                          ),
-
-                          // Middle book
-                          Positioned(
-                            right: 80,
-                            child: Transform.rotate(
-                              angle: -0.6,
-                              child: bookImage(
-                                  'assets/images/exploring_god.jpeg', 170),
-                            ),
-                          ),
-
-                          // Front book (upright)
-                          bookImage(
-                              "assets/images/tapping_god's_resources.jpeg",
-                              170),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/images/crop_germinating.jpeg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.6),
+              BlendMode.darken,
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Living Seed Media',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Playfair',
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Let's explore God's resources with Living Seed Media",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 70),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 60,
-                    child: ElevatedButton(
-                      onPressed: () => GoRouter.of(context)
-                          .go(LivingSeedMediaRouter.signinPath),
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        minimumSize: const Size(10, 50),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          'Get Started',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 20.0,
-                              color: Colors.white),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(25.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            bookImage(
+                                "assets/images/tapping_god's_resources.jpeg",
+                                170),
+                            // Backmost book (most rotated)
+                            Positioned(
+                              left: 15,
+                              bottom: 3,
+                              child: Transform.rotate(
+                                angle: 0,
+                                child: CircleAvatar(
+                                  radius: 65,
+                                  backgroundImage: const AssetImage(
+                                      'assets/images/audioImage.png'),
+                                ),
+                              ),
+                            ),
+
+                            // Middle book
+                            Positioned(
+                                right: 15,
+                                bottom: 3,
+                                child: Transform.rotate(
+                                  angle: 0,
+                                  child: CircleAvatar(
+                                    radius: 65,
+                                    backgroundImage: const AssetImage(
+                                        'assets/images/video_image.jpeg'),
+                                  ),
+                                )),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Living Seed Media',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Playfair',
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "Let's explore God's resources with Living Seed Media",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 70),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 60,
+                      child: ElevatedButton(
+                        onPressed: () => GoRouter.of(context)
+                            .go(LivingSeedMediaRouter.signinPath),
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: const Size(10, 50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            'Get Started',
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 20.0,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

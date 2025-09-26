@@ -28,253 +28,269 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Form(
-              key: loginFormField,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                              shape: WidgetStatePropertyAll(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                              minimumSize: WidgetStatePropertyAll(Size(7, 50)),
-                              elevation: WidgetStatePropertyAll(0.0),
-                              iconColor: WidgetStatePropertyAll(
-                                  Theme.of(context).brightness ==
-                                          Brightness.dark
-                                      ? Colors.white
-                                      : Colors.black),
-                              backgroundColor: WidgetStatePropertyAll(
-                                  Theme.of(context)
-                                      .dividerColor
-                                      .withOpacity(0.45))),
-                          onPressed: () => GoRouter.of(context)
-                              .go(LivingSeedMediaRouter.landingPagePath),
-                          label: Icon(
-                            Icons.arrow_back_ios_outlined,
-                            size: 18,
-                          )),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                            fontFamily: 'Playfair',
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Please fill up your email address and password to log in to your account',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).disabledColor,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).dividerColor.withOpacity(0.45),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(15))),
-                      child: Column(
-                        children: [
-                          CustomTextInput(
-                              label: 'Email Address',
-                              controller: emailController,
-                              icon: Icons.email_outlined,
-                              validator: () {},
-                              isEmail: true),
-                          CustomTextInput(
-                              label: 'Password',
-                              controller: passwordController,
-                              icon: Iconsax.password_check,
-                              validator: () {},
-                              obscureText: _obscureText,
-                              maxLine: 1,
-                              isPassword: true),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 70,
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () => GoRouter.of(context)
-                            .go(LivingSeedMediaRouter.forgotPasswordPath),
-                        child: Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColorDark,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        RegExp regExp = RegExp(
-                            "^[a-zA-Z0-9.a-zA-Z0-9.!#%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                        if (!regExp.hasMatch(emailController.text)) {
-                          showMessage(
-                              'Please put in a correct email Address', context);
-                          setState(() {
-                            isLoading = false;
-                          });
-                          return;
-                        }
-                        Users? authenticatedUser = await Provider.of<
-                                UsersAuthProvider>(context, listen: false)
-                            .signIn(
-                                emailController.text, passwordController.text);
-                        if (authenticatedUser != null) {
-                          GoRouter.of(context)
-                              .go(LivingSeedMediaRouter.homePath);
-                        } else {
-                          setState(() {
-                            errorMessage = 'Invalid EmailAddress or password';
-                            showMessage(errorMessage, context);
-                          });
-                        }
-                        setState(() {
-                          isLoading = false;
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: Theme.of(context).primaryColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        minimumSize: const Size(10, 50),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10.0),
-                        child: Center(
-                          child: isLoading == false
-                              ? Text(
-                                  'Sign In',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 20.0,
-                                    color: Colors.white,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: const AssetImage('assets/images/crop_germinating.jpeg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.6),
+              BlendMode.darken,
+            ),
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Form(
+                key: loginFormField,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                shape: WidgetStatePropertyAll(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                )
-                              : LoadingAnimationWidget.halfTriangleDot(
-                                  color: Colors.white, size: 20),
+                                ),
+                                minimumSize:
+                                    WidgetStatePropertyAll(Size(7, 50)),
+                                elevation: WidgetStatePropertyAll(0.0),
+                                iconColor: WidgetStatePropertyAll(
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black),
+                                backgroundColor: WidgetStatePropertyAll(
+                                    Theme.of(context)
+                                        .dividerColor
+                                        .withOpacity(0.45))),
+                            onPressed: () => GoRouter.of(context)
+                                .go(LivingSeedMediaRouter.landingPagePath),
+                            label: Icon(
+                              Icons.arrow_back_ios_outlined,
+                              size: 18,
+                            )),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                              fontFamily: 'Playfair',
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                      child: Text(
-                        'OR CONTINUE WITH',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Theme.of(context).disabledColor,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        elevation: 0,
-                        backgroundColor: Theme.of(context).dividerColor,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        minimumSize: const Size(10, 50),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset('assets/icons/devicon_google.svg'),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Google',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 20.0,
-                                  color: Theme.of(context).primaryColorDark),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Don\'t have an account?',
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Please fill up your email address and password to log in to your account',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             color: Theme.of(context).disabledColor,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () => GoRouter.of(context)
-                              .go(LivingSeedMediaRouter.signupPath),
-                          child: Text('Sign up',
-                              style: TextStyle(
-                                color: Theme.of(context).primaryColorDark,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                              )),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .dividerColor
+                                .withOpacity(0.45),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15))),
+                        child: Column(
+                          children: [
+                            CustomTextInput(
+                                label: 'Email Address',
+                                controller: emailController,
+                                icon: Icons.email_outlined,
+                                validator: () {},
+                                isEmail: true),
+                            CustomTextInput(
+                                label: 'Password',
+                                controller: passwordController,
+                                icon: Iconsax.password_check,
+                                validator: () {},
+                                obscureText: _obscureText,
+                                maxLine: 1,
+                                isPassword: true),
+                          ],
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  ],
+                      ),
+                      const SizedBox(
+                        height: 70,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () => GoRouter.of(context)
+                              .go(LivingSeedMediaRouter.forgotPasswordPath),
+                          child: Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorDark,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          RegExp regExp = RegExp(
+                              "^[a-zA-Z0-9.a-zA-Z0-9.!#%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          if (!regExp.hasMatch(emailController.text)) {
+                            showMessage('Please put in a correct email Address',
+                                context);
+                            setState(() {
+                              isLoading = false;
+                            });
+                            return;
+                          }
+                          Users? authenticatedUser =
+                              await Provider.of<UsersAuthProvider>(context,
+                                      listen: false)
+                                  .signIn(emailController.text,
+                                      passwordController.text);
+                          if (authenticatedUser != null) {
+                            GoRouter.of(context)
+                                .go(LivingSeedMediaRouter.homePath);
+                          } else {
+                            setState(() {
+                              errorMessage = 'Invalid EmailAddress or password';
+                              showMessage(errorMessage, context);
+                            });
+                          }
+                          setState(() {
+                            isLoading = false;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: const Size(10, 50),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Center(
+                            child: isLoading == false
+                                ? Text(
+                                    'Sign In',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 20.0,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : LoadingAnimationWidget.halfTriangleDot(
+                                    color: Colors.white, size: 20),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                        child: Text(
+                          'OR CONTINUE WITH',
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).disabledColor,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: Theme.of(context).dividerColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          minimumSize: const Size(10, 50),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                  'assets/icons/devicon_google.svg'),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                'Google',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 20.0,
+                                    color: Theme.of(context).primaryColorDark),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 60,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Don\'t have an account?',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).disabledColor,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () => GoRouter.of(context)
+                                .go(LivingSeedMediaRouter.signupPath),
+                            child: Text('Sign up',
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColorDark,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                )),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
