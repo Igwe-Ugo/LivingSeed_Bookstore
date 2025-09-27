@@ -136,7 +136,7 @@ class LandingPage extends StatelessWidget {
             onPressed: () => GoRouter.of(context).go(LivingSeedMediaRouter.signinPath),
             style: ElevatedButton.styleFrom(
               elevation: 8,
-              backgroundColor: Theme.of(context).colorScheme.primary, // Use theme primary color
+              backgroundColor: Theme.of(context).primaryColor, // Use theme primary color
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -146,6 +146,7 @@ class LandingPage extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    fontFamily: 'Playfair'
                   ),
             ),
           ),

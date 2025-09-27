@@ -127,29 +127,27 @@ class LivingSeedMediaRouter {
                 navigatorKey: homeTabNavigationKey,
                 routes: <RouteBase>[
                   GoRoute(
-                    path: homePath,
-                    builder: (context, state) => Home(),
-                    routes: [
-                      GoRoute(
-                        path: journalPath,
-                        builder: (context, state) => const JournalListScreen(),
-                        routes: [
-                          GoRoute(
-                            path: journalDetailsPath,
-                            builder: (context, state) {
-                              final journalPost = state.extra as JournalPost?;
-                              if (journalPost != null) {
-                                return JournalDetailScreen(post: journalPost);
-                              } else {
-                                return const Center(
-                                    child: Text("No journal data available"));
-                              }
-                            },
-                          ),
-                        ],
-                      )
-                    ]
-                  ),
+                      path: homePath,
+                      builder: (context, state) => Home(),
+                      routes: [
+                        GoRoute(
+                          path: journalPath,
+                          builder: (context, state) =>
+                              const JournalListScreen(),
+                        ),
+                        GoRoute(
+                          path: journalDetailsPath,
+                          builder: (context, state) {
+                            final journalPost = state.extra as JournalPost?;
+                            if (journalPost != null) {
+                              return JournalDetailScreen(post: journalPost);
+                            } else {
+                              return const Center(
+                                  child: Text("No journal data available"));
+                            }
+                          },
+                        ),
+                      ]),
                 ]),
             StatefulShellBranch(
                 navigatorKey: libraryTabNavigationKey,
@@ -302,19 +300,19 @@ class LivingSeedMediaRouter {
                             },
                             routes: [
                               GoRoute(
-                                path: writeReviewPath,
-                                builder: (context, state) {
-                                  final bookPurchased = state.extra;
-                                  if (bookPurchased is PurchasedBooksItems){
-                                    return  WriteReview(bookPurchased: bookPurchased,);
-                                  } else {
-                                    return Center(
-                                  child: Text(
-                                      'Books cannot be reviewed'),
-                                );
-                                  }
-                                }
-                              ),
+                                  path: writeReviewPath,
+                                  builder: (context, state) {
+                                    final bookPurchased = state.extra;
+                                    if (bookPurchased is PurchasedBooksItems) {
+                                      return WriteReview(
+                                        bookPurchased: bookPurchased,
+                                      );
+                                    } else {
+                                      return Center(
+                                        child: Text('Books cannot be reviewed'),
+                                      );
+                                    }
+                                  }),
                             ]),
 
                         // transaction history
