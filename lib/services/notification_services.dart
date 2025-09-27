@@ -339,18 +339,33 @@ class NotificationDropDownServices {
   
   // initialize the notification plugin
   static Future<void> initNotificationsDropDown() async {
+    
+    // 1. MOBILE SETTINGS
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings(
             '@mipmap/ic_launcher'); // replace with app icon
     const DarwinInitializationSettings initializationSettingsIOS =
         DarwinInitializationSettings();
 
+    // 2. DESKTOP SETTINGS (Crucial for fixing the Linux error)
+    // You must provide an app name for desktop initializations.
+    // The details required here are minimal, but the object must exist.
+    
     final InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
+      // Add placeholders for desktop environments to satisfy the Linux plugin
+      linux: const LinuxInitializationSettings(
+        defaultActionName: 'Open notification',
+      ),
+      // Adding macOS and Windows for robustness if you target those later
+      macOS: initializationSettingsIOS, 
+      windows: null, // Windows initialization is often configured lazily or not needed for simple dropdowns
     );
 
+    // Note: We don't need to check the platform here; the plugin handles
+    // initializing only the relevant platform.
     await _notificationsPlugin.initialize(initializationSettings);
   }
 
@@ -373,11 +388,15 @@ class NotificationDropDownServices {
       channelDescription: 'Main notification channel',
       importance: Importance.max,
       priority: Priority.high,
+      // For persistent notifications that appear in the system tray on desktop/web:
+      // You may need to specify platform-specific options for desktop platforms in the NotificationDetails object.
     );
 
     const NotificationDetails details = NotificationDetails(
       android: androidDetails,
       iOS: DarwinNotificationDetails(),
+      macOS: DarwinNotificationDetails(),
+      linux: LinuxNotificationDetails(), // Add Linux details
     );
 
     await _notificationsPlugin.show(id, title, body, details);

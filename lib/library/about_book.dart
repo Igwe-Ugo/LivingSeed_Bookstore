@@ -131,7 +131,7 @@ class _AboutBookState extends State<AboutBook> {
                           title: 'Book Added to cart',
                           body:
                               "The book with the name ${widget.aboutBooks.bookTitle} has been added to your cart"
-                                  .substring(0, 5));
+                                  .substring(0, 150));
                       showMessage('Book has been added to Cart', context);
                     },
                     style: ElevatedButton.styleFrom(

@@ -2,6 +2,7 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+// Note: Assuming these imports exist in your project structure
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final CarouselSliderController _carouselController =
-      CarouselSliderController();
+  // Use 'late' keyword if these are expected to be initialized elsewhere
+  // final CarouselSliderController _carouselController = CarouselSliderController();
   final PageController _pageController = PageController();
   int _currentPage = 0;
   bool _isPlaying = true;
@@ -62,16 +63,20 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // NOTE: Removed the PageView's onPageChanged and replaced it with local state management.
     return Consumer2<UsersAuthProvider, BookProvider>(
       builder: (context, userProvider, bookProvider, child) {
         if (userProvider.userData == null) {
           return const Scaffold(
-            body: Column(
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 10),
-                Text('Please log in to continue'),
-              ],
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text('Please log in to continue'),
+                ],
+              ),
             ),
           );
         }
@@ -80,105 +85,343 @@ class _HomeState extends State<Home> {
         List<AboutBooks> books = bookProvider.allBooks;
 
         return Scaffold(
-          body: Column(
-            children: [
-              // header
-              Padding(
-                padding: const EdgeInsets.all(25.0),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Image.asset('assets/icons/LSeed-Logo-1.png', scale: 5),
-                        const SizedBox(width: 5),
-                        const Text(
-                          'Livingseed',
-                          style: TextStyle(
-                            fontFamily: 'Playfair',
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+          // WRAP THE BODY IN A SINGLECHILDSCROLLVIEW
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // Align to start for better look
+              children: [
+                // header
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          // Using a placeholder for the asset image path
+                          Image.asset('assets/icons/LSeed-Logo-1.png',
+                              scale: 5),
+                          const SizedBox(width: 5),
+                          const Text(
+                            'Livingseed',
+                            style: TextStyle(
+                              fontFamily: 'Playfair',
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Welcome\n${user.fullname}',
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Playfair',
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Welcome\n${user.fullname}',
+                            style: TextStyle(
+                              color: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Playfair',
+                            ),
                           ),
-                        ),
-                        CircleAvatar(
-                          radius: 25,
-                          backgroundImage: AssetImage(user.userImage),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // horizontal tabs
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildDashboardCard(
-                            context, 'Books', Icons.library_books, Colors.blue,
-                            onTap: () => _goToPage(0)),
-                        _buildDashboardCard(
-                            context, 'Audios', Icons.graphic_eq, Colors.green,
-                            onTap: () => _goToPage(1)),
-                        _buildDashboardCard(
-                            context, 'Videos', Icons.smart_display, Colors.red,
-                            onTap: () => _goToPage(2)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // PageView content
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      _currentPage = index;
-                    });
-                  },
-                  children: [
-                    // Books Page
-                    _buildBooksPage(books),
-
-                    // Audios Page
-                    Center(
-                      child: Text(
-                        "Audios Section",
-                        style: Theme.of(context).textTheme.headlineMedium,
+                          CircleAvatar(
+                            radius: 25,
+                            backgroundImage: AssetImage(user.userImage),
+                          ),
+                        ],
                       ),
-                    ),
+                      const SizedBox(height: 20),
 
-                    // Videos Page
-                    Center(
-                      child: Text(
-                        "Videos Section",
-                        style: Theme.of(context).textTheme.headlineMedium,
+                      // horizontal tabs
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildDashboardCard(context, 'Books',
+                              Icons.library_books, Colors.blue,
+                              onTap: () => _goToPage(0)),
+                          _buildDashboardCard(
+                              context, 'Audios', Icons.graphic_eq, Colors.green,
+                              onTap: () => _goToPage(1)),
+                          _buildDashboardCard(context, 'Videos',
+                              Icons.smart_display, Colors.red,
+                              onTap: () => _goToPage(2)),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+
+                // PageView content (GIVE IT A FIXED HEIGHT NOW)
+                SizedBox(
+                  height: 300, // Explicit height for PageView
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        _currentPage = index;
+                      });
+                    },
+                    children: [
+                      // Books Page
+                      _buildBooksPage(books),
+
+                      // Audios Page
+                      Center(
+                        child: Text(
+                          "Audios Section",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),
+
+                      // Videos Page
+                      Center(
+                        child: Text(
+                          "Videos Section",
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Text(
+                    'LIVING JOURNAL',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Text(
+                    'Latest Posts',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                SizedBox(
+                  height:
+                      400, // Give fixed height for the horizontal card section
+                  child: ListView(
+                    // Changed Row + SingleChildScrollView to ListView.builder for proper behavior
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      buildBlogCard(
+                        imageUrl: 'assets/images/Innocent_But_not-wise.png',
+                        date: 'May 18, 2019',
+                        title: 'Innocent, But Not Wise!',
+                        author: 'Jerusha Andeyek',
+                        category: 'Practical Discipleship',
+                        onReadMore: () {
+                          // ignore: avoid_print
+                          print(
+                              'Read More tapped for: Innocent, But Not Wise!');
+                        },
+                      ),
+                      buildBlogCard(
+                        imageUrl:
+                            'assets/images/man-jump-through-gaps-hills.jpg',
+                        date: 'September 28, 2017',
+                        title: 'Made for a purpose',
+                        author: 'Gbile Akannit',
+                        category: 'Gleanings',
+                        onReadMore: () {
+                          // ignore: avoid_print
+                          print('Read More tapped for: Made for a purpose ');
+                        },
+                      ),
+                      buildBlogCard(
+                        imageUrl: 'assets/images/God-is-moving-back.jpg',
+                        date: 'June 1, 2023',
+                        title: 'God is moving back',
+                        author: 'Lanre Adeboye',
+                        category: 'Dear Disciples',
+                        onReadMore: () {
+                          // ignore: avoid_print
+                          print('Read More tapped for: God is moving back');
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  /// A functional widget that builds the complete blog post card layout.
+  ///
+  /// It takes all content data as parameters, making it highly reusable.
+  Widget buildBlogCard({
+    required String imageUrl,
+    required String date,
+    required String title,
+    required String author,
+    required String category,
+    required VoidCallback onReadMore,
+  }) {
+    // Helper function for the metadata rows (Author/Category)
+    Widget buildMetadataRow({required IconData icon, required String text}) {
+      return Row(
+        children: [
+          Icon(icon, size: 18),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(fontSize: 14),
+          ),
+        ],
+      );
+    }
+
+    return SizedBox(
+      // Wrap in a SizedBox to constrain the width for horizontal scrolling
+      width: MediaQuery.of(context).size.width *
+          0.9, // Make card 90% of screen width
+      child: Card(
+        // Clip the card content to respect the border radius
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 4,
+        margin: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 1. Image and Vertical Date Banner Stack
+            Stack(
+              children: [
+                // Image Area
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Image.asset(
+                    // Changed Image.network to Image.asset for local paths
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    // Add a filter to darken the image and enhance drama, matching the original photo's mood
+                    colorBlendMode: BlendMode.darken,
+                    color: Colors.black.withOpacity(0.4),
+                    // Removed errorBuilder since we are using local assets now
+                  ),
+                ),
+
+                // Vertical Date Banner
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  bottom: 0, // Stretch vertically to the image height
+                  child: Container(
+                    width: 35, // Fixed width for the vertical banner
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      // Only round the top-left corner as the banner is part of the clipped Card
+                      borderRadius:
+                          const BorderRadius.only(topLeft: Radius.circular(10)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Calendar Icon
+                        const Icon(Icons.calendar_today,
+                            size: 18, color: Colors.white),
+                        const SizedBox(height: 12),
+                        // Rotated Date Text
+                        RotatedBox(
+                          quarterTurns:
+                              3, // Rotate 270 degrees (vertical text orientation)
+                          child: Text(
+                            date.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.8,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            // 2. Text Content Area
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: 'Playfair',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Author Row
+                  buildMetadataRow(
+                    icon: Icons.person_rounded,
+                    text: author,
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Category Row
+                  buildMetadataRow(
+                    icon: Icons.folder_open,
+                    text: category,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Read More Link (Underlined)
+                  InkWell(
+                    onTap: onReadMore,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Read More',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          height: 2,
+                          width: 85, // Width of the underline
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -195,7 +438,8 @@ class _HomeState extends State<Home> {
             ),
             const SizedBox(height: 15),
             CarouselSlider.builder(
-              carouselController: _carouselController,
+              // NOTE: If _carouselController is not used, remove it to avoid runtime errors
+              // carouselController: _carouselController,
               itemCount: books.length,
               options: CarouselOptions(
                 height: 250,
