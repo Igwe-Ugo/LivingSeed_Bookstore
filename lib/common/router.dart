@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/account/widget.dart';
 import 'package:livingseed_media/admin/widget.dart';
 import 'package:livingseed_media/auth/widget.dart';
-import 'package:livingseed_media/home/home.dart';
+import 'package:livingseed_media/home/widget.dart';
 import 'package:livingseed_media/library/widget.dart';
 import 'package:livingseed_media/media/media.dart';
 import 'package:livingseed_media/media/widget.dart';
@@ -48,6 +48,8 @@ class LivingSeedMediaRouter {
 
   // home pages
   static const String homePath = '/home';
+  static const String journalPath = 'journal';
+  static const String journalDetailsPath = 'journal_details';
 
   // books pages
   static const String libraryPath = '/library';
@@ -127,6 +129,26 @@ class LivingSeedMediaRouter {
                   GoRoute(
                     path: homePath,
                     builder: (context, state) => Home(),
+                    routes: [
+                      GoRoute(
+                        path: journalPath,
+                        builder: (context, state) => const JournalListScreen(),
+                        routes: [
+                          GoRoute(
+                            path: journalDetailsPath,
+                            builder: (context, state) {
+                              final journalPost = state.extra as JournalPost?;
+                              if (journalPost != null) {
+                                return JournalDetailScreen(post: journalPost);
+                              } else {
+                                return const Center(
+                                    child: Text("No journal data available"));
+                              }
+                            },
+                          ),
+                        ],
+                      )
+                    ]
                   ),
                 ]),
             StatefulShellBranch(

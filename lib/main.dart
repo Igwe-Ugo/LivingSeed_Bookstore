@@ -25,6 +25,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
   late BibleStudyProvider bibleStudyProvider;
   late AddEventProvider addEventProvider;
   late MagazineProvider magazineProvider;
+  late JournalProvider journalProvider;
 
   @override
   void initState() {
@@ -37,6 +38,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
     bibleStudyProvider = BibleStudyProvider();
     addEventProvider = AddEventProvider();
     magazineProvider = MagazineProvider();
+    journalProvider = JournalProvider();
 
     // Load necessary data AFTER the first frame to avoid context-related issues
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,6 +48,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
       bibleStudyProvider.initializeBibleStudy();
       addEventProvider.initializeEvents();
       magazineProvider.initializeMagazines();
+      journalProvider.initializeJournalPosts();
     });
 
     getCurrentAppTheme();
@@ -67,6 +70,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
         ChangeNotifierProvider(create: (_) => bibleStudyProvider),
         ChangeNotifierProvider(create: (_) => addEventProvider),
         ChangeNotifierProvider(create: (_) => magazineProvider),
+        ChangeNotifierProvider(create: (_) => journalProvider),
       ],
       child: Consumer<DarkThemeProvider>(
         builder: (context, themeData, child) {

@@ -2,10 +2,13 @@
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 // Note: Assuming these imports exist in your project structure
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+
+import '../common/widget.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -64,8 +67,8 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     // NOTE: Removed the PageView's onPageChanged and replaced it with local state management.
-    return Consumer2<UsersAuthProvider, BookProvider>(
-      builder: (context, userProvider, bookProvider, child) {
+    return Consumer3<UsersAuthProvider, BookProvider, JournalProvider>(
+      builder: (context, userProvider, bookProvider, journalProvider, child) {
         if (userProvider.userData == null) {
           return const Scaffold(
             body: Center(
@@ -83,6 +86,7 @@ class _HomeState extends State<Home> {
 
         Users user = userProvider.userData!;
         List<AboutBooks> books = bookProvider.allBooks;
+        List<JournalPost> journalPost = journalProvider.allPosts;
 
         return Scaffold(
           // WRAP THE BODY IN A SINGLECHILDSCROLLVIEW
@@ -190,72 +194,72 @@ class _HomeState extends State<Home> {
 
                 const SizedBox(height: 20),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Text(
-                    'LIVING JOURNAL',
-                    style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Text(
+                            'LIVING JOURNAL',
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Text(
+                            'Latest Posts',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Text(
-                    'Latest Posts',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                    TextButton(
+                      onPressed: () {
+                        GoRouter.of(context).go(
+                            '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}');
+                      },
+                      child: Text(
+                        'View More >',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 const SizedBox(height: 10),
 
                 SizedBox(
                   height:
                       400, // Give fixed height for the horizontal card section
-                  child: ListView(
+                  child: ListView.builder(
+                    itemCount: journalPost.length,
                     // Changed Row + SingleChildScrollView to ListView.builder for proper behavior
                     scrollDirection: Axis.horizontal,
-                    children: [
-                      buildBlogCard(
-                        imageUrl: 'assets/images/Innocent_But_not-wise.png',
-                        date: 'May 18, 2019',
-                        title: 'Innocent, But Not Wise!',
-                        author: 'Jerusha Andeyek',
-                        category: 'Practical Discipleship',
-                        onReadMore: () {
-                          // ignore: avoid_print
-                          print(
-                              'Read More tapped for: Innocent, But Not Wise!');
-                        },
-                      ),
-                      buildBlogCard(
-                        imageUrl:
-                            'assets/images/man-jump-through-gaps-hills.jpg',
-                        date: 'September 28, 2017',
-                        title: 'Made for a purpose',
-                        author: 'Gbile Akannit',
-                        category: 'Gleanings',
-                        onReadMore: () {
-                          // ignore: avoid_print
-                          print('Read More tapped for: Made for a purpose ');
-                        },
-                      ),
-                      buildBlogCard(
-                        imageUrl: 'assets/images/God-is-moving-back.jpg',
-                        date: 'June 1, 2023',
-                        title: 'God is moving back',
-                        author: 'Lanre Adeboye',
-                        category: 'Dear Disciples',
-                        onReadMore: () {
-                          // ignore: avoid_print
-                          print('Read More tapped for: God is moving back');
-                        },
-                      ),
-                    ],
+                    itemBuilder: (context, index) {
+                      final journal = journalPost[index];
+                      return buildBlogCard(
+                          imageUrl: journal.imageUrl,
+                          date: journal,
+                          title: journal.title,
+                          author: journal.authorName,
+                          category: journal,
+                          onReadMore: () {
+                            GoRouter.of(context).go(
+                                '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}/${LivingSeedMediaRouter.journalDetailsPath}',
+                                extra: journal);
+                          });
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -272,10 +276,10 @@ class _HomeState extends State<Home> {
   /// It takes all content data as parameters, making it highly reusable.
   Widget buildBlogCard({
     required String imageUrl,
-    required String date,
+    required JournalPost date,
     required String title,
     required String author,
-    required String category,
+    required JournalPost category,
     required VoidCallback onReadMore,
   }) {
     // Helper function for the metadata rows (Author/Category)
@@ -347,7 +351,8 @@ class _HomeState extends State<Home> {
                           quarterTurns:
                               3, // Rotate 270 degrees (vertical text orientation)
                           child: Text(
-                            date.toUpperCase(),
+                            '${date.date.day}-${date.date.month}-${date.date.year}'
+                                .toUpperCase(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -373,7 +378,7 @@ class _HomeState extends State<Home> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontSize: 22,
+                      fontSize: 18,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'Playfair',
                     ),
@@ -390,7 +395,7 @@ class _HomeState extends State<Home> {
                   // Category Row
                   buildMetadataRow(
                     icon: Icons.folder_open,
-                    text: category,
+                    text: category.category.name,
                   ),
                   const SizedBox(height: 20),
 
