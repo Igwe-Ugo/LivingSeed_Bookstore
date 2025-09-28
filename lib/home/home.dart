@@ -256,7 +256,7 @@ class _HomeState extends State<Home> {
                           category: journal,
                           onReadMore: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalDetailsPath}',
+                                '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}/${LivingSeedMediaRouter.journalDetailsPath}',
                                 extra: journal);
                           });
                     },

@@ -131,22 +131,26 @@ class LivingSeedMediaRouter {
                       builder: (context, state) => Home(),
                       routes: [
                         GoRoute(
-                          path: journalPath,
-                          builder: (context, state) =>
-                              const JournalListScreen(),
-                        ),
-                        GoRoute(
-                          path: journalDetailsPath,
-                          builder: (context, state) {
-                            final journalPost = state.extra as JournalPost?;
-                            if (journalPost != null) {
-                              return JournalDetailScreen(post: journalPost);
-                            } else {
-                              return const Center(
-                                  child: Text("No journal data available"));
-                            }
-                          },
-                        ),
+                            path: journalPath,
+                            builder: (context, state) =>
+                                const JournalListScreen(),
+                            routes: [
+                              GoRoute(
+                                path: journalDetailsPath,
+                                builder: (context, state) {
+                                  final journalPost =
+                                      state.extra as JournalPost?;
+                                  if (journalPost != null) {
+                                    return JournalDetailScreen(
+                                        post: journalPost);
+                                  } else {
+                                    return const Center(
+                                        child:
+                                            Text("No journal data available"));
+                                  }
+                                },
+                              ),
+                            ]),
                       ]),
                 ]),
             StatefulShellBranch(
