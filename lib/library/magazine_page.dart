@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 
 class MagazinePage extends StatelessWidget {
@@ -16,8 +17,11 @@ class MagazinePage extends StatelessWidget {
       onTap: () {
         if (aboutMagazine != null) {
           GoRouter.of(context).go(
-              '',
+              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
               extra: aboutMagazine);
+        } else {
+          // Handle the case where aboutMagazine is null, if necessary
+          // For example, show a message or do nothing
         }
       },
       child: Container(

@@ -45,6 +45,7 @@ class LivingSeedMediaRouter {
   static const String signinPath = '/signin';
   static const String signupPath = '/signup';
   static const String forgotPasswordPath = '/forgot_password';
+  static const String signupVerificationPath = 'signup_verification';
 
   // home pages
   static const String homePath = '/home';
@@ -111,9 +112,20 @@ class LivingSeedMediaRouter {
         builder: (context, state) => const SignIn(),
       ),
       GoRoute(
-        path: signupPath,
-        builder: (context, state) => const SignUp(),
-      ),
+          path: signupPath,
+          builder: (context, state) => const SignUp(),
+          routes: [
+            GoRoute(
+              path: signupVerificationPath,
+              builder: (context, state) {
+                final args = (state.extra as Map<String, dynamic>?) ?? {};
+                return SignupVerification(
+                  fullname: args['fullname'] as String? ?? '',
+                  email: args['email'] as String? ?? '',
+                );
+              },
+            ),
+          ]),
       GoRoute(
         path: forgotPasswordPath,
         builder: (context, state) => const ForgotPassword(),

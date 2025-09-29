@@ -5,7 +5,7 @@ class MagazineModel {
   final String issue;
   final String coverImage;
   final String publisher;
-  final int price;
+  final double price;
   final String subTitle;
   final EditorsDesk editorsDesk;
   final List<Section> contents;
@@ -48,7 +48,7 @@ class MagazineModel {
         issue: json['issue'],
         coverImage: json['coverImage'],
         publisher: json['publisher'],
-        price: json['price'],
+        price: (json['price'] as num).toDouble(),
         subTitle: json['subTitle'],
         editorsDesk: EditorsDesk.fromJson(json['editorsDesk']),
         contents: (json['contents'] as List)

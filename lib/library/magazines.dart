@@ -32,7 +32,8 @@ class Magazines extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => GoRouter.of(context).go(
-                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}'),
+                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+                  extra: magazine),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(

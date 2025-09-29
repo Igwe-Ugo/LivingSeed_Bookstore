@@ -3,6 +3,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:provider/provider.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -23,6 +27,86 @@ class _SignUpState extends State<SignUp> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final telephoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    fullnameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    telephoneController.dispose();
+    super.dispose();
+  }
+
+  void _signUpUser() async {
+    // 1. --- Input Validation (All checks must pass before proceeding) ---
+    final emailRegExp = RegExp(
+        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$");
+    
+    if (!_formKey.currentState!.validate()) {
+      return showMessage('Please fill all available input spaces', context);
+    }
+    if (passwordController.text != confirmPasswordController.text) {
+      return showMessage(
+          'Password must be the same as your confirmed password', context);
+    }
+    if (!emailRegExp.hasMatch(emailController.text)) {
+      return showMessage('Please put in a correct email Address', context);
+    }
+    if (!agreeToTerms) {
+      return showMessage(
+          'You must agree to the Terms and Conditions to proceed.', context);
+    }
+    if (!male && !female) {
+      return showMessage('Please select your gender', context);
+    }
+
+    setState(() {
+      isLoading = true;
+    });
+
+    final Users newUser = Users(
+      fullname: fullnameController.text,
+      emailAddress: emailController.text,
+      password: passwordController.text,
+      telephone: telephoneController.text,
+      userImage: 'assets/images/avatar.png',
+      gender: male ? 'Male' : 'Female',
+      dateOfBirth: '',
+      role: 'Regular',
+      cart: [],
+      bookPurchased: [],
+      transactionHistory: [],
+    );
+
+    try {
+      // 2. --- Call Auth Service to Register User ---
+      // NOTE: Using the 'signUp' function structure you provided
+      final Map<String, dynamic> result =
+          await Provider.of<UsersAuthProvider>(context, listen: false)
+              .signUp(newUser: newUser);
+
+      // 3. --- Handle Result and Navigate ---
+      if (result['success'] == true) {
+        showMessage('Account created. Please verify your email.', context);
+        // NAVIGATE to OTP verification screen, passing ALL required data
+        GoRouter.of(context).push('${LivingSeedMediaRouter.signupPath}/${LivingSeedMediaRouter.signupVerificationPath}', extra: {
+          'email': newUser.emailAddress,
+          'fullname': newUser.fullname,
+        });
+      } else {
+         showMessage('Sign up failed: ${result['error'] ?? 'Unknown error'}', context);
+      }
+    } catch (e) {
+      showMessage('Sign up failed: ${e.toString()}', context);
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +251,8 @@ class _SignUpState extends State<SignUp> {
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: Center(
                         child: isLoading
-                            ? CircularProgressIndicator(color: Colors.white)
+                            ? LoadingAnimationWidget.halfTriangleDot(
+                                    color: Colors.white, size: 20)
                             : const Text(
                                 'Sign Up',
                                 style: TextStyle(
@@ -310,22 +395,5 @@ class _SignUpState extends State<SignUp> {
         const Text('I agree to the Terms and Conditions'),
       ],
     );
-  }
-
-  void _signUpUser() async {
-    RegExp regExp = RegExp(
-        "^[a-zA-Z0-9.a-zA-Z0-9.!#%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (!_formKey.currentState!.validate()) {
-      return showMessage('Please fill all available input spaces', context);
-    }
-    if (passwordController.text != confirmPasswordController.text) {
-      showMessage(
-          'Password must be the same with your confirmed password', context);
-      return;
-    }
-    if (!regExp.hasMatch(emailController.text)) {
-      showMessage('Please put in a correct email Address', context);
-      return;
-    }
   }
 }

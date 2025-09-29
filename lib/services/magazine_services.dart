@@ -62,7 +62,7 @@ class MagazineProvider extends ChangeNotifier {
     return File('${directory.path}/magazines.json');
   }
 
-  /* Future<void> _saveMagazinesToLocal() async {
+  Future<void> _saveMagazinesToLocal() async {
     try {
       final file = await _getMagazineFile();
       String jsonData =
@@ -71,5 +71,16 @@ class MagazineProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint('Error saving magazines: $e');
     }
-  } */
+  }
+
+  Future<bool> uploadMagazine(MagazineModel newMagazine) async {
+    if (_magazines
+        .any((mag) => mag.magazineTitle == newMagazine.magazineTitle)) {
+      return false; // Prevent duplicates
+    }
+    _magazines.add(newMagazine);
+    await _saveMagazinesToLocal();
+    notifyListeners();
+    return true;
+  }
 }

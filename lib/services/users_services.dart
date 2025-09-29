@@ -68,15 +68,52 @@ class UsersAuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> signup(Users newUser) async {
-    if (_users.any((user) => user.emailAddress == newUser.emailAddress)) {
-      return false; // Email Already exists
+  /// Registers the user locally (as unverified) and simulates sending an OTP.
+  /// Returns user details and the temporary code for the next step.
+  Future<Map<String, dynamic>> signUp({
+    required Users newUser,
+  }) async {
+    try {
+      if (_users.any((user) => user.emailAddress == newUser.emailAddress)) {
+        return {
+          'success': false,
+          'error': 'User with this email already exists.'
+        };
+      }
+
+      // Create the new user object and add to list
+      final createdUser = Users(
+        fullname: newUser.fullname,
+        emailAddress: newUser.emailAddress,
+        password: newUser.password,
+        telephone: newUser.telephone,
+        gender: newUser.gender,
+        userImage: 'assets/images/avatar.png',
+        dateOfBirth: '',
+        role: 'Regular',
+        cart: [],
+        bookPurchased: [],
+        transactionHistory: [],
+      );
+
+      _users.add(createdUser);
+      // Do something to send OTP here in a real app
+      // For simulation, we skip actual sending and just return success
+      //await _saveUserToLocal();
+      //notifyListeners();
+
+      return {
+        'success': true,
+        'fullname': newUser.fullname, // Return fullName for display
+        'email': newUser.emailAddress,
+      };
+    } catch (e) {
+      debugPrint('Sign Up Error: $e');
+      return {
+        'success': false,
+        'error': 'An unexpected error occurred during sign up.'
+      };
     }
-    _users.add(newUser);
-    _currentUser = newUser;
-    await _saveUserToLocal();
-    notifyListeners();
-    return true;
   }
 
   Future<bool> changePassword(String newPassword, String oldPassword) async {
@@ -168,6 +205,18 @@ class UsersAuthProvider extends ChangeNotifier {
           bookTitle: book.title,
           bookAuthor: book.subTitle,
           amount: book.amount));
+      notifyListeners();
+      _saveUserToLocal();
+    }
+  }
+
+  void addToMagazineCart(MagazineModel magazine) {
+    if (_currentUser != null) {
+      _currentUser!.cart.add(CartItems(
+          coverImage: magazine.coverImage,
+          bookTitle: magazine.magazineTitle,
+          bookAuthor: magazine.publisher,
+          amount: magazine.price));
       notifyListeners();
       _saveUserToLocal();
     }

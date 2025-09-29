@@ -104,35 +104,7 @@ class _AboutBookState extends State<AboutBook> {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      Provider.of<UsersAuthProvider>(context, listen: false)
-                          .addToBookCart(widget.aboutBooks);
-                      Users user =
-                          Provider.of<UsersAuthProvider>(context, listen: false)
-                              .userData!;
-                      NotificationItems newNotification = NotificationItems(
-                        notificationImage: widget.aboutBooks.coverImage,
-                        notificationTitle: 'Book added to cart',
-                        notificationMessage:
-                            'A book with the name: ${widget.aboutBooks.bookTitle} has been added to your cart item. You can view it in your cart session. You have done a great job by uplisting this in your purchases, do well to purchase!',
-                        notificationDate:
-                            "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
-                        notificationTime:
-                            "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
-                      );
-                      Provider.of<NotificationProvider>(context, listen: false)
-                          .sendPersonalNotification(
-                              user.emailAddress, newNotification);
-
-                      NotificationDropDownServices notificationId =
-                          NotificationDropDownServices();
-
-                      NotificationDropDownServices.showNotification(
-                          id: notificationId.getNextId(),
-                          title: 'Book Added to cart',
-                          body:
-                              "The book with the name ${widget.aboutBooks.bookTitle} has been added to your cart"
-                                  .substring(0, 150));
-                      showMessage('Book has been added to Cart', context);
+                      _uploadBook(context);
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
@@ -430,5 +402,37 @@ class _AboutBookState extends State<AboutBook> {
             )
           ],
         )));
+  }
+
+  void _uploadBook(BuildContext context) {
+    Provider.of<UsersAuthProvider>(context, listen: false)
+        .addToBookCart(widget.aboutBooks);
+    Users user =
+        Provider.of<UsersAuthProvider>(context, listen: false)
+            .userData!;
+    NotificationItems newNotification = NotificationItems(
+      notificationImage: widget.aboutBooks.coverImage,
+      notificationTitle: 'Book added to cart',
+      notificationMessage:
+          'A book with the name: ${widget.aboutBooks.bookTitle} has been added to your cart item. You can view it in your cart session. You have done a great job by uplisting this in your purchases, do well to purchase!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+    Provider.of<NotificationProvider>(context, listen: false)
+        .sendPersonalNotification(
+            user.emailAddress, newNotification);
+    
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
+    
+    NotificationDropDownServices.showNotification(
+        id: notificationId.getNextId(),
+        title: 'Book Added to cart',
+        body:
+            "The book with the name ${widget.aboutBooks.bookTitle} has been added to your cart"
+                .substring(0, 150));
+    showMessage('Book has been added to Cart', context);
   }
 }

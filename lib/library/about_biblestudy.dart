@@ -69,7 +69,7 @@ class AboutBibleStudy extends StatelessWidget {
               const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
-                  _notifyBibleStudy(context);
+                  _uploadBibleStudy(context);
                 },
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -200,7 +200,7 @@ class AboutBibleStudy extends StatelessWidget {
     )));
   }
 
-  void _notifyBibleStudy(BuildContext context) {
+  void _uploadBibleStudy(BuildContext context) {
     Provider.of<UsersAuthProvider>(context, listen: false)
         .addToBibleStudyCart(aboutBiblestudy);
     Users user =
