@@ -6,3 +6,4 @@ export 'users_profile.dart';
 export 'notices.dart';
 export 'upload_biblestudy.dart';
 export 'add_event.dart';
+export 'write_article.dart';

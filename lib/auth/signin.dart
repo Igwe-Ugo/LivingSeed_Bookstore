@@ -86,6 +86,7 @@ class _SignInState extends State<SignIn> {
                           style: TextStyle(
                               fontFamily: 'Playfair',
                               fontSize: 30,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -199,10 +200,10 @@ class _SignInState extends State<SignIn> {
                                 ? Text(
                                     'Sign In',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 20.0,
-                                      color: Colors.white,
-                                    ),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 20.0,
+                                        color: Colors.white,
+                                        fontFamily: 'Playfair'),
                                   )
                                 : LoadingAnimationWidget.halfTriangleDot(
                                     color: Colors.white, size: 20),
@@ -218,7 +219,7 @@ class _SignInState extends State<SignIn> {
                           'OR CONTINUE WITH',
                           style: TextStyle(
                               fontSize: 14,
-                              color: Theme.of(context).disabledColor,
+                              color: Colors.white,
                               fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -267,7 +268,7 @@ class _SignInState extends State<SignIn> {
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w400,
-                              color: Theme.of(context).disabledColor,
+                              color: Colors.white,
                             ),
                           ),
                           TextButton(

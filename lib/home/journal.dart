@@ -120,7 +120,7 @@ class _JournalListScreenState extends State<JournalListScreen> {
     return GestureDetector(
       onTap: () {
         GoRouter.of(context).go(
-            '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalDetailsPath}',
+            '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}/${LivingSeedMediaRouter.journalDetailsPath}',
             extra: post);
       },
       child: Card(

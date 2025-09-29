@@ -94,6 +94,7 @@ class LivingSeedMediaRouter {
   static const String manageUsersPath = 'manage_users';
   static const String userProfilePath = 'user_profile';
   static const String addEventPath = 'add_event';
+  static const String addArticle = 'add_article';
 
   LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
@@ -366,6 +367,11 @@ class LivingSeedMediaRouter {
                                 path: addEventPath,
                                 builder: (context, state) =>
                                     const AdminAddEvent(),
+                              ),
+                              GoRoute(
+                                path: addArticle,
+                                builder: (context, state) =>
+                                    const WriteArticle(),
                               ),
                               GoRoute(
                                   path: manageNotificationsPath,

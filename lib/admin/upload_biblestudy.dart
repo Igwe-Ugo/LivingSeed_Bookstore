@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+// import 'reusable_media_picker.dart'; // Assume this file is accessible
+// The MediaFilePicker class is assumed to be defined and accessible.
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +25,13 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
   final TextEditingController _amountController = TextEditingController();
   List<TextEditingController> _bibleStudyChapterController = [
     TextEditingController()
-  ]; // initial textfield
+  ];
+
+  // --- File Handling State ---
+  // NEW: State to store files returned from the reusable component
+  XFile? _coverImage;
+  PlatformFile? _bookFile;
+  // REMOVED: All manual file picking methods (_pickCoverImage, _pickBibleStudyFile)
 
   void updateTextFields(int count) {
     setState(() {
@@ -33,38 +41,12 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
     });
   }
 
-  XFile? _coverImage;
-  PlatformFile? _bookFile;
-
-  Future<void> _pickCoverImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _coverImage = pickedImage;
-      });
-    }
-  }
-
-  Future<void> _pickBibleStudyFile() async {
-    final FilePickerResult? result = await FilePicker.platform
-        .pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-    if (result != null && result.files.isNotEmpty) {
-      setState(() {
-        _bookFile = result.files.first;
-      });
-    }
-  }
-
   void _uploadBibleStudy() {
     if (_formKey.currentState!.validate() &&
         _coverImage != null &&
         _bookFile != null) {
-      // Perform the upload logic here, e.g., send data to backend or Firebase
       _uploadBibleStudyToJson();
       _clearFields();
-      // Clear the form
       _formKey.currentState!.reset();
       setState(() {
         _coverImage = null;
@@ -86,7 +68,28 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
 
   @override
   Widget build(BuildContext context) {
+    final bookFileName = _bookFile?.path ?? _bookFile?.name;
+
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => GoRouter.of(context).pop(),
+          icon: const Icon(
+            Iconsax.arrow_left_2,
+            size: 17,
+          ),
+        ),
+        title: const Text(
+          'Upload Bible Study Material',
+          style: TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -95,66 +98,32 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          GoRouter.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Iconsax.arrow_left_2,
-                          size: 17,
-                        )),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                    const Text(
-                      'Upload Bible Study Material',
-                      style: TextStyle(
-                        fontFamily: 'Playfair',
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                // Cover Image Picker - USING REUSABLE WIDGET
+                ImagePickerDropZone(
+                  title: 'Upload Cover Image',
+                  icon: Iconsax.image,
+                  color: Colors.green, // Kept original color
+                  onFilePicked: (file) {
+                    setState(() {
+                      _coverImage = file as XFile;
+                    });
+                  },
                 ),
-                const SizedBox(
-                  height: 20,
+
+                const SizedBox(height: 16),
+                // PDF File Picker - USING REUSABLE WIDGET
+                PdfFilePickerDropZone(
+                  title: 'Upload Bible Study File (PDF)',
+                  icon: Iconsax.document_1,
+                  color: Colors.red, // Kept original color
+                  onFilePicked: (file) {
+                    setState(() {
+                      _bookFile = file as PlatformFile;
+                    });
+                  },
+                  initialFileName: bookFileName,
                 ),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        elevation: WidgetStatePropertyAll(0),
-                      ),
-                      onPressed: _pickCoverImage,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Iconsax.image,
-                              color: Colors.green,
-                            ),
-                            SizedBox(
-                              width: 7,
-                            ),
-                            Text(
-                              'Upload Cover Image',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    if (_coverImage != null)
-                      Text(
-                        'Image Selected',
-                        style: TextStyle(color: Colors.green[700]),
-                      )
-                  ],
-                ),
+
                 const SizedBox(height: 16),
                 CustomTextInput(
                   label: 'BibleStudy Title',
@@ -171,7 +140,9 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
                     label: 'BibleStudy Subtitle',
                     controller: _subtitleController,
                     icon: Icons.subtitles,
-                    validator: () {}),
+                    validator: (value) {
+                      return null;
+                    }), // Fixed validator
                 CustomTextInput(
                   label: 'BibleStudy Price ... (#)',
                   controller: _amountController,
@@ -191,7 +162,7 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
                     (index) => DropdownMenuItem(
                       value: index + 1,
                       child: Text(
-                          'Chapters of book?... ${index + 1} Fields'),
+                          'Contents of bible study?... ${index + 1} Fields'), // Updated text
                     ),
                   ),
                   onChanged: (value) {
@@ -211,53 +182,18 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
                       itemBuilder: (context, index) {
                         return CustomTextInput(
                           label:
-                              'How many contents of bible study?... ${index + 1} field',
+                              'Content Title... ${index + 1} field', // Updated label
                           controller: _bibleStudyChapterController[index],
                           isTitleNotNecessary: true,
                           isIcon: false,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter the number of chapters of the biblestudy';
+                              return 'Please enter the title for content ${index + 1}';
                             }
                             return null;
                           },
                         );
                       }),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      style: ButtonStyle(elevation: WidgetStatePropertyAll(0)),
-                      onPressed: _pickBibleStudyFile,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Row(
-                          children: const [
-                            Icon(
-                              Iconsax.document_1,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              'Upload Bible Study File (PDF)',
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    if (_bookFile != null)
-                      Text(
-                        'File Selected',
-                        style:
-                            TextStyle(color: Colors.green[700], fontSize: 12),
-                      )
-                  ],
                 ),
                 const SizedBox(height: 24),
                 Center(
@@ -291,6 +227,7 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
   }
 
   void _uploadBibleStudyToJson() async {
+    // ... (unchanged upload logic) ...
     if (!_formKey.currentState!.validate()) {
       return showMessage('Please fill all available input spaces', context);
     }
@@ -300,19 +237,19 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
     for (int i = 0; i < _bibleStudyChapterController.length; i++) {
       String text = _bibleStudyChapterController[i].text.trim();
       if (text.isNotEmpty) {
-        contents.add(Chapter(chapterNum: i+1, chapterTitle: text));
+        contents.add(Chapter(chapterNum: i + 1, chapterTitle: text));
       }
     }
 
     BibleStudyMaterial newUpload = BibleStudyMaterial(
-        coverImage: _coverImage!.path.toString(),
-        title: _titleController.text,
-        subTitle: _subtitleController.text,
-        amount: double.tryParse(_amountController.text) ?? 0.0,
-        chapterNum: _bibleStudyChapterController.length,
-        pdfLink: _bookFile!.path.toString(),
-        contents: contents,
-      );
+      coverImage: _coverImage!.path.toString(),
+      title: _titleController.text,
+      subTitle: _subtitleController.text,
+      amount: double.tryParse(_amountController.text) ?? 0.0,
+      chapterNum: _bibleStudyChapterController.length,
+      pdfLink: _bookFile!.path.toString(),
+      contents: contents,
+    );
 
     bool success = await Provider.of<BibleStudyProvider>(context, listen: false)
         .uploadBibleStudy(newUpload);

@@ -203,7 +203,8 @@ class AdminDashboard extends StatelessWidget {
                         context,
                         title: 'Write Article',
                         icon: Iconsax.pen_add,
-                        onPressed: () {},
+                        onPressed: () => GoRouter.of(context).go(
+                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addArticle}'),
                       ),
                       _buildActionButton(
                         context,

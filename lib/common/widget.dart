@@ -6,3 +6,5 @@ export 'show_message.dart';
 export 'notification_badge.dart';
 export 'text_input.dart';
 export 'meeting_data_source.dart';
+export 'image_file_picker.dart';
+export 'pdf_file_picker.dart';

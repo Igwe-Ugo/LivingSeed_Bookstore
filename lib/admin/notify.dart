@@ -23,17 +23,6 @@ class _AdminNotificationsState extends State<AdminNotifications> {
 
   XFile? _coverImage;
 
-  Future<void> _pickCoverImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _coverImage = pickedImage;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Consumer<NotificationProvider>(
@@ -85,39 +74,15 @@ class _AdminNotificationsState extends State<AdminNotifications> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Column(
-                      children: [
-                        if (_coverImage != null)
-                          Text(
-                            'Image Selected',
-                            style: TextStyle(color: Colors.green[700]),
-                          ),
-                        const SizedBox(width: 12),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            elevation: WidgetStatePropertyAll(0),
-                          ),
-                          onPressed: _pickCoverImage,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Row(
-                              children: const [
-                                Icon(
-                                  Iconsax.image,
-                                  color: Colors.green,
-                                ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  'Upload Notification Image',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                    ImagePickerDropZone(
+                      title: 'Upload Cover Image',
+                      icon: Iconsax.image,
+                      color: Colors.green, // Kept original color
+                      onFilePicked: (file) {
+                        setState(() {
+                          _coverImage = file as XFile;
+                        });
+                      },
                     ),
                     const SizedBox(
                       height: 16,
@@ -244,7 +209,8 @@ class _AdminNotificationsState extends State<AdminNotifications> {
           "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
     );
 
-    NotificationDropDownServices notificationId = NotificationDropDownServices();
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
 
     bool success =
         await Provider.of<NotificationProvider>(context, listen: false)
