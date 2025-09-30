@@ -11,12 +11,20 @@
       {
         "person_name": "David Ugo",
         "date": "2023-05-19T14:30:00Z",
-        "person_comment": "A truly insightful perspective on the balance of character. Thank you for sharing!"
+        "person_comment": "A truly insightful perspective on the balance of character. Thank you for sharing!",
+        "replies": [
+          {
+            "person_name": "Jerusha Andeyek",
+            "date": "2023-05-20T10:00:00Z",
+            "person_comment": "Thank you, David! I'm glad it resonated with you."
+          }
+        ]
       },
       {
         "person_name": "Grace Ada",
         "date": "2023-05-19T16:00:00Z",
-        "person_comment": "This reminds me of Matthew 10:16. So true!"
+        "person_comment": "This reminds me of Matthew 10:16. So true!",
+        "replies": []
       }
     ]
   },
@@ -32,7 +40,14 @@
       {
         "person_name": "John D.",
         "date": "2024-03-11T11:20:00Z",
-        "person_comment": "Amen! This is a great reminder of God's unwavering faithfulness."
+        "person_comment": "Amen! This is a great reminder of God's unwavering faithfulness.",
+        "replies": [
+          {
+            "person_name": "Gbile Akanni",
+            "date": "2024-03-12T08:45:00Z",
+            "person_comment": "Thank you, John! Truly, His faithfulness never fails."
+          }
+        ]
       }
     ]
   },
@@ -58,7 +73,14 @@
       {
         "person_name": "Sarah K.",
         "date": "2024-02-16T09:15:00Z",
-        "person_comment": "Powerful reminder! The section on total dedication really challenged me."
+        "person_comment": "Powerful reminder! The section on total dedication really challenged me.",
+        "replies": [
+          {
+            "person_name": "Admin",
+            "date": "2024-02-16T10:00:00Z",
+            "person_comment": "Glad it resonated with you, Sarah! Surrender is indeed a daily journey."
+          }
+        ]
       }
     ]
   }

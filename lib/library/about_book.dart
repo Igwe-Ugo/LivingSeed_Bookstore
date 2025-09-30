@@ -104,7 +104,7 @@ class _AboutBookState extends State<AboutBook> {
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
-                      _uploadBook(context);
+                      _addBookToCart(context);
                     },
                     style: ElevatedButton.styleFrom(
                       elevation: 0,
@@ -404,7 +404,7 @@ class _AboutBookState extends State<AboutBook> {
         )));
   }
 
-  void _uploadBook(BuildContext context) {
+  void _addBookToCart(BuildContext context) {
     Provider.of<UsersAuthProvider>(context, listen: false)
         .addToBookCart(widget.aboutBooks);
     Users user =

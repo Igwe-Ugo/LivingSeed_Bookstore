@@ -52,7 +52,8 @@ class _WriteArticleState extends State<WriteArticle> {
         journalWriteup: _articleController.text,
         comments: []);
 
-    await Provider.of<JournalProvider>(context).addJournalPost(newArticle);
+    await Provider.of<JournalProvider>(context, listen: false)
+        .addJournalPost(newArticle);
 
     showMessage('Article uploaded successfully!', context);
     GoRouter.of(context).pop();
@@ -154,7 +155,7 @@ class _WriteArticleState extends State<WriteArticle> {
                 controller: _articleController,
                 isIcon: false,
                 maxLine: 10,
-                maxLength: 1000,
+                maxLength: 3000,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please add a write up for this article';

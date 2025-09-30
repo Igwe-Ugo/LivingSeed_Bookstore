@@ -19,6 +19,34 @@ extension JournalCategoryExtension on JournalCategory {
   }
 }
 
+class JournalReplyComment {
+  final String replierName;
+  final DateTime replyDate;
+  final String replyContent;
+
+  JournalReplyComment({
+    required this.replierName,
+    required this.replyDate,
+    required this.replyContent,
+  });
+
+  factory JournalReplyComment.fromJson(Map<String, dynamic> json) {
+    return JournalReplyComment(
+      replierName: json['replier_name'] as String? ?? 'Unknown User',
+      replyDate: json['reply_date'] != null ? DateTime.parse(json['reply_date']) : DateTime.now(),
+      replyContent: json['reply_content'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'replier_name': replierName,
+      'reply_date': replyDate.toIso8601String(),
+      'reply_content': replyContent,
+    };
+  }
+}
+
 // --- COMMENT MODEL ---
 
 /// Model for individual user comments on a journal post.
@@ -26,11 +54,13 @@ class JournalComment {
   final String personName;
   final DateTime date;
   final String personComment;
+  final List<JournalReplyComment> replies;
 
   JournalComment({
     required this.personName,
     required this.date,
     required this.personComment,
+    this.replies = const [],
   });
 
   factory JournalComment.fromJson(Map<String, dynamic> json) {
@@ -39,6 +69,10 @@ class JournalComment {
       // Parses ISO 8601 string from JSON. Handles potential nulls gracefully.
       date: json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(), 
       personComment: json['person_comment'] as String? ?? '',
+      replies: (json['replies'] as List<dynamic>?)
+              ?.map((i) => JournalReplyComment.fromJson(i as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
   }
 
@@ -47,6 +81,7 @@ class JournalComment {
       'person_name': personName,
       'date': date.toIso8601String(), 
       'person_comment': personComment,
+      'replies': replies.map((reply) => reply.toJson()).toList(),
     };
   }
 }

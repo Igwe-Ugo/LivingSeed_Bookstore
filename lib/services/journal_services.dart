@@ -135,4 +135,23 @@ class JournalProvider extends ChangeNotifier {
   List<JournalPost> getPostsByCategory(JournalCategory category) {
     return _posts.where((post) => post.category == category).toList();
   }
+
+  Future<void> addCommentToPost(String postId, JournalComment comment) async {
+    int index = _posts.indexWhere((post) => post.id == postId);
+    if (index != -1) {
+      _posts[index].comments.add(comment);
+      await _savePostsToLocal();
+      notifyListeners();
+    }
+  }
+
+  Future<void> replyCommentOnPost(String postId, int commentIndex, JournalReplyComment reply) async {
+    int postIdx = _posts.indexWhere((post) => post.id == postId);
+    if (postIdx != -1 && commentIndex < _posts[postIdx].comments.length) {
+      _posts[postIdx].comments[commentIndex].replies.add(reply);
+      await _savePostsToLocal();
+      notifyListeners();
+    }
+  }
+
 }
