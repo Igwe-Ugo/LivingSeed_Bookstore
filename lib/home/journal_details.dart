@@ -162,7 +162,8 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
     );
   }
 
-  Widget _buildCommentsSection(BuildContext context, Users currentUser, JournalPost post) {
+  Widget _buildCommentsSection(
+      BuildContext context, Users currentUser, JournalPost post) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
@@ -187,7 +188,7 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
           ...widget.post.comments
               .map((comment) => _buildCommentCard(context, comment)),
 
-          const SizedBox(height: 50),
+          const SizedBox(height: 30),
           CustomTextInput(
             label: "Add a comment",
             controller: _commentController,
@@ -291,7 +292,7 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
           if (comment.replies.isNotEmpty)
             _buildRepliesSection(context, comment.replies),
           // --- END ADDED ---
-          
+
           const Divider(height: 1),
         ],
       ),
@@ -299,7 +300,8 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
   }
 
   // --- ADDED: New Widget to build the list of replies ---
-  Widget _buildRepliesSection(BuildContext context, List<JournalReplyComment> replies) {
+  Widget _buildRepliesSection(
+      BuildContext context, List<JournalReplyComment> replies) {
     return Padding(
       padding: const EdgeInsets.only(left: 35.0, top: 8.0, bottom: 8.0),
       child: Column(
@@ -311,8 +313,8 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Icon(
-                  Icons.subdirectory_arrow_right, 
-                  size: 16, 
+                  Icons.subdirectory_arrow_right,
+                  size: 16,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 const SizedBox(width: 4),
@@ -333,7 +335,10 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
                           const SizedBox(width: 4),
                           Text(
                             '(${reply.replyDate.day}/${reply.replyDate.month}/${reply.replyDate.year})',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 10),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodySmall
+                                ?.copyWith(fontSize: 10),
                           ),
                         ],
                       ),

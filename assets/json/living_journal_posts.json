@@ -14,9 +14,9 @@
         "person_comment": "A truly insightful perspective on the balance of character. Thank you for sharing!",
         "replies": [
           {
-            "person_name": "Jerusha Andeyek",
-            "date": "2023-05-20T10:00:00Z",
-            "person_comment": "Thank you, David! I'm glad it resonated with you."
+            "replier_name": "Jerusha Andeyek",
+            "reply_date": "2023-05-20T10:00:00Z",
+            "reply_content": "Thank you, David! I'm glad it resonated with you."
           }
         ]
       },
@@ -43,9 +43,9 @@
         "person_comment": "Amen! This is a great reminder of God's unwavering faithfulness.",
         "replies": [
           {
-            "person_name": "Gbile Akanni",
-            "date": "2024-03-12T08:45:00Z",
-            "person_comment": "Thank you, John! Truly, His faithfulness never fails."
+            "replier_name": "Gbile Akanni",
+            "reply_date": "2024-03-12T08:45:00Z",
+            "reply_content": "Thank you, John! Truly, His faithfulness never fails."
           }
         ]
       }
@@ -76,9 +76,9 @@
         "person_comment": "Powerful reminder! The section on total dedication really challenged me.",
         "replies": [
           {
-            "person_name": "Admin",
-            "date": "2024-02-16T10:00:00Z",
-            "person_comment": "Glad it resonated with you, Sarah! Surrender is indeed a daily journey."
+            "replier_name": "Admin",
+            "reply_date": "2024-02-16T10:00:00Z",
+            "reply_content": "Glad it resonated with you, Sarah! Surrender is indeed a daily journey."
           }
         ]
       }
