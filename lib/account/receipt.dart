@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/models/widget.dart';
+import 'package:printing/printing.dart';
 
 class Receipt extends StatelessWidget {
   final Users user;
@@ -22,9 +25,7 @@ class Receipt extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-            onPressed: () {
-              GoRouter.of(context).pop();
-            },
+            onPressed: () => Navigator.pop(context),
             icon: const Icon(
               Iconsax.arrow_left_2,
               size: 17,
@@ -189,22 +190,27 @@ class Receipt extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Theme.of(context).primaryColor),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.download_outlined,
-                      size: 30,
-                    ),
-                    Text(
-                      'Download PDF',
-                    )
-                  ],
+              GestureDetector(
+                onTap: () {
+                  _generateAndSavePdf(context, user, transactionHistory);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Theme.of(context).primaryColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.download_outlined,
+                        size: 30,
+                      ),
+                      Text(
+                        'Download PDF',
+                      )
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 50),
@@ -272,5 +278,130 @@ class Receipt extends StatelessWidget {
       DataCell(Text(qty)),
       DataCell(Text(totalCost)),
     ]);
+  }
+
+  Future<void> _generateAndSavePdf(
+      BuildContext context, Users user, TransactionHistory history) async {
+    final pdf = pw.Document();
+
+    final total =
+        history.description.fold(0.0, (sum, item) => sum + item.totalCost);
+
+    // Create a list of PDF TableRow widgets
+    final List<pw.TableRow> tableRows = [
+      pw.TableRow(
+        children: [
+          pw.Text('Description',
+              style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text('Unit', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text('Qty', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          pw.Text('Total', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+        ],
+      ),
+      // Add data rows
+      ...history.description.map((item) {
+        return pw.TableRow(children: [
+          pw.Text(item.bookName, style: const pw.TextStyle(fontSize: 10)),
+          pw.Text('\$${item.unitCost.toStringAsFixed(2)}',
+              style: const pw.TextStyle(fontSize: 10)),
+          pw.Text(item.quantity.toString(),
+              style: const pw.TextStyle(fontSize: 10)),
+          pw.Text('\$${item.totalCost.toStringAsFixed(2)}',
+              style: const pw.TextStyle(fontSize: 10)),
+        ]);
+      }),
+    ];
+
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context pageContext) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Center(
+                child: pw.Text(
+                  history.transactionTitle,
+                  style: pw.TextStyle(
+                      fontSize: 24, fontWeight: pw.FontWeight.bold),
+                ),
+              ),
+              pw.SizedBox(height: 20),
+
+              // Transaction Details
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text('Customer: ${user.fullname}'),
+                  pw.Text('Receipt No: ${history.receiptNo}'),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text('Date: ${history.transactionDate}'),
+                  pw.Text('Time: ${history.transactionTime}'),
+                ],
+              ),
+
+              pw.SizedBox(height: 20),
+
+              // Table
+              pw.Table(
+                border: pw.TableBorder.all(),
+                columnWidths: const {
+                  0: pw.FlexColumnWidth(3), // Description
+                  1: pw.FlexColumnWidth(1.5), // Unit
+                  2: pw.FlexColumnWidth(1), // Qty
+                  3: pw.FlexColumnWidth(1.5), // Total
+                },
+                children: tableRows,
+              ),
+
+              pw.SizedBox(height: 20),
+
+              // Totals
+              pw.Align(
+                alignment: pw.Alignment.topRight,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Text('Subtotal: \$${total.toStringAsFixed(2)}'),
+                    pw.Divider(),
+                    pw.Text(
+                      'TOTAL: \$${total.toStringAsFixed(2)}',
+                      style: pw.TextStyle(
+                          fontWeight: pw.FontWeight.bold, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+
+              pw.SizedBox(height: 40),
+              pw.Center(
+                child: pw.Text('Thank you for your purchase!',
+                    style: pw.TextStyle(fontStyle: pw.FontStyle.italic)),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+    // Save the PDF using the printing package
+    final Uint8List bytes = await pdf.save();
+
+    // Use the printing package's save/share functionality
+    await Printing.sharePdf(
+      bytes: bytes,
+      filename: 'receipt_${history.receiptNo}.pdf',
+    );
+
+    // Optionally show a confirmation message
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+          content: Text(
+              'Receipt ${history.receiptNo} downloaded and shared successfully!')),
+    );
   }
 }

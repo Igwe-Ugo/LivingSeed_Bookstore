@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/common/router.dart';
 import 'package:livingseed_media/models/widget.dart';
-
 
 class TransactionHistoryList extends StatelessWidget {
   final Users user;
@@ -11,6 +10,9 @@ class TransactionHistoryList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Correctly check if the transaction history is empty right at the start.
+    final hasTransactions = user.transactionHistory.isNotEmpty;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -32,55 +34,68 @@ class TransactionHistoryList extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: user.transactionHistory.length,
-        itemBuilder: (context, index) {
-          return user != null && user.transactionHistory.isNotEmpty
-              ? _transactionHistoryItems(
-                  context, user.transactionHistory[index], user, index)
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Icon(
-                        Icons.history_edu_outlined,
-                        size: 100,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'No Transactions made! Every Transaction history appears here',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                    ]);
-        },
-      ),
+      // Use a ternary operator on the body to decide which widget to display.
+      body: hasTransactions
+          ? ListView.builder(
+              itemCount: user.transactionHistory.length,
+              itemBuilder: (context, index) {
+                // If we reach here, we know the list is not empty, so we safely build the item.
+                return _transactionHistoryItems(
+                    context, user.transactionHistory[index], user, index);
+              },
+            )
+          : const Center(
+              // Display this only if hasTransactions is false.
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Iconsax.receipt,
+                    size: 70,
+                    color: Colors.grey,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    "No Recent Transactions to be reviewed",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 }
 
-Container _transactionHistoryItems(
+// Function to build individual transaction history items
+Widget _transactionHistoryItems(
     BuildContext context, TransactionHistory history, Users user, int index) {
-  return Container(
-    padding: const EdgeInsets.all(8),
-    width: MediaQuery.of(context).size.width,
+  return GestureDetector(
+    onTap: () {
+      GoRouter.of(context).go(
+        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}/${LivingSeedMediaRouter.receiptPath}', // Use the name defined in router.dart
+        extra: {
+          'user': user,
+          'transactionHistory': history,
+        },
+      );
+    },
     child: Card(
-      elevation: 0,
-      child: InkWell(
-        onTap: () => GoRouter.of(context).go(
-            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}/${LivingSeedMediaRouter.transactionDescriptionPath}',
-            extra: {
-              'user': user,
-              'transactionHistory': user.transactionHistory[index]
-            }),
+      margin: const EdgeInsets.all(8.0),
+      elevation: 4.0,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).primaryColor,
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
         child: Padding(
-          padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

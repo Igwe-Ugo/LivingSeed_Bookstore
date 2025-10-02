@@ -75,7 +75,7 @@ class LivingSeedMediaRouter {
 
   // transaction histories
   static const String transactionHistoryPath = 'transaction_history';
-  static const String transactionDescriptionPath = 'transaction_description';
+  static const String receiptPath = 'receipt';
 
   // notification pages
   static const String notificationPath = '/notifications';
@@ -336,8 +336,10 @@ class LivingSeedMediaRouter {
                         GoRoute(
                             path: transactionHistoryPath,
                             builder: (context, state) {
-                              final user = state.extra;
-                              if (user is Users) {
+                              final user = state.extra is Users
+                                  ? state.extra as Users?
+                                  : null;
+                              if (user != null) {
                                 return TransactionHistoryList(user: user);
                               } else {
                                 return Center(
@@ -348,15 +350,28 @@ class LivingSeedMediaRouter {
                             },
                             routes: [
                               GoRoute(
-                                path: transactionDescriptionPath,
+                                path: receiptPath,
                                 builder: (context, state) {
-                                  final args =
-                                      state.extra as Map<String, dynamic>;
-                                  return Receipt(
-                                      user: args['user'] as Users,
-                                      transactionHistory:
-                                          args['transactionHistory']
-                                              as TransactionHistory);
+                                  final args = state.extra;
+                                  if (args is Map<String, dynamic> &&
+                                      args.containsKey('user') &&
+                                      args.containsKey('transactionHistory')) {
+                                    final Users user = args['user'] as Users;
+                                    final TransactionHistory
+                                        transactionHistory =
+                                        args['transactionHistory']
+                                            as TransactionHistory;
+
+                                    return Receipt(
+                                      user: user,
+                                      transactionHistory: transactionHistory,
+                                    );
+                                  } else {
+                                    // Handle case where required data is missing or wrong type
+                                    return const Center(
+                                        child: Text(
+                                            'Receipt details missing or invalid.'));
+                                  }
                                 },
                               )
                             ]),

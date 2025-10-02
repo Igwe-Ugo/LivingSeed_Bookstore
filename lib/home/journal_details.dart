@@ -17,6 +17,15 @@ class JournalDetailScreen extends StatefulWidget {
 
 class _JournalDetailScreenState extends State<JournalDetailScreen> {
   final TextEditingController _commentController = TextEditingController();
+  final TextEditingController _replyController = TextEditingController();
+  int? _replyingToCommentIndex;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    _replyController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,18 +186,31 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
                 ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const Divider(),
-
           if (widget.post.comments.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 20.0),
               child: Center(child: Text('Be the first to leave a comment!')),
             ),
-
-          // List of Comments
-          ...widget.post.comments
-              .map((comment) => _buildCommentCard(context, comment)),
-
-          const SizedBox(height: 30),
+          const SizedBox(height: 10),
+          Column(
+            children: [
+              ...widget.post.comments.asMap().entries.map((entry) {
+                final index = entry.key;
+                final comment = entry.value;
+                return Column(
+                  children: [
+                    _buildCommentCard(context, comment, index),
+                    if (_replyingToCommentIndex == index)
+                      _buildReplyInputField(context, currentUser,
+                          widget.post.id!, index, comment.personName)
+                  ],
+                );
+              }),
+            ],
+          ),
+          const SizedBox(
+            height: 20,
+          ),
           CustomTextInput(
             label: "Add a comment",
             controller: _commentController,
@@ -230,7 +252,81 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
     );
   }
 
-  Widget _buildCommentCard(BuildContext context, JournalComment comment) {
+  Widget _buildReplyInputField(
+    BuildContext context,
+    Users user,
+    String postId,
+    int commentIndex,
+    String parentCommentAuthor,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 35.0, top: 8.0, bottom: 15.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Replying to $parentCommentAuthor:',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 4),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _replyController,
+                  decoration: InputDecoration(
+                    hintText: 'Your reply...',
+                    contentPadding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 0.5),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.5),
+                          width: 0.5),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                      borderSide: BorderSide(
+                          color: Theme.of(context).primaryColor, width: 1.5),
+                    ),
+                  ),
+                  minLines: 1,
+                  maxLines: 5,
+                ),
+              ),
+              const SizedBox(width: 8),
+              SizedBox(
+                height: 40,
+                child: ElevatedButton(
+                  onPressed: () => _submitReply(user, postId, commentIndex),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Theme.of(context).primaryColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0)),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                  ),
+                  child: const Icon(Iconsax.send_1, size: 20),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCommentCard(
+      BuildContext context, JournalComment comment, int commentIndex) {
+    final isReplyingToThisComment = _replyingToCommentIndex == commentIndex;
     return Container(
       padding: const EdgeInsets.only(bottom: 10.0, top: 10.0),
       child: Column(
@@ -259,20 +355,31 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
               // Reply Button
               TextButton.icon(
                 onPressed: () {
-                  // TODO: Implement reply functionality (e.g., show a text field/dialog)
-                  showMessage(
-                      "'Reply feature coming soon for ${comment.personName}!'",
-                      context);
+                  setState(() {
+                    // If currently replying to this comment, set state to null (Cancel)
+                    // Otherwise, set state to this comment's index (Reply)
+                    _replyingToCommentIndex =
+                        isReplyingToThisComment ? null : commentIndex;
+                    _replyController.clear(); // Clear controller when toggling
+                  });
                 },
                 icon: Icon(
-                  Icons.reply,
+                  isReplyingToThisComment ? Icons.cancel_outlined : Icons.reply,
                   size: 16,
-                  color: Theme.of(context).primaryColor,
+                  color: isReplyingToThisComment
+                      ? Colors.red // Use red for Cancel
+                      : Theme.of(context).primaryColor,
                 ),
                 label: Text(
-                  'Reply',
+                  isReplyingToThisComment
+                      ? 'Cancel'
+                      : 'Reply', // Change text to Cancel
                   style: TextStyle(
-                      fontSize: 12, color: Theme.of(context).primaryColor),
+                    fontSize: 12,
+                    color: isReplyingToThisComment
+                        ? Colors.red
+                        : Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
             ],
@@ -382,11 +489,39 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
       personComment: commentText,
     );
 
-    setState(() {
-      widget.post.comments.add(newComment);
+    Provider.of<JournalProvider>(context, listen: false)
+        .addCommentToPost(post.id!, newComment)
+        .then((_) {
       _commentController.clear();
+      showMessage('Comment added successfully!', context);
+    }).catchError((error) {
+      debugPrint('Error submitting comment: $error');
+      showMessage('Failed to add comment. Please try again.', context);
     });
+  }
 
-    showMessage('Comment added successfully!', context);
+  void _submitReply(Users user, String postId, int commentIndex) {
+    final replyText = _replyController.text.trim();
+    if (replyText.isEmpty) {
+      showMessage('Please enter a reply before submitting.', context);
+      return;
+    }
+    final newReply = JournalReplyComment(
+      replierName: user.fullname,
+      replyDate: DateTime.now(),
+      replyContent: replyText,
+    );
+    Provider.of<JournalProvider>(context, listen: false)
+        .replyCommentOnPost(postId, commentIndex, newReply)
+        .then((_) {
+      setState(() {
+        _replyController.clear();
+        _replyingToCommentIndex = null;
+      });
+      showMessage('Reply added successfully!', context);
+    }).catchError((error) {
+      debugPrint('Error adding reply: $error');
+      showMessage('Failed to add reply. Please try again.', context);
+    });
   }
 }

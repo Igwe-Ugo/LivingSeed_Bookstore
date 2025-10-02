@@ -136,21 +136,72 @@ class JournalProvider extends ChangeNotifier {
     return _posts.where((post) => post.category == category).toList();
   }
 
+  /// Adds a new top-level comment to a specific journal post.
   Future<void> addCommentToPost(String postId, JournalComment comment) async {
     int index = _posts.indexWhere((post) => post.id == postId);
     if (index != -1) {
-      _posts[index].comments.add(comment);
+      // Create a new list for comments to ensure proper immutability/change detection
+      List<JournalComment> updatedComments = List.from(_posts[index].comments);
+      updatedComments.add(comment);
+      
+      // Create a new post object with updated comments list
+      _posts[index] = JournalPost(
+        id: _posts[index].id,
+        title: _posts[index].title,
+        authorName: _posts[index].authorName,
+        imageUrl: _posts[index].imageUrl,
+        date: _posts[index].date,
+        category: _posts[index].category,
+        journalWriteup: _posts[index].journalWriteup,
+        comments: updatedComments,
+      );
+      
       await _savePostsToLocal();
       notifyListeners();
     }
   }
 
+  /// Adds a reply to an existing comment within a specific journal post.
   Future<void> replyCommentOnPost(String postId, int commentIndex, JournalReplyComment reply) async {
     int postIdx = _posts.indexWhere((post) => post.id == postId);
-    if (postIdx != -1 && commentIndex < _posts[postIdx].comments.length) {
-      _posts[postIdx].comments[commentIndex].replies.add(reply);
+    
+    if (postIdx != -1 && commentIndex >= 0 && commentIndex < _posts[postIdx].comments.length) {
+      // Reference the original comment
+      JournalComment originalComment = _posts[postIdx].comments[commentIndex];
+      
+      // Create a new list of replies, adding the new reply
+      List<JournalReplyComment> updatedReplies = List.from(originalComment.replies)..add(reply);
+
+      // Create a new comment object with the updated replies list
+      JournalComment updatedComment = JournalComment(
+        personName: originalComment.personName,
+        date: originalComment.date,
+        personComment: originalComment.personComment,
+        replies: updatedReplies,
+      );
+
+      // Create a new list of comments for the post
+      List<JournalComment> updatedComments = List.from(_posts[postIdx].comments);
+      
+      // Replace the old comment with the updated comment
+      updatedComments[commentIndex] = updatedComment;
+      
+      // Create a new post object with the updated comments list
+      _posts[postIdx] = JournalPost(
+        id: _posts[postIdx].id,
+        title: _posts[postIdx].title,
+        authorName: _posts[postIdx].authorName,
+        imageUrl: _posts[postIdx].imageUrl,
+        date: _posts[postIdx].date,
+        category: _posts[postIdx].category,
+        journalWriteup: _posts[postIdx].journalWriteup,
+        comments: updatedComments,
+      );
+      
       await _savePostsToLocal();
       notifyListeners();
+    } else {
+      debugPrint('Error: Post ID ($postId) or Comment Index ($commentIndex) not found.');
     }
   }
 
