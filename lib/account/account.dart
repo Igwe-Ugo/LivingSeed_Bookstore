@@ -140,7 +140,7 @@ class _AccountState extends State<Account> {
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
                           '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.booksPurchasedPath}',
-                          extra: user),
+                      ),
                       leading: const Icon(Iconsax.document_download),
                       title: Text(
                         'Books Purchased',
@@ -151,8 +151,7 @@ class _AccountState extends State<Account> {
                     ),
                     ListTile(
                       onTap: () => GoRouter.of(context).go(
-                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}',
-                          extra: user),
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}',),
                       leading: const Icon(Icons.history_outlined),
                       title: Text(
                         'Transaction History',

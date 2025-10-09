@@ -2,63 +2,73 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/services/users_services.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import '../common/widget.dart';
 import '../models/widget.dart';
 
 class BookPurchased extends StatelessWidget {
-  final Users user;
-  const BookPurchased({super.key, required this.user});
+  const BookPurchased({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () => GoRouter.of(context).pop(),
-          icon: const Icon(
-            Iconsax.arrow_left_2,
-            size: 17,
-          ),
-        ),
-        title: const Text(
-          'Books Purchased',
-          style: TextStyle(
-            fontFamily: 'Playfair',
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: user.bookPurchased.isNotEmpty
-          ? ListView.builder(
-              itemCount: user.bookPurchased.length,
-              itemBuilder: (context, index) {
-                return _booksPurchasedItems(context, user.bookPurchased[index]);
-              },
-            )
-          : Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(
-                    Icons.book_outlined,
-                    size: 100,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'No books purchased!\nEvery purchased book appears here',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+    return Consumer<UsersAuthProvider>(
+      builder: (context, userProvider, child) {
+        final user = userProvider.userData;
+        if (user == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0,
+            leading: IconButton(
+              onPressed: () => GoRouter.of(context).pop(),
+              icon: const Icon(
+                Iconsax.arrow_left_2,
+                size: 17,
               ),
             ),
+            title: const Text(
+              'Books Purchased',
+              style: TextStyle(
+                fontFamily: 'Playfair',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          body: user.bookPurchased.isNotEmpty
+              ? ListView.builder(
+                  itemCount: user.bookPurchased.length,
+                  itemBuilder: (context, index) {
+                    return _booksPurchasedItems(context, user.bookPurchased[index]);
+                  },
+                )
+              : Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        Icons.book_outlined,
+                        size: 100,
+                      ),
+                      SizedBox(height: 20),
+                      Text(
+                        'No books purchased!\nEvery purchased book appears here',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+        );
+      }
     );
   }
 }

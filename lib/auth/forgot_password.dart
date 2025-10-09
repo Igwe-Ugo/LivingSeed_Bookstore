@@ -52,14 +52,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           child: Container(
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.45),
+                                color: Colors.white.withOpacity(0.95),
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(15))),
                             child: Icon(
                               Iconsax.arrow_left_2,
                               size: 17,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -74,6 +73,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           style: TextStyle(
                               fontFamily: 'Playfair',
                               fontSize: 30,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -84,7 +84,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
-                            color: Theme.of(context).disabledColor,
+                            color: Colors.white,
                           ),
                         ),
                       ),
@@ -95,9 +95,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .dividerColor
-                                .withOpacity(0.45),
+                            color: Colors.white.withOpacity(0.95),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15))),
                         child: Column(
@@ -108,6 +106,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 icon: Iconsax.password_check,
                                 validator: () {},
                                 obscureText: _obscureText,
+                                textColor: Colors.black,
                                 maxLine: 1,
                                 isPassword: true),
                             CustomTextInput(
@@ -116,6 +115,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                 icon: Iconsax.password_check,
                                 validator: () {},
                                 obscureText: _obscureText,
+                                textColor: Colors.black,
                                 maxLine: 1,
                                 isPassword: true),
                           ],

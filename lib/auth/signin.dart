@@ -60,15 +60,9 @@ class _SignInState extends State<SignIn> {
                                 minimumSize:
                                     WidgetStatePropertyAll(Size(7, 50)),
                                 elevation: WidgetStatePropertyAll(0.0),
-                                iconColor: WidgetStatePropertyAll(
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? Colors.white
-                                        : Colors.black),
-                                backgroundColor: WidgetStatePropertyAll(
-                                    Theme.of(context)
-                                        .dividerColor
-                                        .withOpacity(0.45))),
+                                iconColor: WidgetStatePropertyAll(Colors.black),
+                                backgroundColor:
+                                    WidgetStatePropertyAll(Colors.white)),
                             onPressed: () => GoRouter.of(context)
                                 .go(LivingSeedMediaRouter.landingPagePath),
                             label: Icon(
@@ -97,7 +91,7 @@ class _SignInState extends State<SignIn> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
-                            color: Theme.of(context).disabledColor,
+                            color: Colors.white.withOpacity(0.95),
                           ),
                         ),
                       ),
@@ -108,9 +102,7 @@ class _SignInState extends State<SignIn> {
                         width: MediaQuery.of(context).size.width,
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .dividerColor
-                                .withOpacity(0.45),
+                            color: Colors.white.withOpacity(0.95),
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(15))),
                         child: Column(
@@ -119,6 +111,7 @@ class _SignInState extends State<SignIn> {
                                 label: 'Email Address',
                                 controller: emailController,
                                 icon: Icons.email_outlined,
+                                textColor: Colors.black,
                                 validator: () {},
                                 isEmail: true),
                             CustomTextInput(
@@ -126,6 +119,7 @@ class _SignInState extends State<SignIn> {
                                 controller: passwordController,
                                 icon: Iconsax.password_check,
                                 validator: () {},
+                                textColor: Colors.black,
                                 obscureText: _obscureText,
                                 maxLine: 1,
                                 isPassword: true),

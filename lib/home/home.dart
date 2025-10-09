@@ -25,6 +25,7 @@ class _HomeState extends State<Home> {
   bool _isPlaying = true;
 
   void _showInfoDialog(AboutBooks book) {
+    double _fontSize = 13.0;
     setState(() {
       _isPlaying = false;
     });
@@ -35,17 +36,54 @@ class _HomeState extends State<Home> {
         return AlertDialog(
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: Text(book.bookTitle),
-          content: Text(book.author),
+          title: Text(
+            book.bookTitle,
+            style: TextStyle(
+                fontFamily: 'Playfair',
+                fontSize: 17,
+                fontWeight: FontWeight.w900),
+          ),
+          content: SizedBox(
+            height: 170,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  book.author,
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  book.aboutBook,
+                  maxLines: 7,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                ),
+              ],
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
-                setState(() {
-                  _isPlaying = true;
-                });
+                Navigator.of(context).pop();
+                GoRouter.of(context).go(
+                    '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+                    extra: book);
               },
-              child: const Text('close'),
+              child: Text(
+                'See more'.toUpperCase(),
+                style: TextStyle(
+                    fontSize: _fontSize, color: Theme.of(context).primaryColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'close'.toUpperCase(),
+                style: TextStyle(
+                    fontSize: _fontSize, color: Theme.of(context).primaryColor),
+              ),
             ),
           ],
         );

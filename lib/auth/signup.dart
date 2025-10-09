@@ -42,7 +42,7 @@ class _SignUpState extends State<SignUp> {
     // 1. --- Input Validation (All checks must pass before proceeding) ---
     final emailRegExp = RegExp(
         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$");
-    
+
     if (!_formKey.currentState!.validate()) {
       return showMessage('Please fill all available input spaces', context);
     }
@@ -90,12 +90,15 @@ class _SignUpState extends State<SignUp> {
       if (result['success'] == true) {
         showMessage('Account created. Please verify your email.', context);
         // NAVIGATE to OTP verification screen, passing ALL required data
-        GoRouter.of(context).push('${LivingSeedMediaRouter.signupPath}/${LivingSeedMediaRouter.signupVerificationPath}', extra: {
-          'email': newUser.emailAddress,
-          'fullname': newUser.fullname,
-        });
+        GoRouter.of(context).push(
+            '${LivingSeedMediaRouter.signupPath}/${LivingSeedMediaRouter.signupVerificationPath}',
+            extra: {
+              'email': newUser.emailAddress,
+              'fullname': newUser.fullname,
+            });
       } else {
-         showMessage('Sign up failed: ${result['error'] ?? 'Unknown error'}', context);
+        showMessage(
+            'Sign up failed: ${result['error'] ?? 'Unknown error'}', context);
       }
     } catch (e) {
       showMessage('Sign up failed: ${e.toString()}', context);
@@ -140,14 +143,9 @@ class _SignUpState extends State<SignUp> {
                             ),
                             minimumSize: WidgetStatePropertyAll(Size(7, 50)),
                             elevation: WidgetStatePropertyAll(0.0),
-                            iconColor: WidgetStatePropertyAll(
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black),
+                            iconColor: WidgetStatePropertyAll(Colors.black),
                             backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context)
-                                    .dividerColor
-                                    .withOpacity(0.45))),
+                                Colors.white.withOpacity(0.95))),
                         onPressed: () => GoRouter.of(context)
                             .go(LivingSeedMediaRouter.landingPagePath),
                         label: Icon(
@@ -158,14 +156,15 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(
                     height: 10,
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Welcome!',
                       style: TextStyle(
                           fontFamily: 'Playfair',
                           fontSize: 30,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white.withOpacity(0.95)),
                     ),
                   ),
                   Align(
@@ -175,7 +174,7 @@ class _SignUpState extends State<SignUp> {
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
-                        color: Theme.of(context).disabledColor,
+                        color: Colors.white.withOpacity(0.95),
                       ),
                     ),
                   ),
@@ -184,7 +183,7 @@ class _SignUpState extends State<SignUp> {
                     width: MediaQuery.of(context).size.width,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
-                        color: Theme.of(context).dividerColor.withOpacity(0.45),
+                        color: Colors.white.withOpacity(0.95),
                         borderRadius:
                             const BorderRadius.all(Radius.circular(15))),
                     child: Column(
@@ -192,11 +191,13 @@ class _SignUpState extends State<SignUp> {
                         CustomTextInput(
                             label: 'Fullname',
                             validator: () {},
+                            textColor: Colors.black,
                             controller: fullnameController,
                             icon: Icons.person_outline),
                         CustomTextInput(
                             label: 'Email',
                             validator: () {},
+                            textColor: Colors.black,
                             controller: emailController,
                             icon: Icons.email_outlined,
                             isEmail: true),
@@ -206,6 +207,7 @@ class _SignUpState extends State<SignUp> {
                             controller: passwordController,
                             icon: Iconsax.password_check,
                             maxLine: 1,
+                            textColor: Colors.black,
                             isPassword: true),
                         CustomTextInput(
                             label: 'Confirm Password',
@@ -214,10 +216,12 @@ class _SignUpState extends State<SignUp> {
                             controller: confirmPasswordController,
                             icon: Iconsax.password_check,
                             obscureText: _obscureText,
+                            textColor: Colors.black,
                             isPassword: true),
                         CustomTextInput(
                             label: 'Telephone',
                             validator: () {},
+                            textColor: Colors.black,
                             controller: telephoneController,
                             icon: Icons.phone_android_outlined,
                             isPhone: true),
@@ -252,7 +256,7 @@ class _SignUpState extends State<SignUp> {
                       child: Center(
                         child: isLoading
                             ? LoadingAnimationWidget.halfTriangleDot(
-                                    color: Colors.white, size: 20)
+                                color: Colors.white, size: 20)
                             : const Text(
                                 'Sign Up',
                                 style: TextStyle(
@@ -273,7 +277,7 @@ class _SignUpState extends State<SignUp> {
                       'OR CONTINUE WITH',
                       style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context).disabledColor,
+                          color: Colors.white.withOpacity(0.95),
                           fontWeight: FontWeight.w700),
                     ),
                   ),
@@ -321,7 +325,7 @@ class _SignUpState extends State<SignUp> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
-                          color: Theme.of(context).disabledColor,
+                          color: Colors.white.withOpacity(0.95),
                         ),
                       ),
                       TextButton(
@@ -352,8 +356,11 @@ class _SignUpState extends State<SignUp> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text('Select Gender:    ',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
+        Text('Select Gender:    ',
+            style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                color: Colors.white.withOpacity(0.95))),
         Checkbox(
           activeColor: Theme.of(context).primaryColor,
           value: male,
@@ -364,7 +371,10 @@ class _SignUpState extends State<SignUp> {
             });
           },
         ),
-        const Text('Male'),
+        Text(
+          'Male',
+          style: TextStyle(color: Colors.white.withOpacity(0.95)),
+        ),
         Checkbox(
           activeColor: Theme.of(context).primaryColor,
           value: female,
@@ -375,7 +385,10 @@ class _SignUpState extends State<SignUp> {
             });
           },
         ),
-        const Text('Female'),
+        Text(
+          'Female',
+          style: TextStyle(color: Colors.white.withOpacity(0.95)),
+        ),
       ],
     );
   }
@@ -392,7 +405,10 @@ class _SignUpState extends State<SignUp> {
             });
           },
         ),
-        const Text('I agree to the Terms and Conditions'),
+        Text(
+          'I agree to the Terms and Conditions',
+          style: TextStyle(color: Colors.white.withOpacity(0.95)),
+        ),
       ],
     );
   }

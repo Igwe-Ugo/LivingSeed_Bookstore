@@ -302,19 +302,7 @@ class LivingSeedMediaRouter {
                         // books purchased
                         GoRoute(
                             path: booksPurchasedPath,
-                            builder: (context, state) {
-                              final user = state.extra;
-                              if (user is Users) {
-                                return BookPurchased(
-                                  user: user,
-                                );
-                              } else {
-                                return Center(
-                                  child: Text(
-                                      'No Recent Announcements to be reviewed'),
-                                );
-                              }
-                            },
+                            builder: (context, state) => BookPurchased(),
                             routes: [
                               GoRoute(
                                   path: writeReviewPath,
@@ -335,45 +323,11 @@ class LivingSeedMediaRouter {
                         // transaction history
                         GoRoute(
                             path: transactionHistoryPath,
-                            builder: (context, state) {
-                              final user = state.extra is Users
-                                  ? state.extra as Users?
-                                  : null;
-                              if (user != null) {
-                                return TransactionHistoryList(user: user);
-                              } else {
-                                return Center(
-                                  child: Text(
-                                      'No Recent Transactions to be reviewed'),
-                                );
-                              }
-                            },
+                            builder: (context, state) => TransactionHistoryList(),
                             routes: [
                               GoRoute(
-                                path: receiptPath,
-                                builder: (context, state) {
-                                  final args = state.extra;
-                                  if (args is Map<String, dynamic> &&
-                                      args.containsKey('user') &&
-                                      args.containsKey('transactionHistory')) {
-                                    final Users user = args['user'] as Users;
-                                    final TransactionHistory
-                                        transactionHistory =
-                                        args['transactionHistory']
-                                            as TransactionHistory;
-
-                                    return Receipt(
-                                      user: user,
-                                      transactionHistory: transactionHistory,
-                                    );
-                                  } else {
-                                    // Handle case where required data is missing or wrong type
-                                    return const Center(
-                                        child: Text(
-                                            'Receipt details missing or invalid.'));
-                                  }
-                                },
-                              )
+                                  path: receiptPath,
+                                  builder: (context, state) => Receipt())
                             ]),
                         // admin panel
                         GoRoute(

@@ -15,12 +15,14 @@ class CustomTextInput extends StatefulWidget {
   int? maxLine;
   int? maxLength;
   bool isIcon;
+  Color? textColor;
   CustomTextInput(
       {super.key,
       required this.label,
       required this.controller,
       this.icon,
       this.maxLine,
+      this.textColor,
       this.isEmail = false,
       this.isPassword = false,
       this.isPhone = false,
@@ -44,8 +46,10 @@ class _CustomTextInputState extends State<CustomTextInput> {
         !widget.isTitleNotNecessary
             ? Text(
                 widget.label,
-                style:
-                    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: widget.textColor),
               )
             : SizedBox.shrink(),
         const SizedBox(height: 7),
@@ -71,12 +75,20 @@ class _CustomTextInputState extends State<CustomTextInput> {
                     : widget.isNumber
                         ? TextInputType.number
                         : TextInputType.text,
+            style: TextStyle(color: widget.textColor),
             decoration: InputDecoration(
+              hoverColor: Theme.of(context).disabledColor.withOpacity(0.1),
               filled: true,
               fillColor: Theme.of(context).disabledColor.withOpacity(0.1),
-              prefixIcon: widget.isIcon ? Icon(widget.icon, size: 17) : null,
+              prefixIcon: widget.isIcon
+                  ? Icon(
+                      widget.icon,
+                      size: 17,
+                      color: widget.textColor,
+                    )
+                  : null,
               hintText: 'Enter ${widget.label}',
-              hintStyle: TextStyle(fontSize: 12),
+              hintStyle: TextStyle(fontSize: 12, color: widget.textColor),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
@@ -91,6 +103,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
                       child: Icon(
                         widget.obscureText ? Iconsax.eye : Iconsax.eye_slash,
                         size: 17,
+                        color: widget.textColor!.withOpacity(0.7),
                       ),
                     )
                   : null,
