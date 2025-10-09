@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:livingseed_media/common/show_message.dart';
 import 'package:livingseed_media/services/users_services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -335,20 +336,100 @@ class Receipt extends StatelessWidget {
 
               // Transaction Details
               pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('Customer: ${user.fullname}'),
-                  pw.Text('Receipt No: ${history.receiptNo}'),
-                ],
-              ),
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    // should add the living seed picture here.
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('Receipts',
+                            style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold, fontSize: 25)),
+                        pw.Text(
+                          'Receipt No: ${history.receiptNo}',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                        pw.Text(
+                          'Receipt Date: ${history.transactionDate}',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                        pw.Text(
+                          'Receipt Time: ${history.transactionTime}',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                pw.SizedBox(
+                  height: 20,
+                ),
               pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text('Date: ${history.transactionDate}'),
-                  pw.Text('Time: ${history.transactionTime}'),
-                ],
-              ),
-
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('From'.toUpperCase(),
+                            style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        pw.Text(
+                          'peace house publications'.toUpperCase(),
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, fontSize: 12),
+                        ),
+                        pw.Text(
+                          'Peace House, P.O.Box 971',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                        pw.Text(
+                          'Gboko, Benue State, Nigeria',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                        pw.Text(
+                          'Contact: +234 123 456 7890',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                        pw.Text(
+                          'Email: contact@peacehouse.com',
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.normal, fontSize: 10),
+                        ),
+                      ],
+                    ),
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('To'.toUpperCase(),
+                            style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold, fontSize: 10)),
+                        pw.SizedBox(height: 4),
+                        pw.Text(
+                          user.fullname.toUpperCase(),
+                          style: pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold, fontSize: 12),
+                        ),
+                        pw.SizedBox(height: 4),
+                        pw.Text(
+                          'Email: ${user.emailAddress}',
+                          style: pw.TextStyle(
+                              fontSize: 10, fontWeight: pw.FontWeight.normal),
+                        ),
+                        pw.Text(
+                          'Phone: ${user.telephone}',
+                          style: pw.TextStyle(
+                              fontSize: 10, fontWeight: pw.FontWeight.normal),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               pw.SizedBox(height: 20),
 
               // Table
@@ -403,10 +484,6 @@ class Receipt extends StatelessWidget {
     );
 
     // Optionally show a confirmation message
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-          content: Text(
-              'Receipt ${history.receiptNo} downloaded and shared successfully!')),
-    );
+    showMessage('Receipt ${history.receiptNo} downloaded and shared successfully!', context);
   }
 }
