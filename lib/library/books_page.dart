@@ -48,8 +48,6 @@ class _BooksPageState extends State<BooksPage> {
         ratingCount[rating] = (ratingCount[rating] ?? 0) + 1;
       }
     }
-
-    // Get total number of reviews
     totalReviews = widget.aboutBooks.ratingReviews.length;
   }
 

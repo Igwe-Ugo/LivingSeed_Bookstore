@@ -68,7 +68,7 @@ class LivingSeedMediaRouter {
 
   // account pages
   static const String accountPath = '/account';
-  static const String editAccountPath = 'editAccount';
+  static const String editAccountPath = 'edit_account';
   static const String cartPath = 'cart';
   static const String changePasswordPath = 'change_password';
   static const String writeReviewPath = 'write_review';
@@ -90,12 +90,14 @@ class LivingSeedMediaRouter {
   //admin pages
   static const String uploadBookPath = 'upload_book';
   static const String uploadBibleStudyPath = 'upload_bibilestudy';
+  static const String uploadMagazinePath = 'upload_magazine';
   static const String dashboardPath = 'dashboard';
   static const String manageNotificationsPath = 'manage_notifications';
   static const String manageUsersPath = 'manage_users';
   static const String userProfilePath = 'user_profile';
   static const String addEventPath = 'add_event';
   static const String addArticle = 'add_article';
+  static const String manageBooks = 'manage_book';
 
   LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
@@ -323,7 +325,8 @@ class LivingSeedMediaRouter {
                         // transaction history
                         GoRoute(
                             path: transactionHistoryPath,
-                            builder: (context, state) => TransactionHistoryList(),
+                            builder: (context, state) =>
+                                TransactionHistoryList(),
                             routes: [
                               GoRoute(
                                   path: receiptPath,
@@ -335,6 +338,10 @@ class LivingSeedMediaRouter {
                             builder: (context, state) => const AdminDashboard(),
                             routes: [
                               GoRoute(
+                                path: manageBooks,
+                                builder: (context, state) => const BookManagementScreen(),
+                              ),
+                              GoRoute(
                                 path: uploadBookPath,
                                 builder: (context, state) =>
                                     const UploadBookScreen(),
@@ -343,6 +350,11 @@ class LivingSeedMediaRouter {
                                 path: uploadBibleStudyPath,
                                 builder: (context, state) =>
                                     const UploadBibleStudy(),
+                              ),
+                              GoRoute(
+                                path: uploadMagazinePath,
+                                builder: (context, state) =>
+                                    const UploadMagazineScreen(),
                               ),
                               GoRoute(
                                 path: addEventPath,

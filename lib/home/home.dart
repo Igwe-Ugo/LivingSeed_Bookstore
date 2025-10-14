@@ -199,7 +199,7 @@ class _HomeState extends State<Home> {
 
                 // PageView content (GIVE IT A FIXED HEIGHT NOW)
                 SizedBox(
-                  height: 300, // Explicit height for PageView
+                  height: MediaQuery.of(context).size.height * 0.4,
                   child: PageView(
                     controller: _pageController,
                     onPageChanged: (index) {
@@ -278,8 +278,8 @@ class _HomeState extends State<Home> {
                 const SizedBox(height: 10),
 
                 SizedBox(
-                  height:
-                      400, // Give fixed height for the horizontal card section
+                  height: MediaQuery.of(context).size.height *
+                      0.48, // Give fixed height for the horizontal card section
                   child: ListView.builder(
                     itemCount: journalPost.length,
                     // Changed Row + SingleChildScrollView to ListView.builder for proper behavior
@@ -287,6 +287,7 @@ class _HomeState extends State<Home> {
                     itemBuilder: (context, index) {
                       final journal = journalPost[index];
                       return buildBlogCard(
+                          context: context,
                           imageUrl: journal.imageUrl,
                           date: journal,
                           title: journal.title,
@@ -313,6 +314,7 @@ class _HomeState extends State<Home> {
   ///
   /// It takes all content data as parameters, making it highly reusable.
   Widget buildBlogCard({
+    required BuildContext context,
     required String imageUrl,
     required JournalPost date,
     required String title,
@@ -320,15 +322,21 @@ class _HomeState extends State<Home> {
     required JournalPost category,
     required VoidCallback onReadMore,
   }) {
+    const double kMaxBlogCardWidth = 360.0;
+    final cardWidth = (MediaQuery.of(context).size.width * 0.9)
+        .clamp(150.0, kMaxBlogCardWidth); // Max width constraint
     // Helper function for the metadata rows (Author/Category)
     Widget buildMetadataRow({required IconData icon, required String text}) {
       return Row(
         children: [
           Icon(icon, size: 18),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(fontSize: 14),
+          Flexible(
+            child: Text(
+              text,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       );
@@ -336,8 +344,7 @@ class _HomeState extends State<Home> {
 
     return SizedBox(
       // Wrap in a SizedBox to constrain the width for horizontal scrolling
-      width: MediaQuery.of(context).size.width *
-          0.9, // Make card 90% of screen width
+      width: cardWidth,
       child: Card(
         // Clip the card content to respect the border radius
         clipBehavior: Clip.antiAlias,
@@ -415,8 +422,9 @@ class _HomeState extends State<Home> {
                   // Title
                   Text(
                     title,
+                    maxLines: 2,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 15,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'Playfair',
                     ),
@@ -469,92 +477,90 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBooksPage(List<AboutBooks> books) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Featured",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Featured",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 15),
+          CarouselSlider.builder(
+            // NOTE: If _carouselController is not used, remove it to avoid runtime errors
+            // carouselController: _carouselController,
+            itemCount: books.length,
+            options: CarouselOptions(
+              height: 250,
+              autoPlay: _isPlaying,
+              autoPlayInterval: const Duration(seconds: 10),
+              viewportFraction: 0.97,
             ),
-            const SizedBox(height: 15),
-            CarouselSlider.builder(
-              // NOTE: If _carouselController is not used, remove it to avoid runtime errors
-              // carouselController: _carouselController,
-              itemCount: books.length,
-              options: CarouselOptions(
-                height: 250,
-                autoPlay: _isPlaying,
-                autoPlayInterval: const Duration(seconds: 10),
-                viewportFraction: 0.95,
-              ),
-              itemBuilder: (context, index, realIndex) {
-                final book = books[index];
-                return GestureDetector(
-                  onTap: () => _showInfoDialog(book),
+            itemBuilder: (context, index, realIndex) {
+              final book = books[index];
+              return GestureDetector(
+                onTap: () => _showInfoDialog(book),
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black45,
+                        blurRadius: 6,
+                        offset: Offset(0, 4),
+                      ),
+                    ],
+                    image: DecorationImage(
+                      image: AssetImage(book.coverImage),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                   child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black45,
-                          blurRadius: 6,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                      image: DecorationImage(
-                        image: AssetImage(book.coverImage),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          begin: Alignment.bottomCenter,
-                          end: Alignment.topCenter,
-                          colors: [
-                            Colors.black.withOpacity(0.84),
-                            Colors.transparent,
-                          ],
-                        ),
-                      ),
-                      alignment: Alignment.bottomLeft,
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            book.bookTitle,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontFamily: 'Playfair',
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            book.author,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Colors.black.withOpacity(0.84),
+                          Colors.transparent,
                         ],
                       ),
                     ),
+                    alignment: Alignment.bottomLeft,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          book.bookTitle,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontFamily: 'Playfair',
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          book.author,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
-            ),
-          ],
-        ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -37,6 +37,7 @@ class RatingReview {
 }
 
 class AboutBooks {
+  final String bookId;
   final String coverImage;
   final String bookTitle;
   final String author;
@@ -48,8 +49,9 @@ class AboutBooks {
   final List<Map<String, String>> chapters;
   final List<RatingReview> ratingReviews;
 
-  AboutBooks(
-      {required this.coverImage,
+  AboutBooks({
+      required this.bookId,
+      required this.coverImage,
       required this.bookTitle,
       required this.author,
       required this.amount,
@@ -76,6 +78,7 @@ class AboutBooks {
     }
 
     return AboutBooks(
+        bookId: json['bookId'],
         coverImage: json['coverImage'],
         bookTitle: json['bookTitle'],
         author: json['author'],
@@ -90,6 +93,7 @@ class AboutBooks {
 
   Map<String, dynamic> toJson() {
     return {
+      "bookId": bookId,
       "coverImage": coverImage,
       "bookTitle": bookTitle,
       "author": author,

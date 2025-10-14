@@ -17,6 +17,7 @@ analyzer:
     avoid_print: ignore
     no_leading_underscores_for_local_identifiers: ignore
     unrelated_type_equality_checks: ignore
+    depend_on_referenced_packages: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

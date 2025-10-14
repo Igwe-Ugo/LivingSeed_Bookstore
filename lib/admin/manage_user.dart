@@ -61,37 +61,30 @@ class _AdminUserManagementState extends State<AdminUserManagement> {
     List<Users>? allUsers = Provider.of<UsersAuthProvider>(context).allUsers;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(
+            Iconsax.arrow_left_2,
+            size: 17,
+          ),
+        ),
+        title: const Text(
+          'Manage Users',
+          style: TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                IconButton(
-                    onPressed: () {
-                      GoRouter.of(context).pop();
-                    },
-                    icon: const Icon(
-                      Iconsax.arrow_left_2,
-                      size: 17,
-                    )),
-                const SizedBox(
-                  width: 15,
-                ),
-                const Text(
-                  'Manage Users',
-                  style: TextStyle(
-                    fontFamily: 'Playfair',
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
             CustomTextInput(
               label: 'Search for any user...',
               icon: Iconsax.user_search,
@@ -275,20 +268,6 @@ class CustomUserTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-              if (isAdmin == 'Admin')
-                PopupMenuItem(
-                  onTap: () {
-                    Provider.of<UsersAuthProvider>(context, listen: false)
-                        .removeAdmin(email);
-                    showMessage(
-                        'User has been removed from being an Admin', context);
-                  },
-                  value: 'remove_admin',
-                  child: Text(
-                    'Remove Admin',
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
               PopupMenuItem(
                 onTap: () {
                   Provider.of<UsersAuthProvider>(context).deleteUser(name);
@@ -296,10 +275,12 @@ class CustomUserTile extends StatelessWidget {
                   showMessage('User has been deleted!', context);
                 },
                 value: 'delete',
-                child: Text(
-                  'Delete User',
-                  overflow: TextOverflow.ellipsis,
-                ),
+                child: isAdmin != 'Admin'
+                    ? Text(
+                        'Delete User',
+                        overflow: TextOverflow.ellipsis,
+                      )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),

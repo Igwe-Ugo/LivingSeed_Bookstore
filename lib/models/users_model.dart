@@ -1,5 +1,42 @@
 import 'dart:convert';
 
+// admin log to track activities
+class AdminRecentActivity {
+  final String id;
+  final String title;
+  final String subtitle;
+  final DateTime timestamp;
+  final String relatedBookId;
+
+  AdminRecentActivity({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.timestamp,
+    required this.relatedBookId,
+  });
+
+  factory AdminRecentActivity.fromJson(Map<String, dynamic> json) {
+    return AdminRecentActivity(
+      id: json['id'],
+      title: json['title'],
+      subtitle: json['subtitle'],
+      timestamp: DateTime.parse(json['timestamp']),
+      relatedBookId: json['relatedBookId'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'subtitle': subtitle,
+      'timestamp': timestamp.toIso8601String(),
+      'relatedBookId': relatedBookId,
+    };
+  }
+}
+
 class CartItems {
   final String bookTitle;
   final String coverImage;
@@ -148,19 +185,22 @@ class Users {
   final List<CartItems> cart;
   final List<PurchasedBooksItems> bookPurchased;
   final List<TransactionHistory> transactionHistory;
+  List<AdminRecentActivity>? recentActivities;
 
-  Users(
-      {required this.fullname,
-      required this.emailAddress,
-      required this.userImage,
-      required this.telephone,
-      required this.password,
-      required this.gender,
-      required this.dateOfBirth,
-      required this.role,
-      required this.cart,
-      required this.bookPurchased,
-      required this.transactionHistory});
+  Users({
+    required this.fullname,
+    required this.emailAddress,
+    required this.userImage,
+    required this.telephone,
+    required this.password,
+    required this.gender,
+    required this.dateOfBirth,
+    required this.role,
+    required this.cart,
+    required this.bookPurchased,
+    required this.transactionHistory,
+    this.recentActivities = const [],
+  });
 
   factory Users.fromJson(Map<String, dynamic> json) {
     List<CartItems> extractedCart = [];
@@ -185,6 +225,14 @@ class Users {
           .toList();
     }
 
+    List<AdminRecentActivity> extractedActivities = [];
+    if (json['adminRecentActivities'] != null &&
+        json['adminRecentActivities'] is List) {
+      extractedActivities = (json['adminRecentActivities'] as List)
+          .map((e) => AdminRecentActivity.fromJson(e as Map<String, dynamic>))
+          .toList();
+    }
+
     return Users(
         fullname: json['fullname'],
         emailAddress: json['emailAddress'],
@@ -196,7 +244,8 @@ class Users {
         role: json['role'],
         cart: extractedCart,
         bookPurchased: extractedBookPurchased,
-        transactionHistory: extractedTransactionHistory);
+        transactionHistory: extractedTransactionHistory,
+        recentActivities: extractedActivities);
   }
 
   Map<String, dynamic> toJson() {
@@ -211,7 +260,8 @@ class Users {
       'role': role,
       'cart': cart.map((e) => e.toJson()).toList(),
       'bookPurchased': bookPurchased.map((e) => e.toJson()).toList(),
-      'transactionHistory': transactionHistory.map((e) => e.toJson()).toList()
+      'transactionHistory': transactionHistory.map((e) => e.toJson()).toList(),
+      'adminRecentActivities': recentActivities?.map((e) => e.toJson()).toList(),
     };
   }
 

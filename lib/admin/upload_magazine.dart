@@ -3,20 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:livingseed_media/models/widget.dart';
-import 'package:livingseed_media/services/widget.dart';
-import 'package:provider/provider.dart';
 import '../../common/widget.dart';
-import "package:uuid/uuid.dart";
 
-class UploadBookScreen extends StatefulWidget {
-  const UploadBookScreen({super.key});
+class UploadMagazineScreen extends StatefulWidget {
+  const UploadMagazineScreen({super.key});
 
   @override
-  State<UploadBookScreen> createState() => _UploadBookScreenState();
+  State<UploadMagazineScreen> createState() => _UploadMagazineScreenState();
 }
 
-class _UploadBookScreenState extends State<UploadBookScreen> {
+class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
   int selectedChapterNum = 1;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -24,7 +20,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _aboutAuthorController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
-  List<TextEditingController> _bookChapterController = [
+  List<TextEditingController> _magazineContentController = [
     TextEditingController()
   ];
 
@@ -34,13 +30,12 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
   void updateTextFields(int count) {
     setState(() {
       selectedChapterNum = count;
-      _bookChapterController =
+      _magazineContentController =
           List.generate(count, (index) => TextEditingController());
     });
   }
 
   void _uploadBookToJson() async {
-    final Uuid _uuid = const Uuid();
     if (!_formKey.currentState!.validate()) {
       return showMessage('Please fill all required fields', context);
     }
@@ -56,46 +51,31 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
     }
 
     // Process chapters
-    List<Map<String, String>> chapters = [];
-    for (int i = 0; i < _bookChapterController.length; i++) {
-      String text = _bookChapterController[i].text.trim();
+    List<Map<String, String>> content = [];
+    for (int i = 0; i < _magazineContentController.length; i++) {
+      String text = _magazineContentController[i].text.trim();
       if (text.isNotEmpty) {
-        chapters.add({"chapter ${i + 1}": text});
+        content.add({"Content ${i + 1}": text});
       }
     }
 
-    AboutBooks newUpload = AboutBooks(
-        bookId: _uuid.v4(),
-        coverImage: _coverImage!.path.isNotEmpty
-            ? _coverImage!.path
-            : _coverImage!.name,
-        bookTitle: _titleController.text,
-        author: _authorController.text,
-        amount: double.tryParse(_amountController.text) ?? 0.0,
-        aboutAuthor: _aboutAuthorController.text,
-        aboutBook: _descriptionController.text,
-        chapterNum: _bookChapterController.length,
-        // Use PlatformFile path/name
-        pdfLink: _bookFile!.path ?? _bookFile!.name,
-        chapters: chapters,
-        ratingReviews: []);
-
-    bool success = await Provider.of<BookProvider>(context, listen: false)
-        .uploadBook(newUpload);
+    /* bool success = await Provider.of<MagazineProvider>(context, listen: false)
+        .uploadMagazine(newUpload);
 
     if (success) {
-      showMessage('Book uploaded successfully!', context);
-      GoRouter.of(context).pop();
-      _formKey.currentState!.reset();
+      showMessage('Magazine uploaded successfully!', context);
     } else {
-      showMessage('Book already exists, please upload a new book', context);
-    }
+      showMessage('Magazine already exists, please upload a new magazine', context);
+    } */
   }
 
+  // REMOVED: Widget _buildFilePickerDropZone - replaced by MediaFilePicker
+
   Widget _buildChapterInput(int index) {
+    // ... (unchanged) ...
     return CustomTextInput(
-      label: 'Chapter ${index + 1} title',
-      controller: _bookChapterController[index],
+      label: 'Content ${index + 1} title',
+      controller: _magazineContentController[index],
       isIcon: false,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -113,7 +93,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
     _descriptionController.dispose();
     _aboutAuthorController.dispose();
     _amountController.dispose();
-    for (var controller in _bookChapterController) {
+    for (var controller in _magazineContentController) {
       controller.dispose();
     }
     super.dispose();
@@ -136,7 +116,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
           ),
         ),
         title: const Text(
-          'Upload New Book',
+          'Upload Magazine',
           style: TextStyle(
             fontFamily: 'Playfair',
             fontSize: 20,
@@ -151,8 +131,9 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // --- 1. File Uploads (Cover Image & PDF) ---
               ImagePickerDropZone(
-                title: 'Upload Book Cover (Image)',
+                title: 'Upload Magazine Cover (Image)',
                 icon: Iconsax.image,
                 color: Colors.green,
                 onFilePicked: (file) {
@@ -162,8 +143,9 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
                 },
               ),
 
+              // Book PDF Picker - USING REUSABLE WIDGET
               PdfFilePickerDropZone(
-                title: 'Upload Book File (PDF)',
+                title: 'Upload Magazine File (PDF)',
                 icon: Iconsax.document_upload,
                 color: theme.colorScheme.tertiary,
                 onFilePicked: (file) {
@@ -173,7 +155,10 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
                 },
                 initialFileName: bookFileName,
               ),
+
               const SizedBox(height: 20),
+
+              // --- 2. Text Inputs ---
               CustomTextInput(
                 label: 'Book title',
                 controller: _titleController,
@@ -198,7 +183,7 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
               ),
               CustomTextInput(
                 label: 'Amount (\$)',
-                controller: _amountController,
+                controller: _authorController,
                 icon: Iconsax.dollar_circle,
                 isNumber: true,
                 validator: (value) {
@@ -258,10 +243,14 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
                 ],
               ),
               const SizedBox(height: 10),
+
+              // Dynamic Chapter TextFields
               ...List.generate(
                   selectedChapterNum, (index) => _buildChapterInput(index)),
 
               const SizedBox(height: 30),
+
+              // --- 4. Submit Button ---
               SizedBox(
                 width: double.infinity,
                 height: 50,

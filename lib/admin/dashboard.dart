@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart';
+import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 
@@ -74,10 +75,43 @@ class AdminDashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer3<MagazineProvider, BibleStudyProvider, BookProvider>(
+    return Consumer4<MagazineProvider, BibleStudyProvider, BookProvider,
+            UsersAuthProvider>(
         builder: (context, magazineProvider, bibleStudyProvider, bookProvider,
-            child) {
+            userProvider, child) {
+      final Users? user = userProvider.userData;
+      // Safety check: Dashboard should not load if user is null,
+      // but we handle it gracefully here.
+      if (user == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      // Use the new recentActivities list, reversed for proper display order
+      final List<AdminRecentActivity> activities =
+          user.recentActivities!.reversed.toList();
+
+      // Check if the current user is an Admin
+      final bool isAdmin = user.role == 'Admin';
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(
+              Iconsax.arrow_left_2,
+              size: 17,
+            ),
+          ),
+          title: const Text(
+            'Admin Dashboard',
+            style: TextStyle(
+              fontFamily: 'Playfair',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         body: SafeArea(
           // SingleChildScrollView wraps the entire body content
           child: SingleChildScrollView(
@@ -86,50 +120,34 @@ class AdminDashboard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            GoRouter.of(context).pop();
-                          },
-                          icon: const Icon(
-                            Iconsax.arrow_left_2,
-                            size: 17,
-                          )),
-                      const SizedBox(
-                        width: 15,
-                      ),
-                      const Text(
-                        'Admin Dashboard',
-                        style: TextStyle(
-                          fontFamily: 'Playfair',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
                   // Dashboard Overview
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildDashboardCard(context, 'Books', Iconsax.book,
-                          Colors.blue, bookProvider.allBooks.length),
                       _buildDashboardCard(
-                          context,
-                          'Bible Study',
-                          Iconsax.book_1,
-                          Colors.green,
-                          bibleStudyProvider.allBibleStudies.length),
+                          context: context,
+                          title: 'Books',
+                          icon: Iconsax.book,
+                          color: Colors.blue,
+                          count: bookProvider.allBooks.length,
+                          onTap: () {
+                            GoRouter.of(context).go(
+                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBooks}');
+                          }),
                       _buildDashboardCard(
-                          context,
-                          'Magazines',
-                          Iconsax.book_saved,
-                          Colors.orange,
-                          magazineProvider.magazines.length),
+                          context: context,
+                          title: 'Bible Study',
+                          icon: Iconsax.book_1,
+                          color: Colors.green,
+                          count: bibleStudyProvider.allBibleStudies.length,
+                          onTap: () {}),
+                      _buildDashboardCard(
+                          context: context,
+                          title: 'Magazines',
+                          icon: Iconsax.book_saved,
+                          color: Colors.orange,
+                          count: magazineProvider.magazines.length,
+                          onTap: () {}),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -173,7 +191,8 @@ class AdminDashboard extends StatelessWidget {
                         context,
                         title: 'Upload Magazine',
                         icon: Iconsax.document_code,
-                        onPressed: () {},
+                        onPressed: () => GoRouter.of(context).go(
+                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.uploadMagazinePath}'),
                       ),
                       // Manage Notifications
                       _buildActionButton(
@@ -258,29 +277,38 @@ class AdminDashboard extends StatelessWidget {
   }
 
   // Widget for Dashboard Overview Cards (unchanged)
-  Widget _buildDashboardCard(BuildContext context, String title, IconData icon,
-      Color color, int count) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
-        width: MediaQuery.of(context).size.width / 4,
-        height: 150,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 30, color: color),
-            const SizedBox(height: 10),
-            Text(
-              '$count',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+  Widget _buildDashboardCard({
+    required BuildContext context,
+    required String title,
+    required IconData icon,
+    required Color color,
+    required int count,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        child: Container(
+          width: MediaQuery.of(context).size.width / 4,
+          height: 150,
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, size: 30, color: color),
+              const SizedBox(height: 10),
+              Text(
+                '$count',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Text(title, style: const TextStyle(fontSize: 11)),
-          ],
+              Text(title, style: const TextStyle(fontSize: 11)),
+            ],
+          ),
         ),
       ),
     );
@@ -319,6 +347,33 @@ class AdminDashboard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Helper widget to display a single activity log entry
+  Widget _buildActivityTile(
+      BuildContext context, AdminRecentActivity activity) {
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        child: Icon(
+            activity.title.contains('Upload')
+                ? Iconsax.arrow_up_1
+                : Iconsax.edit,
+            color: Theme.of(context).primaryColor,
+            size: 20),
+      ),
+      title: Text(activity.title,
+          style: const TextStyle(fontWeight: FontWeight.w600)),
+      subtitle: Text(activity.subtitle),
+      trailing: Text(
+        '${DateTime.now().difference(activity.timestamp).inHours} hrs ago',
+        style: const TextStyle(fontSize: 10, color: Colors.grey),
+      ),
+      onTap: () {
+        // Navigate to the detailed activity page
+        context.push('/admin/activity-detail', extra: activity);
+      },
     );
   }
 }

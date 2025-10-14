@@ -25,169 +25,164 @@ class _AdminNotificationsState extends State<AdminNotifications> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Consumer<NotificationProvider>(
-        builder: (context, notificationProvider, child) {
-      final generalNotices = notificationProvider.generalNotifications;
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(
+              Iconsax.arrow_left_2,
+              size: 17,
+            ),
+          ),
+          title: const Text(
+            'Manage Notifications',
+            style: TextStyle(
+              fontFamily: 'Playfair',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        body: Consumer<NotificationProvider>(
+            builder: (context, notificationProvider, child) {
+          final generalNotices = notificationProvider.generalNotifications;
 
-      return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        GoRouter.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Iconsax.arrow_left_2,
-                        size: 17,
-                      )),
-                  const SizedBox(
-                    width: 15,
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Create Notification',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        ImagePickerDropZone(
+                          title: 'Upload Cover Image',
+                          icon: Iconsax.image,
+                          color: Colors.green, // Kept original color
+                          onFilePicked: (file) {
+                            setState(() {
+                              _coverImage = file as XFile;
+                            });
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        CustomTextInput(
+                            label: 'Message title...',
+                            controller: _notificationTitleController,
+                            icon: Icons.title,
+                            validator: () {}),
+                        CustomTextInput(
+                          label: "Message",
+                          controller: _notificationMessageController,
+                          isIcon: false,
+                          maxLine: 10,
+                          maxLength: 700,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please give details about the notification made';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              elevation: WidgetStatePropertyAll(0),
+                              backgroundColor: WidgetStatePropertyAll(
+                                  Theme.of(context).primaryColor)),
+                          onPressed: () => _sendNotification(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Iconsax.message, color: Colors.white),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    'Send Notification',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                   const Text(
-                    'Manage Notifications',
+                    'Recent Notifications',
                     style: TextStyle(
-                      fontFamily: 'Playfair',
-                      fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      fontSize: 17,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Create Notification',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    ImagePickerDropZone(
-                      title: 'Upload Cover Image',
-                      icon: Iconsax.image,
-                      color: Colors.green, // Kept original color
-                      onFilePicked: (file) {
-                        setState(() {
-                          _coverImage = file as XFile;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    CustomTextInput(
-                        label: 'Message title...',
-                        controller: _notificationTitleController,
-                        icon: Icons.title,
-                        validator: () {}),
-                    CustomTextInput(
-                      label: "Message",
-                      controller: _notificationMessageController,
-                      isIcon: false,
-                      maxLine: 10,
-                      maxLength: 700,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please give details about the notification made';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                          elevation: WidgetStatePropertyAll(0),
-                          backgroundColor: WidgetStatePropertyAll(
-                              Theme.of(context).primaryColor)),
-                      onPressed: () => _sendNotification(),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                  const SizedBox(height: 10),
+                  generalNotices.isNotEmpty
+                      ? Column(
+                          children: generalNotices
+                              .map((notice) => recentNotifications(context,
+                                  notificationImage: notice.notificationImage,
+                                  notificationTitle: notice.notificationTitle,
+                                  notificationMessage:
+                                      notice.notificationMessage,
+                                  notificationDate: notice.notificationDate,
+                                  notificationTime: notice.notificationTime,
+                                  notificationData: notice))
+                              .toList(),
+                        )
+                      : Center(
+                          child: Column(
                             children: const [
-                              Icon(Iconsax.message, color: Colors.white),
                               SizedBox(
-                                width: 10,
+                                height: 40,
+                              ),
+                              Icon(
+                                Iconsax.message_notif,
+                                size: 80,
+                              ),
+                              SizedBox(
+                                height: 15,
                               ),
                               Text(
-                                'Send Notification',
+                                'No Recent Notifications Uploaded',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                                  fontSize: 18,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 40,
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
+                ],
               ),
-              const Text(
-                'Recent Notifications',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
-              ),
-              const SizedBox(height: 10),
-              generalNotices.isNotEmpty
-                  ? Column(
-                      children: generalNotices
-                          .map((notice) => recentNotifications(context,
-                              notificationImage: notice.notificationImage,
-                              notificationTitle: notice.notificationTitle,
-                              notificationMessage: notice.notificationMessage,
-                              notificationDate: notice.notificationDate,
-                              notificationTime: notice.notificationTime,
-                              notificationData: notice))
-                          .toList(),
-                    )
-                  : Center(
-                      child: Column(
-                        children: const [
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Icon(
-                            Iconsax.message_notif,
-                            size: 80,
-                          ),
-                          SizedBox(
-                            height: 15,
-                          ),
-                          Text(
-                            'No Recent Notifications Uploaded',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 40,
-                          ),
-                        ],
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      );
-    }));
+            ),
+          );
+        }));
   }
 
   void _sendNotification() async {

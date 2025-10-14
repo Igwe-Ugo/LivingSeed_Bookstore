@@ -1,5 +1,6 @@
 [
   {
+    "bookId": "1",
     "coverImage": "assets/images/becoming_like_jesus.png",
     "bookTitle":"Becoming like Jesus",
     "author":"Gbile Akanni",
@@ -42,6 +43,7 @@
     ]
   },
   {
+    "bookId": "2",
     "coverImage": "assets/images/dignity_of_manhood.png",
     "bookTitle":"The Dignity of Manhood",
     "author":"Gbile Akanni",
@@ -85,6 +87,7 @@
     ]
   },
   {
+    "bookId": "3",
     "coverImage": "assets/images/agents_of_transformation.png",
     "bookTitle":"Raising Agents of Transformation",
     "author":"Gbile Akanni",
@@ -128,6 +131,7 @@
     ]
   },
   {
+    "bookId": "4",
     "coverImage": "assets/images/tapping_god's_resources.jpeg",
     "bookTitle":"Tapping God's resources for life and ministry",
     "author":"Gbile Akanni",
@@ -171,6 +175,7 @@
     ]
   },
   {
+    "bookId": "5",
     "coverImage": "assets/images/no_more_two.jpeg",
     "bookTitle":"No More Two\nGod's principles for marriage",
     "author":"Gbile Akanni",
@@ -214,6 +219,7 @@
     ]
   },
   {
+    "bookId": "6",
     "coverImage": "assets/images/exploring_god.jpeg",
     "bookTitle":"Encountering, Exploring and Engaging God",
     "author":"Gbile Akanni",
