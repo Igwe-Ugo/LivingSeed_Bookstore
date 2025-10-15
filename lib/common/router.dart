@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/account/widget.dart';
+import 'package:livingseed_media/admin/manage_journal.dart';
 import 'package:livingseed_media/admin/widget.dart';
 import 'package:livingseed_media/auth/widget.dart';
 import 'package:livingseed_media/home/widget.dart';
@@ -96,8 +97,13 @@ class LivingSeedMediaRouter {
   static const String manageUsersPath = 'manage_users';
   static const String userProfilePath = 'user_profile';
   static const String addEventPath = 'add_event';
-  static const String addArticle = 'add_article';
-  static const String manageBooks = 'manage_book';
+  static const String addArticlePath = 'add_article';
+  static const String manageBooksPath = 'manage_book';
+  static const String editBookPath = 'edit_book';
+  static const String manageJournalPath = 'manage_journal';
+  static const String editJournalPath = 'edit_journal';
+  static const String manageBibleStudyPath = 'manage_biblestudy';
+  static const String editBibleStudyPath = 'edit_biblestudy';
 
   LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
@@ -338,9 +344,49 @@ class LivingSeedMediaRouter {
                             builder: (context, state) => const AdminDashboard(),
                             routes: [
                               GoRoute(
-                                path: manageBooks,
-                                builder: (context, state) => const BookManagementScreen(),
-                              ),
+                                  path: manageBooksPath,
+                                  builder: (context, state) =>
+                                      const BookManagement(),
+                                  routes: [
+                                    GoRoute(
+                                      path: editBookPath,
+                                      builder: (context, state) {
+                                        final aboutBooks =
+                                            state.extra as AboutBooks?;
+                                        if (aboutBooks != null) {
+                                          return EditBook(
+                                            aboutBooks: aboutBooks,
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text(
+                                                  "No book data available to edit"));
+                                        }
+                                      },
+                                    )
+                                  ]),
+                              GoRoute(
+                                  path: manageBibleStudyPath,
+                                  builder: (context, state) =>
+                                      const BiblestudyManagement(),
+                                  routes: [
+                                    GoRoute(
+                                      path: editBibleStudyPath,
+                                      builder: (context, state) {
+                                        final bibleStudy =
+                                            state.extra as BibleStudyMaterial?;
+                                        if (bibleStudy != null) {
+                                          return EditBibleStudy(
+                                            bibleStudy: bibleStudy,
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text(
+                                                  "No bible study data available to edit"));
+                                        }
+                                      },
+                                    )
+                                  ]),
                               GoRoute(
                                 path: uploadBookPath,
                                 builder: (context, state) =>
@@ -362,9 +408,9 @@ class LivingSeedMediaRouter {
                                     const AdminAddEvent(),
                               ),
                               GoRoute(
-                                path: addArticle,
+                                path: addArticlePath,
                                 builder: (context, state) =>
-                                    const WriteArticle(),
+                                    const WriteJournal(),
                               ),
                               GoRoute(
                                   path: manageNotificationsPath,
@@ -407,6 +453,28 @@ class LivingSeedMediaRouter {
                                         }
                                       },
                                     ),
+                                  ]),
+                              GoRoute(
+                                  path: manageJournalPath,
+                                  builder: (context, state) =>
+                                      const JournalManagement(),
+                                  routes: [
+                                    GoRoute(
+                                      path: editJournalPath,
+                                      builder: (context, state) {
+                                        final journal =
+                                            state.extra as JournalPost?;
+                                        if (journal != null) {
+                                          return EditJournal(
+                                            journals: journal,
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text(
+                                                  "No journal data available to edit"));
+                                        }
+                                      },
+                                    )
                                   ]),
                             ]),
                         GoRoute(

@@ -7,14 +7,14 @@ import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 import '../../common/widget.dart';
 
-class WriteArticle extends StatefulWidget {
-  const WriteArticle({super.key});
+class WriteJournal extends StatefulWidget {
+  const WriteJournal({super.key});
 
   @override
-  State<WriteArticle> createState() => _WriteArticleState();
+  State<WriteJournal> createState() => _WriteJournalState();
 }
 
-class _WriteArticleState extends State<WriteArticle> {
+class _WriteJournalState extends State<WriteJournal> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();

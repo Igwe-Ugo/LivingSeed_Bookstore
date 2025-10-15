@@ -90,8 +90,6 @@ class AdminDashboard extends StatelessWidget {
       final List<AdminRecentActivity> activities =
           user.recentActivities!.reversed.toList();
 
-      // Check if the current user is an Admin
-      final bool isAdmin = user.role == 'Admin';
       return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -119,7 +117,7 @@ class AdminDashboard extends StatelessWidget {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   // Dashboard Overview
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -132,7 +130,7 @@ class AdminDashboard extends StatelessWidget {
                           count: bookProvider.allBooks.length,
                           onTap: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBooks}');
+                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBooksPath}');
                           }),
                       _buildDashboardCard(
                           context: context,
@@ -140,7 +138,10 @@ class AdminDashboard extends StatelessWidget {
                           icon: Iconsax.book_1,
                           color: Colors.green,
                           count: bibleStudyProvider.allBibleStudies.length,
-                          onTap: () {}),
+                          onTap: () {
+                            GoRouter.of(context).go(
+                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBibleStudyPath}');
+                          }),
                       _buildDashboardCard(
                           context: context,
                           title: 'Magazines',
@@ -220,16 +221,17 @@ class AdminDashboard extends StatelessWidget {
                       ),
                       _buildActionButton(
                         context,
-                        title: 'Write Article',
+                        title: 'Write Journal',
                         icon: Iconsax.pen_add,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addArticle}'),
+                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addArticlePath}'),
                       ),
                       _buildActionButton(
                         context,
-                        title: 'Reports',
-                        icon: Iconsax.chart_21,
-                        onPressed: () {},
+                        title: 'Edit Journal',
+                        icon: Iconsax.edit_2,
+                        onPressed: () => GoRouter.of(context).go(
+                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageJournalPath}'),
                       ),
                     ],
                   ),
@@ -245,28 +247,7 @@ class AdminDashboard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 10),
-
-                  // REPLACED: ListView.builder and SizedBox with a simple Column
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // Use a map function to generate the ListTiles directly in the Column's children
-                    children: _activities.map((activity) {
-                      return ListTile(
-                        leading: Icon(
-                          activity['icon'] as IconData,
-                          color: Colors.grey[700],
-                        ),
-                        title: Text(activity['title'] as String),
-                        subtitle: Text(activity['subtitle'] as String),
-                        trailing: Text(
-                          // Calculate the date string based on the 'days_ago' value
-                          '${DateTime.now().subtract(Duration(days: activity['days_ago'] as int)).toLocal()}'
-                              .split(' ')[0],
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                  //activities.map((recent) => _buildActivityTile(context, recent))
                 ],
               ),
             ),

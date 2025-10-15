@@ -35,37 +35,31 @@ class _ProfileState extends State<Profile> {
     Users? user = Provider.of<UsersAuthProvider>(context).userData!;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              GoRouter.of(context).pop();
+            },
+            icon: const Icon(
+              Iconsax.arrow_left_2,
+              size: 17,
+            )),
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Row(
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        GoRouter.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Iconsax.arrow_left_2,
-                        size: 17,
-                      )),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  const Text(
-                    'Profile',
-                    style: TextStyle(
-                      fontFamily: 'Playfair',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               SizedBox(
                 width: double.infinity,
                 child: Column(

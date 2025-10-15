@@ -7,6 +7,7 @@ class CustomTextInput extends StatefulWidget {
   IconData? icon;
   bool isPassword;
   bool isEmail;
+  bool showEnter;
   bool isPhone;
   bool obscureText;
   bool isTitleNotNecessary;
@@ -22,6 +23,7 @@ class CustomTextInput extends StatefulWidget {
       required this.controller,
       this.icon,
       this.maxLine,
+      this.showEnter = true,
       this.textColor,
       this.isEmail = false,
       this.isPassword = false,
@@ -87,7 +89,9 @@ class _CustomTextInputState extends State<CustomTextInput> {
                       color: widget.textColor,
                     )
                   : null,
-              hintText: 'Enter ${widget.label}',
+              hintText: widget.showEnter == true
+                  ? 'Enter ${widget.label}'
+                  : widget.label,
               hintStyle: TextStyle(fontSize: 12, color: widget.textColor),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
