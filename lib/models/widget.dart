@@ -6,3 +6,4 @@ export 'notification_model.dart';
 export 'events_model.dart';
 export 'audio_model.dart';
 export 'journal_model.dart';
+export 'activity_log_model.dart';

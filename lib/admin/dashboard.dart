@@ -9,72 +9,12 @@ import 'package:provider/provider.dart';
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
 
-  // A list to generate the recent activities data (instead of using the builder index)
-  final List<Map<String, dynamic>> _activities = const [
-    {
-      'title': 'Activity 1',
-      'subtitle': 'Uploaded a book',
-      'icon': Iconsax.book,
-      'days_ago': 0
-    },
-    {
-      'title': 'Activity 2',
-      'subtitle': 'Uploaded a Bible study material',
-      'icon': Iconsax.book_1,
-      'days_ago': 1
-    },
-    {
-      'title': 'Activity 3',
-      'subtitle': 'Uploaded a Magazine',
-      'icon': Iconsax.book_saved,
-      'days_ago': 2
-    },
-    {
-      'title': 'Activity 4',
-      'subtitle': 'Uploaded a book',
-      'icon': Iconsax.book,
-      'days_ago': 3
-    },
-    {
-      'title': 'Activity 5',
-      'subtitle': 'Uploaded a Bible study material',
-      'icon': Iconsax.book_1,
-      'days_ago': 4
-    },
-    {
-      'title': 'Activity 6',
-      'subtitle': 'Uploaded a Magazine',
-      'icon': Iconsax.book_saved,
-      'days_ago': 5
-    },
-    {
-      'title': 'Activity 7',
-      'subtitle': 'Uploaded a book',
-      'icon': Iconsax.book,
-      'days_ago': 6
-    },
-    {
-      'title': 'Activity 8',
-      'subtitle': 'Uploaded a Bible study material',
-      'icon': Iconsax.book_1,
-      'days_ago': 7
-    },
-    {
-      'title': 'Activity 9',
-      'subtitle': 'Uploaded a Magazine',
-      'icon': Iconsax.book_saved,
-      'days_ago': 8
-    },
-    {
-      'title': 'Activity 10',
-      'subtitle': 'Uploaded a book',
-      'icon': Iconsax.book,
-      'days_ago': 9
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // watch the activity service for real-time updates
+    final activityService = Provider.of<AdminActivityService>(context);
+    final recentActivities = activityService.recentActivities;
+
     return Consumer4<MagazineProvider, BibleStudyProvider, BookProvider,
             UsersAuthProvider>(
         builder: (context, magazineProvider, bibleStudyProvider, bookProvider,
@@ -85,10 +25,6 @@ class AdminDashboard extends StatelessWidget {
       if (user == null) {
         return const Center(child: CircularProgressIndicator());
       }
-
-      // Use the new recentActivities list, reversed for proper display order
-      final List<AdminRecentActivity> activities =
-          user.recentActivities!.reversed.toList();
 
       return Scaffold(
         appBar: AppBar(
@@ -238,16 +174,32 @@ class AdminDashboard extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  // Recent Activities Section
+                  // --- Activity Log Section ---
                   const Text(
-                    'Recent Activities',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
+                    'Recent Activities (Last 20)',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  //activities.map((recent) => _buildActivityTile(context, recent))
+
+                  if (recentActivities.isEmpty)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20.0),
+                      child: Center(
+                        child: Text('No activities logged yet.',
+                            style: TextStyle(color: Colors.grey)),
+                      ),
+                    )
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: recentActivities.length,
+                      itemBuilder: (context, index) {
+                        final activity = recentActivities[index];
+                        return _buildActivityTile(context, activity);
+                      },
+                    ),
+                  // --- End Activity Log Section ---
                 ],
               ),
             ),
@@ -332,28 +284,32 @@ class AdminDashboard extends StatelessWidget {
   }
 
   // Helper widget to display a single activity log entry
-  Widget _buildActivityTile(
-      BuildContext context, AdminRecentActivity activity) {
+  Widget _buildActivityTile(BuildContext context, AdminActivity activity) {
+    // Calculate time difference
+    final difference = DateTime.now().difference(activity.timestamp);
+    String timeAgo;
+    if (difference.inHours < 24) {
+      timeAgo = '${difference.inHours} hrs ago';
+    } else {
+      timeAgo = '${difference.inDays} days ago';
+    }
+
     return ListTile(
+      contentPadding: EdgeInsets.zero,
       leading: CircleAvatar(
         backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-        child: Icon(
-            activity.title.contains('Upload')
-                ? Iconsax.arrow_up_1
-                : Iconsax.edit,
-            color: Theme.of(context).primaryColor,
-            size: 20),
+        child: Icon(activity.icon,
+            color: Theme.of(context).primaryColor, size: 20),
       ),
-      title: Text(activity.title,
+      title: Text(activity.action,
           style: const TextStyle(fontWeight: FontWeight.w600)),
-      subtitle: Text(activity.subtitle),
+      subtitle: Text(activity.details),
       trailing: Text(
-        '${DateTime.now().difference(activity.timestamp).inHours} hrs ago',
+        timeAgo,
         style: const TextStyle(fontSize: 10, color: Colors.grey),
       ),
       onTap: () {
-        // Navigate to the detailed activity page
-        context.push('/admin/activity-detail', extra: activity);
+        // You can potentially navigate to the edited book's page here
       },
     );
   }

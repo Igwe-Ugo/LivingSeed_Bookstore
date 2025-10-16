@@ -8,7 +8,6 @@ export 'upload_biblestudy.dart';
 export 'add_event.dart';
 export 'write_journal.dart';
 export 'upload_magazine.dart';
-export 'activity_log_page.dart';
 export 'book_management.dart';
 export 'edit_book.dart';
 export 'edit_journal.dart';

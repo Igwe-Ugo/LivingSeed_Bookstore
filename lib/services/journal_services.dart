@@ -205,4 +205,16 @@ class JournalProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> updateJournal(JournalPost updatedPost) async {
+    final index = _posts.indexWhere((post) => post.id == updatedPost.id);
+    if (index != -1) {
+      _posts[index] = updatedPost;
+      await _savePostsToLocal();
+      notifyListeners();
+      debugPrint('Success: Journal with ID ${updatedPost.id} updated successfully.');
+    } else {
+      debugPrint('Error: Journal with ID ${updatedPost.id} not found for update.');
+    }
+  }
+
 }

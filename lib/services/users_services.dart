@@ -7,7 +7,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:livingseed_media/models/widget.dart';
 import 'package:path_provider/path_provider.dart';
-import "package:uuid/uuid.dart";
 
 class UsersAuthProvider extends ChangeNotifier {
   Users? _currentUser;
@@ -15,8 +14,6 @@ class UsersAuthProvider extends ChangeNotifier {
   List<Users> _users = [];
   List<Users> get allUsers => _users;
   bool _isInitialized = false;
-  // uuid generator instance
-  final Uuid _uuid = const Uuid();
 
   Future<void> initializeUsers() async {
     if (_isInitialized) return;
@@ -181,55 +178,6 @@ class UsersAuthProvider extends ChangeNotifier {
       notifyListeners();
       _saveUserToLocal();
     }
-  }
-
-  void _addActivityLog(String title, String subtitle, String relatedBookId) {
-    // check 1: must be a current user
-    if (_currentUser == null) return;
-    // check 2: must be admin to log activity
-    if (_currentUser!.role != 'Admin') {
-      debugPrint('Attempted to log activity but user is not an Admin');
-      return;
-    }
-
-    final newActivity = AdminRecentActivity(
-        id: _uuid.v4(),
-        title: title,
-        subtitle: subtitle,
-        timestamp: DateTime.now(),
-        relatedBookId: relatedBookId);
-    // add the new activity to the start of the list
-    _currentUser!.recentActivities!.insert(0, newActivity);
-    // optional: limit the number of activities
-    if (_currentUser!.recentActivities!.length > 20) {
-      _currentUser!.recentActivities!.removeLast();
-    }
-    notifyListeners();
-    _saveUserToLocal();
-  }
-
-  // dummy book management (needs integration with actual book provider)
-  // called after a book is successfully edited
-  void logBookUploaded(AboutBooks book) {
-    _addActivityLog('Book Uploaded', book.bookTitle, book.bookId);
-  }
-
-  /// Called after a book is successfully edited.
-  void logBookEdited(AboutBooks book) {
-    _addActivityLog(
-      'Book Edited',
-      book.bookTitle,
-      book.bookId,
-    );
-  }
-
-  /// Called after a book is successfully deleted.
-  void logBookDeleted(String bookTitle, String bookId) {
-    _addActivityLog(
-      'Book Deleted',
-      bookTitle,
-      bookId,
-    );
   }
 
   void updateUserInfo(Users updatedUser) {
