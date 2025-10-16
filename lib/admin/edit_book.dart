@@ -14,6 +14,12 @@ class EditBook extends StatefulWidget {
 }
 
 class _EditBookState extends State<EditBook> {
+  bool _showTitleInput = false;
+  bool _showAuthorInput = false;
+  bool _showAmountInput = false;
+  bool _showAboutInput = false;
+  bool _showWhoseInput = false;
+
   int selectedChapterNum = 1;
   final TextEditingController _editBookTitleController =
       TextEditingController();
@@ -94,67 +100,171 @@ class _EditBookState extends State<EditBook> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Edit Book Title",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      CustomTextInput(
-                          isTitleNotNecessary: true,
-                          showEnter: false,
-                          label: widget.aboutBooks.bookTitle,
-                          controller: _editBookTitleController,
-                          icon: Icons.title,
-                          validator: () {}),
-                      const SizedBox(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Edit Book Title",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showTitleInput = !_showTitleInput;
+                              });
+                            },
+                            child: Icon(
+                              Iconsax.edit_2,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
                         height: 5,
                       ),
-                      const Text("Edit Book Author",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      CustomTextInput(
-                          isTitleNotNecessary: true,
-                          label: widget.aboutBooks.author,
-                          showEnter: false,
-                          controller: _editBookAuthorController,
-                          icon: Icons.title,
-                          validator: () {}),
+                      _showTitleInput == true
+                          ? CustomTextInput(
+                              isTitleNotNecessary: true,
+                              showEnter: false,
+                              label: widget.aboutBooks.bookTitle,
+                              controller: _editBookTitleController,
+                              icon: Icons.title,
+                              validator: () {})
+                          : Text(
+                              widget.aboutBooks.bookTitle,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 17),
+                              textAlign: TextAlign.justify,
+                            ),
                       const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Edit Book Author",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showAuthorInput = !_showAuthorInput;
+                              });
+                            },
+                            child: Icon(
+                              Iconsax.edit_2,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
                         height: 5,
                       ),
-                      const Text("Edit Book Amount",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      CustomTextInput(
-                        isNumber: true,
-                        showEnter: false,
-                        isIcon: false,
-                        label: '₦ ${widget.aboutBooks.amount.toString()}',
-                        controller: _editBookAmountController,
-                        isTitleNotNecessary: true,
-                        maxLine: 1,
-                        validator: () {},
-                      ),
+                      _showAuthorInput == true
+                          ? CustomTextInput(
+                              isTitleNotNecessary: true,
+                              label: widget.aboutBooks.author,
+                              showEnter: false,
+                              controller: _editBookAuthorController,
+                              icon: Icons.title,
+                              validator: () {})
+                          : Text(
+                              widget.aboutBooks.author,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 17),
+                              textAlign: TextAlign.justify,
+                            ),
                       const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Edit Book Amount",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showAmountInput = !_showAmountInput;
+                              });
+                            },
+                            child: Icon(
+                              Iconsax.edit_2,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
                         height: 5,
                       ),
-                      const Text("Edit What's it about",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      CustomTextInput(
-                        isIcon: false,
-                        showEnter: false,
-                        label: widget.aboutBooks.aboutBook,
-                        controller: _editAboutBookController,
-                        isTitleNotNecessary: true,
-                        validator: () {},
+                      _showAmountInput == true
+                          ? CustomTextInput(
+                              isNumber: true,
+                              showEnter: false,
+                              isIcon: false,
+                              label: '₦ ${widget.aboutBooks.amount.toString()}',
+                              controller: _editBookAmountController,
+                              isTitleNotNecessary: true,
+                              maxLine: 1,
+                              validator: () {},
+                            )
+                          : Text(
+                              '₦ ${widget.aboutBooks.amount.toStringAsFixed(1)}',
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 17),
+                              textAlign: TextAlign.justify,
+                            ),
+                      const SizedBox(
+                        height: 10,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Edit What's it about?",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showAboutInput = !_showAboutInput;
+                              });
+                            },
+                            child: Icon(
+                              Iconsax.edit_2,
+                              size: 20,
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      _showAboutInput == true
+                          ? CustomTextInput(
+                              isIcon: false,
+                              showEnter: false,
+                              label: widget.aboutBooks.aboutBook,
+                              controller: _editAboutBookController,
+                              isTitleNotNecessary: true,
+                              validator: () {},
+                            )
+                          : Text(
+                              widget.aboutBooks.aboutBook,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 14),
+                              textAlign: TextAlign.justify,
+                            ),
                       Text(
                         'Have ${widget.aboutBooks.chapterNum} Chapters',
                         style: TextStyle(
@@ -192,22 +302,45 @@ class _EditBookState extends State<EditBook> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Text(
-                        "Edit Who is the author",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.justify,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Edit who is the author",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                              )),
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                _showWhoseInput = !_showWhoseInput;
+                              });
+                            },
+                            child: Icon(
+                              Iconsax.edit_2,
+                              size: 20,
+                            ),
+                          )
+                        ],
                       ),
-                      CustomTextInput(
-                        isIcon: false,
-                        showEnter: false,
-                        label: widget.aboutBooks.aboutAuthor,
-                        controller: _editWhoAuthorController,
-                        isTitleNotNecessary: true,
-                        validator: () {},
+                      SizedBox(
+                        height: 5,
                       ),
+                      _showWhoseInput == true
+                          ? CustomTextInput(
+                              isIcon: false,
+                              showEnter: false,
+                              label: widget.aboutBooks.aboutAuthor,
+                              controller: _editWhoAuthorController,
+                              isTitleNotNecessary: true,
+                              validator: () {},
+                            )
+                          : Text(
+                              widget.aboutBooks.aboutAuthor,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w100, fontSize: 14),
+                              textAlign: TextAlign.justify,
+                            ),
                       const SizedBox(
                         height: 30,
                       ),
