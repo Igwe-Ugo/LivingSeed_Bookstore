@@ -5,8 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
-import 'package:provider/provider.dart'; // REQUIRED: Import provider
-import 'package:livingseed_media/services/books_services.dart'; // Assuming the BookProvider is here
+import 'package:livingseed_media/services/widget.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class EditBook extends StatefulWidget {
   final AboutBooks aboutBooks;
@@ -22,7 +23,7 @@ class _EditBookState extends State<EditBook> {
   bool _showAmountInput = false;
   bool _showAboutInput = false;
   bool _showWhoseInput = false;
-  
+
   bool _isSaving = false; // State for loading indicator
 
   final TextEditingController _editBookTitleController =
@@ -56,7 +57,7 @@ class _EditBookState extends State<EditBook> {
     _chapterEntries = widget.aboutBooks.chapters.isNotEmpty
         ? widget.aboutBooks.chapters.first.entries.toList()
         : [];
-    
+
     final int chapterCount = _chapterEntries.length;
 
     // 3. Initialize chapter-specific state
@@ -106,7 +107,7 @@ class _EditBookState extends State<EditBook> {
       });
     }
   }
-  
+
   void _deleteChapter(int index) {
     _chapterControllers[index].dispose();
 
@@ -141,20 +142,31 @@ class _EditBookState extends State<EditBook> {
       bookTitle: _editBookTitleController.text,
       author: _editBookAuthorController.text,
       aboutBook: _editAboutBookController.text,
-      aboutAuthor: _editWhoAuthorController.text,    
-      amount: double.tryParse(_editBookAmountController.text) ?? widget.aboutBooks.amount.toDouble(),
-      ratingReviews: widget.aboutBooks.ratingReviews, 
+      aboutAuthor: _editWhoAuthorController.text,
+      amount: double.tryParse(_editBookAmountController.text) ??
+          widget.aboutBooks.amount.toDouble(),
+      ratingReviews: widget.aboutBooks.ratingReviews,
       coverImage: _bookImage?.path ?? widget.aboutBooks.coverImage,
       pdfLink: _bookPdf?.name ?? widget.aboutBooks.pdfLink,
       chapters: updatedChaptersList,
       chapterNum: updatedChapterMap.length,
     );
 
+    AdminActivity newActivity = AdminActivity(
+      id: Uuid().v4(),
+      action: 'Book Edited',
+      details: 'Title: ${updatedBook.bookTitle}, Author: ${updatedBook.author}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.edit,
+    );
+
     try {
       final bookProvider = Provider.of<BookProvider>(context, listen: false);
       await bookProvider.updateBook(updatedBook);
+      Provider.of<AdminActivityService>(context, listen: false).logActivity(
+          newActivity.action, newActivity.details, newActivity.icon);
       showMessage('Success updating book', context);
-      GoRouter.of(context).pop(); 
+      GoRouter.of(context).pop();
     } catch (e) {
       showMessage('Error updating book: $e', context);
     } finally {
@@ -244,32 +256,38 @@ class _EditBookState extends State<EditBook> {
                         fontSize: 20,
                       )),
                   const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      leading: Icon(pdfIcon, color: pdfIconColor),
-                      title: Text(
-                        pdfStatusText,
-                        style: TextStyle(
-                            fontWeight: _bookPdf != null
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                            color: pdfIconColor,
-                            fontSize: 14),
-                        overflow: TextOverflow.ellipsis,
+                  InkWell(
+                    onTap: _pickPdfFile,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade300),
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      trailing: TextButton(
-                        onPressed: _pickPdfFile,
-                        child: Text(
-                          _bookPdf != null ? 'Replace File' : 'Change File',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
+                      child: Column(
+                        children: [
+                          Icon(pdfIcon, color: pdfIconColor),
+                          Text(
+                            pdfStatusText,
+                            style: TextStyle(
+                                fontWeight: _bookPdf != null
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: pdfIconColor,
+                                fontSize: 14),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          TextButton(
+                            onPressed: _pickPdfFile,
+                            child: Text(
+                              _bookPdf != null ? 'Replace File' : 'Change File',
+                              style: TextStyle(
+                                  color: Theme.of(context).primaryColor),
+                            ),
+                          ),
+                        ],
                       ),
-                      onTap: _pickPdfFile,
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -463,7 +481,8 @@ class _EditBookState extends State<EditBook> {
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: _chapterEntries.length,
                         itemBuilder: (context, index) {
-                          MapEntry<String, String> chapterEntry = _chapterEntries[index];
+                          MapEntry<String, String> chapterEntry =
+                              _chapterEntries[index];
                           String chapterNumber = chapterEntry.key;
                           String currentTitle = _chapterControllers[index].text;
 
@@ -487,7 +506,8 @@ class _EditBookState extends State<EditBook> {
                                         // Delete Button
                                         InkWell(
                                           onTap: () => _deleteChapter(index),
-                                          child: Icon(Iconsax.trash, size: 20, color: Colors.red),
+                                          child: Icon(Iconsax.trash,
+                                              size: 20, color: Colors.red),
                                         ),
                                         SizedBox(width: 15),
                                         // Edit Button
@@ -507,7 +527,7 @@ class _EditBookState extends State<EditBook> {
                                 _isChapterEditing[index]
                                     ? CustomTextInput(
                                         isTitleNotNecessary: true,
-                                        label: chapterEntry.value, 
+                                        label: chapterEntry.value,
                                         showEnter: false,
                                         isIcon: false,
                                         controller: _chapterControllers[index],
@@ -588,7 +608,9 @@ class _EditBookState extends State<EditBook> {
                                         height: 20,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.white),
                                         ),
                                       )
                                     : Icon(Iconsax.save_2, color: Colors.white),
@@ -596,7 +618,9 @@ class _EditBookState extends State<EditBook> {
                                   width: 10,
                                 ),
                                 Text(
-                                  _isSaving ? 'Saving Changes...' : 'Save Book Content',
+                                  _isSaving
+                                      ? 'Saving Changes...'
+                                      : 'Save Book Content',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),

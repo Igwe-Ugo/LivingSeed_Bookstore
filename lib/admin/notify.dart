@@ -210,7 +210,19 @@ class _AdminNotificationsState extends State<AdminNotifications> {
     bool success =
         await Provider.of<NotificationProvider>(context, listen: false)
             .sendGeneralNotification(newNotification);
+
+    AdminActivity newActivity = AdminActivity(
+      id: notificationId.getNextId().toString(),
+      action: 'Notification Sent',
+      details:
+          'Title: ${newNotification.notificationTitle}, Message: ${newNotification.notificationMessage.substring(0, 10)}...',
+      timestamp: DateTime.now(),
+      icon: Iconsax.message,
+    );
+
     if (success) {
+      Provider.of<AdminActivityService>(context, listen: false).logActivity(
+          newActivity.action, newActivity.details, newActivity.icon);
       NotificationDropDownServices.showNotification(
           id: notificationId.getNextId(),
           title: "Notification sent!",

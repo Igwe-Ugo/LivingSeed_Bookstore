@@ -51,6 +51,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
       addEventProvider.initializeEvents();
       magazineProvider.initializeMagazines();
       journalProvider.initializeJournalPosts();
+      adminActivities.initializeActivities();
     });
 
     getCurrentAppTheme();
@@ -74,13 +75,6 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
         ChangeNotifierProvider(create: (_) => magazineProvider),
         ChangeNotifierProvider(create: (_) => journalProvider),
         ChangeNotifierProvider(create: (_) => adminActivities),
-        // Pass the Activity Service instance to the BookProvider
-        /* ChangeNotifierProxyProvider<AdminActivityService, BookProvider>(
-          create: (context) => BookProvider(
-            Provider.of<AdminActivityService>(context, listen: false),
-          ),
-          update: (_, activityService, bookProvider) => bookProvider!,
-        ), */
       ],
       child: Consumer<DarkThemeProvider>(
         builder: (context, themeData, child) {

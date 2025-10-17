@@ -79,12 +79,22 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
         pdfLink: _bookFile!.path ?? _bookFile!.name,
         chapters: chapters,
         ratingReviews: []);
+      
+    AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'Book Uploaded',
+      details: 'Title: ${newUpload.bookTitle}, Author: ${newUpload.author}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.arrow_up_1,
+    ); 
 
     bool success = await Provider.of<BookProvider>(context, listen: false)
         .uploadBook(newUpload);
 
     if (success) {
       showMessage('Book uploaded successfully!', context);
+      Provider.of<AdminActivityService>(context, listen: false)
+          .logActivity(newActivity.action, newActivity.details, newActivity.icon);
       GoRouter.of(context).pop();
       _formKey.currentState!.reset();
     } else {

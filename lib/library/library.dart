@@ -75,12 +75,24 @@ class _LibraryState extends State<Library> {
   }
 
   Future<void> _loadMaterials() async {
-    books = await Provider.of<BookProvider>(context, listen: false)
-        .booksFuture!; // load books from json
-    bibleStudy = await Provider.of<BibleStudyProvider>(context, listen: false)
-        .bibleStudyFuture!;
-    magazines = await Provider.of<MagazineProvider>(context, listen: false)
-        .magazineFuture!;
+    BookProvider bookProv = Provider.of<BookProvider>(context, listen: false);
+    if (bookProv.booksFuture == null) {
+      await bookProv.initializeBooks();
+    }
+    books = await bookProv.booksFuture!;
+
+    BibleStudyProvider bibleProv = Provider.of<BibleStudyProvider>(context, listen: false);
+    if (bibleProv.bibleStudyFuture == null) {
+      await bibleProv.initializeBibleStudy();
+    }
+    bibleStudy = await bibleProv.bibleStudyFuture!;
+
+    MagazineProvider magProv = Provider.of<MagazineProvider>(context, listen: false);
+    if (magProv.magazineFuture == null) {
+      await magProv.initializeMagazines();
+    }
+    magazines = await magProv.magazineFuture!;
+
     setState(() {
       filteredBooks = books; // initially, all books are displayed
       filteredBibleStudy = bibleStudy;
