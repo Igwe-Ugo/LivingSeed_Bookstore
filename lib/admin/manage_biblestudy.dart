@@ -5,6 +5,7 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class BiblestudyManagement extends StatelessWidget {
   const BiblestudyManagement({super.key});
@@ -96,6 +97,7 @@ class BiblestudyManagement extends StatelessWidget {
 
   void _showDeleteConfirmation(
       BuildContext context, BibleStudyMaterial bibleStudy) {
+    final Uuid _uuid = const Uuid();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -116,11 +118,19 @@ class BiblestudyManagement extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // 1. Delete the book from the main book list (e.g., BookProvider)
-              // 2. Log the activity
-              // Provider.of<UsersAuthProvider>(context, listen: false)
-              //     .logBookDeleted(book.bookTitle, book.bookId);
-
+              AdminActivity newActivity = AdminActivity(
+                id: _uuid.v4(),
+                action: 'BibleStudy Deleted',
+                details:
+                    'Title: ${bibleStudy.title}, Subtitle: ${bibleStudy.subTitle}',
+                timestamp: DateTime.now(),
+                icon: Icons.cancel_sharp,
+              );
+              Provider.of<BibleStudyProvider>(context, listen: false)
+                  .deleteBiblestudy(bibleStudy.title);
+              Provider.of<AdminActivityService>(context, listen: false)
+                  .logActivity(newActivity.action, newActivity.details,
+                      newActivity.icon);
               showMessage(
                   'Simulated Deletion of "${bibleStudy.title}"', context);
               context.pop();

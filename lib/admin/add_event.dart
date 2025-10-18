@@ -5,6 +5,7 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class AdminAddEvent extends StatefulWidget {
@@ -15,6 +16,8 @@ class AdminAddEvent extends StatefulWidget {
 }
 
 class _AdminAddEventState extends State<AdminAddEvent> {
+  final Uuid _uuid = const Uuid();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AddEventProvider>(builder: (context, eventProvider, child) {
@@ -340,12 +343,25 @@ class _AdminAddEventState extends State<AdminAddEvent> {
       isAllDay: isAllDay, // Include `isAllDay` flag
     );
 
+    AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'Event Scheduled',
+      details:
+          'Event: ${_addTitleController.text}, Details: ${_eventDetailsController.text}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.calendar_1,
+    );
+
     if (isAllDay == false) {
       Provider.of<AddEventProvider>(context, listen: false)
           .addEvent(upcomingEvents);
+      Provider.of<AdminActivityService>(context, listen: false).logActivity(
+          newActivity.action, newActivity.details, newActivity.icon);
     } else {
       Provider.of<AddEventProvider>(context, listen: false)
           .addEvent(upcomingEventsTrue);
+      Provider.of<AdminActivityService>(context, listen: false).logActivity(
+          newActivity.action, newActivity.details, newActivity.icon);
     }
     Navigator.of(context).pop();
   }
@@ -376,7 +392,8 @@ class _AdminAddEventState extends State<AdminAddEvent> {
         ),
         actions: [
           TextButton(
-            onPressed: (){}, // Meant to navigate to the event's screen to be displayed.
+            onPressed:
+                () {}, // Meant to navigate to the event's screen to be displayed.
             child: Text(
               'view event'.toUpperCase(),
               style: TextStyle(

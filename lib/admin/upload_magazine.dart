@@ -58,6 +58,17 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
         content.add({"Content ${i + 1}": text});
       }
     }
+    /* MagazineModel newUpload = MagazineModel(
+        magazineTitle: _titleController.text,
+        issue: issue,
+        price: double.tryParse(_amountController.text) ?? 0.0,
+        coverImage: _coverImage!.path.toString(),
+        publisher: _aboutAuthorController.text,
+        editorsDesk: editorsDesk,
+        contents: contents,
+        bibleStudy: bibleStudy,
+        subTitle: subTitle
+      ); */
 
     /* bool success = await Provider.of<MagazineProvider>(context, listen: false)
         .uploadMagazine(newUpload);
@@ -69,10 +80,7 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
     } */
   }
 
-  // REMOVED: Widget _buildFilePickerDropZone - replaced by MediaFilePicker
-
   Widget _buildChapterInput(int index) {
-    // ... (unchanged) ...
     return CustomTextInput(
       label: 'Content ${index + 1} title',
       controller: _magazineContentController[index],

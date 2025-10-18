@@ -5,12 +5,14 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class JournalManagement extends StatelessWidget {
   const JournalManagement({super.key});
   @override
   Widget build(BuildContext context) {
-    return Consumer<JournalProvider>(builder: (context, journalProvider, child) {
+    return Consumer<JournalProvider>(
+        builder: (context, journalProvider, child) {
       final _allBooks = journalProvider.allPosts;
       return Scaffold(
         appBar: AppBar(
@@ -63,8 +65,7 @@ class JournalManagement extends StatelessWidget {
           ),
           title: Text(journal.title,
               style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle:
-              Text('by ${journal.authorName}'),
+          subtitle: Text('by ${journal.authorName}'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -94,6 +95,7 @@ class JournalManagement extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, JournalPost journal) {
+    final Uuid _uuid = const Uuid();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -114,11 +116,19 @@ class JournalManagement extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // 1. Delete the book from the main book list (e.g., BookProvider)
-              // 2. Log the activity
-              // Provider.of<UsersAuthProvider>(context, listen: false)
-              //     .logBookDeleted(book.bookTitle, book.bookId);
-
+              AdminActivity newActivity = AdminActivity(
+                id: _uuid.v4(),
+                action: 'Journal Deleted',
+                details:
+                    'Title: ${journal.title}, author: ${journal.authorName}',
+                timestamp: DateTime.now(),
+                icon: Icons.cancel_sharp,
+              );
+              Provider.of<JournalProvider>(context, listen: false)
+                  .deleteJournal(journal.title);
+              Provider.of<AdminActivityService>(context, listen: false)
+                  .logActivity(newActivity.action, newActivity.details,
+                      newActivity.icon);
               showMessage('Simulated Deletion of "${journal.title}"', context);
               context.pop();
             },

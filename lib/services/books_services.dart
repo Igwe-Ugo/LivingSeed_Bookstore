@@ -96,14 +96,26 @@ class BookProvider extends ChangeNotifier {
 
   // updates an existing book in the local list and save the changes.
   Future<void> updateBook(AboutBooks updatedBook) async {
-    final index = _books.indexWhere((book) => book.bookId == updatedBook.bookId);
-    if (index != -1){
+    final index =
+        _books.indexWhere((book) => book.bookId == updatedBook.bookId);
+    if (index != -1) {
       _books[index] = updatedBook;
       await _saveBooksToLocal();
       notifyListeners();
-      debugPrint('Success: Book with ID ${updatedBook.bookId} updated successfully.');
+      debugPrint(
+          'Success: Book with ID ${updatedBook.bookId} updated successfully.');
     } else {
-      debugPrint('Error: Book with ID ${updatedBook.bookId} not found for update.');
+      debugPrint(
+          'Error: Book with ID ${updatedBook.bookId} not found for update.');
+    }
+  }
+
+  void deleteBook(String title) {
+    if (_books != null) {
+      _books.removeWhere((item) => item.bookTitle == title);
+      notifyListeners();
+      _saveBooksToLocal();
+      notifyListeners();
     }
   }
 }

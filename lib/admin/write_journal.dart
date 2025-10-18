@@ -6,6 +6,7 @@ import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 import '../../common/widget.dart';
+import 'package:uuid/uuid.dart';
 
 class WriteJournal extends StatefulWidget {
   const WriteJournal({super.key});
@@ -15,6 +16,7 @@ class WriteJournal extends StatefulWidget {
 }
 
 class _WriteJournalState extends State<WriteJournal> {
+  final Uuid _uuid = const Uuid();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _authorController = TextEditingController();
@@ -52,6 +54,15 @@ class _WriteJournalState extends State<WriteJournal> {
         journalWriteup: _articleController.text,
         comments: []);
 
+    AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'Journal Uploaded',
+      details: 'Title: ${_titleController.text}, Author: ${_authorController.text}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.pen_add,
+    ); 
+    await Provider.of<AdminActivityService>(context, listen: false)
+          .logActivity(newActivity.action, newActivity.details, newActivity.icon);
     await Provider.of<JournalProvider>(context, listen: false)
         .addJournalPost(newArticle);
 

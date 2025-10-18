@@ -163,7 +163,7 @@ class _EditBookState extends State<EditBook> {
     try {
       final bookProvider = Provider.of<BookProvider>(context, listen: false);
       await bookProvider.updateBook(updatedBook);
-      Provider.of<AdminActivityService>(context, listen: false).logActivity(
+      await Provider.of<AdminActivityService>(context, listen: false).logActivity(
           newActivity.action, newActivity.details, newActivity.icon);
       showMessage('Success updating book', context);
       GoRouter.of(context).pop();

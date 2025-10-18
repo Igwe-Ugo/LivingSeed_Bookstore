@@ -7,6 +7,7 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class EditJournal extends StatefulWidget {
   final JournalPost journals;
@@ -20,6 +21,7 @@ class _EditJournalState extends State<EditJournal> {
   bool _showTitleInput = false;
   bool _showAuthorInput = false;
   bool _showArticleInput = false;
+  final Uuid _uuid = const Uuid();
 
   String? selectedValue;
   void setSelectedValue(String? value) {
@@ -63,7 +65,14 @@ class _EditJournalState extends State<EditJournal> {
     }
     final normalized = s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
     return JournalCategory.values.firstWhere(
-        (e) => e.toString().split('.').last.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '') == normalized,
+        (e) =>
+            e
+                .toString()
+                .split('.')
+                .last
+                .toLowerCase()
+                .replaceAll(RegExp(r'[^a-z0-9]'), '') ==
+            normalized,
         orElse: () => JournalCategory.values.first);
   }
 
@@ -85,15 +94,26 @@ class _EditJournalState extends State<EditJournal> {
         journalWriteup: _editArticleController.text,
         comments: []);
 
+    AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'Journal Edited',
+      details:
+          'Title: ${_editJournalTitleController.text}, Author: ${_editJournalAuthorController.text}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.pen_add,
+    );
+
     await Provider.of<JournalProvider>(context, listen: false)
         .updateJournal(newArticle);
+    await Provider.of<AdminActivityService>(context, listen: false)
+        .logActivity(newActivity.action, newActivity.details, newActivity.icon);
 
     showMessage('Article uploaded successfully!', context);
     GoRouter.of(context).pop();
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     _editJournalTitleController.text = widget.journals.title;
     _editJournalAuthorController.text = widget.journals.authorName;

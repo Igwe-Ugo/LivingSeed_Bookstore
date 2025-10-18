@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
-import 'package:livingseed_media/services/books_services.dart';
+import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class BookManagement extends StatelessWidget {
   const BookManagement({super.key});
@@ -97,6 +98,7 @@ class BookManagement extends StatelessWidget {
   }
 
   void _showDeleteConfirmation(BuildContext context, AboutBooks book) {
+    final Uuid _uuid = const Uuid();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -117,11 +119,18 @@ class BookManagement extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // 1. Delete the book from the main book list (e.g., BookProvider)
-              // 2. Log the activity
-              // Provider.of<UsersAuthProvider>(context, listen: false)
-              //     .logBookDeleted(book.bookTitle, book.bookId);
-
+              AdminActivity newActivity = AdminActivity(
+                id: _uuid.v4(),
+                action: 'Book Deleted',
+                details: 'Title: ${book.bookTitle}, Author: ${book.author}',
+                timestamp: DateTime.now(),
+                icon: Icons.cancel_sharp,
+              );
+              Provider.of<BookProvider>(context, listen: false)
+                  .deleteBook(book.bookTitle);
+              Provider.of<AdminActivityService>(context, listen: false)
+                  .logActivity(newActivity.action, newActivity.details,
+                      newActivity.icon);
               showMessage('Simulated Deletion of "${book.bookTitle}"', context);
               context.pop();
             },

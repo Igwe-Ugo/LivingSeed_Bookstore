@@ -83,4 +83,12 @@ class MagazineProvider extends ChangeNotifier {
     notifyListeners();
     return true;
   }
+
+  void deleteMagazine(String title) {
+    if (_magazines != null) {
+      _magazines.removeWhere((item) => item.magazineTitle == title);
+      _saveMagazinesToLocal();
+      notifyListeners();
+    }
+  }
 }

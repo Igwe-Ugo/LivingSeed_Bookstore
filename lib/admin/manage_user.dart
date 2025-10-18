@@ -5,6 +5,7 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AdminUserManagement extends StatefulWidget {
   const AdminUserManagement({super.key});
@@ -258,6 +259,17 @@ class CustomUserTile extends StatelessWidget {
               if (isAdmin != 'Admin')
                 PopupMenuItem(
                   onTap: () {
+                    final Uuid _uuid = const Uuid();
+                    AdminActivity newActivity = AdminActivity(
+                      id: _uuid.v4(),
+                      action: 'Made Admin',
+                      details: 'User ${user.fullname} has been made an Admin',
+                      timestamp: DateTime.now(),
+                      icon: Iconsax.user,
+                    );
+                    Provider.of<AdminActivityService>(context, listen: false)
+                        .logActivity(newActivity.action, newActivity.details,
+                            newActivity.icon);
                     Provider.of<UsersAuthProvider>(context, listen: false)
                         .makeAdmin(email);
                     showMessage('User has been made an Admin', context);
@@ -269,19 +281,17 @@ class CustomUserTile extends StatelessWidget {
                   ),
                 ),
               PopupMenuItem(
-                onTap: () {
-                  Provider.of<UsersAuthProvider>(context).deleteUser(name);
-                  GoRouter.of(context).pop();
-                  showMessage('User has been deleted!', context);
-                },
-                value: 'delete',
-                child: isAdmin != 'Admin'
-                    ? Text(
-                        'Delete User',
-                        overflow: TextOverflow.ellipsis,
-                      )
-                    : const SizedBox.shrink(),
-              ),
+                  onTap: () {
+                    Provider.of<UsersAuthProvider>(context, listen: false)
+                        .deleteUser(name);
+                    GoRouter.of(context).pop();
+                    showMessage('User has been deleted!', context);
+                  },
+                  value: 'delete',
+                  child: Text(
+                    'Delete User',
+                    overflow: TextOverflow.ellipsis,
+                  )),
             ],
           ),
         ],

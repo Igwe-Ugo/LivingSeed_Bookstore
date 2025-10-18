@@ -171,6 +171,8 @@ class _EditBibleStudyState extends State<EditBibleStudy> {
               ),
             )
           ],
-        )));
+        )
+      )
+    );
   }
 }

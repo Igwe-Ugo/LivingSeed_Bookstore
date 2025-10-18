@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
-// import 'reusable_media_picker.dart'; // Assume this file is accessible
-// The MediaFilePicker class is assumed to be defined and accessible.
+import 'package:uuid/uuid.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +17,7 @@ class UploadBibleStudy extends StatefulWidget {
 }
 
 class _UploadBibleStudyState extends State<UploadBibleStudy> {
+  final Uuid _uuid = const Uuid();
   int selectedChapterNum = 1;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
@@ -251,10 +251,22 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
       contents: contents,
     );
 
+    AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'BibleStudy uploaded',
+      details:
+          'Title: ${_titleController.text}, subtitle: ${_subtitleController.text}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.message,
+    );
+
     bool success = await Provider.of<BibleStudyProvider>(context, listen: false)
         .uploadBibleStudy(newUpload);
     if (success) {
       showMessage('Bible Study uploaded successfully!', context);
+      Provider.of<AdminActivityService>(context, listen: false)
+                        .logActivity(newActivity.action, newActivity.details,
+                            newActivity.icon);
       GoRouter.of(context).pop();
     } else {
       showMessage(

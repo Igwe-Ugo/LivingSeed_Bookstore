@@ -217,4 +217,13 @@ class JournalProvider extends ChangeNotifier {
     }
   }
 
+  void deleteJournal(String title) {
+    if (_posts != null) {
+      _posts.removeWhere((item) => item.title == title);
+      notifyListeners();
+      _savePostsToLocal();
+      notifyListeners();
+    }
+  }
+
 }

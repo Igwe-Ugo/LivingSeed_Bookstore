@@ -31,8 +31,8 @@ class BibleStudyProvider extends ChangeNotifier {
     // Merge books while preventing duplicates
     Set<String> existingTitles =
         localBibleStudy.map((bibleStudy) => bibleStudy.title).toSet();
-    assetBibleStudy.removeWhere(
-        (bibleStudy) => existingTitles.contains(bibleStudy.title));
+    assetBibleStudy
+        .removeWhere((bibleStudy) => existingTitles.contains(bibleStudy.title));
 
     _bibleStudies = [
       ...localBibleStudy,
@@ -99,5 +99,13 @@ class BibleStudyProvider extends ChangeNotifier {
     await _saveBibleStudyToLocal();
     notifyListeners();
     return true;
+  }
+
+  void deleteBiblestudy(String title) {
+    if (_bibleStudies != null) {
+      _bibleStudies.removeWhere((item) => item.title == title);
+      _saveBibleStudyToLocal();
+      notifyListeners();
+    }
   }
 }
