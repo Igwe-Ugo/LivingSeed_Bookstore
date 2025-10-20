@@ -223,22 +223,7 @@ class LivingSeedMediaRouter {
                                     child: Text("No book data available"));
                               }
                             },
-                            routes: [
-                              GoRoute(
-                                path: reviewsPath,
-                                builder: (context, state) {
-                                  final aboutBooks = state.extra as AboutBooks?;
-                                  if (aboutBooks != null) {
-                                    return Reviews(
-                                      aboutBooks: aboutBooks,
-                                    );
-                                  } else {
-                                    return const Center(
-                                        child: Text("No book data available"));
-                                  }
-                                },
-                              ),
-                            ]),
+                          ),
                         GoRoute(
                           path: aboutMagazinePath,
                           builder: (context, state) {

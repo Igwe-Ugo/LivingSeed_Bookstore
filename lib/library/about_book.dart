@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart';
-import 'package:livingseed_media/library/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 import 'package:provider/provider.dart';
 //import 'package:livingseed_bookstore/services/widget.dart';
 //import 'package:provider/provider.dart';
@@ -26,6 +26,8 @@ class _AboutBookState extends State<AboutBook> {
   late Map<int, int> ratingCount;
   late int totalReviews;
   List<int>? ratings;
+  List<bool> stars = [false, false, false, false, false];
+  bool showWriteReviewTextField = false;
 
   @override
   void initState() {
@@ -86,7 +88,7 @@ class _AboutBookState extends State<AboutBook> {
             child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
                   Center(
@@ -174,97 +176,6 @@ class _AboutBookState extends State<AboutBook> {
                         ),
                       ),
                       const SizedBox(
-                        height: 10,
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: Theme.of(context).disabledColor.withOpacity(0.4),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(5, (index) {
-                                int averageRating = widget
-                                        .aboutBooks.ratingReviews.isNotEmpty
-                                    ? (allReviews /
-                                            widget.aboutBooks.ratingReviews
-                                                .length)
-                                        .floor()
-                                    : 0; // Default to 0 if there are no reviews
-
-                                if (index < averageRating) {
-                                  // filled
-                                  return Icon(
-                                    Iconsax.star1,
-                                    color: filledColor,
-                                    size: starSize,
-                                  );
-                                } else if (index <
-                                    (allReviews /
-                                        widget
-                                            .aboutBooks.ratingReviews.length)) {
-                                  // halffilled
-                                  return Icon(
-                                    Icons.star_half,
-                                    color: filledColor,
-                                    size: starSize,
-                                  );
-                                } else {
-                                  // unfilled
-                                  return Icon(
-                                    Iconsax.star1,
-                                    color: unfilledColor,
-                                    size: starSize,
-                                  );
-                                }
-                              })),
-                          widget.aboutBooks.ratingReviews.isNotEmpty
-                              ? Text(
-                                  (allReviews /
-                                          widget
-                                              .aboutBooks.ratingReviews.length)
-                                      .toStringAsFixed(2),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                              : Text(
-                                  '0',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            if (widget.aboutBooks != null) {
-                              GoRouter.of(context).go(
-                                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}/${LivingSeedMediaRouter.reviewsPath}',
-                                  extra: widget.aboutBooks);
-                            }
-                          },
-                          child: Text(
-                            'See Reviews',
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Divider(
-                        thickness: 1,
-                        color: Theme.of(context).disabledColor.withOpacity(0.4),
-                      ),
-                      const SizedBox(
                         height: 20,
                       ),
                       const Text("What's it about?",
@@ -295,6 +206,7 @@ class _AboutBookState extends State<AboutBook> {
                             more == false ? 'see more...' : 'see less...',
                             style: TextStyle(
                                 color: Theme.of(context).primaryColor,
+                                fontWeight: FontWeight.w700,
                                 fontSize: 13),
                           ),
                         ),
@@ -375,26 +287,177 @@ class _AboutBookState extends State<AboutBook> {
                       const SizedBox(
                         height: 25,
                       ),
-                      const Text("Recommended for you",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )),
-                      const SizedBox(
-                        height: 20,
+                      Text(
+                        'Reviews',
+                        style: const TextStyle(
+                          fontFamily: 'Playfair',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
+                      Column(
+                        children: [
+                          Row(
                             children: [
-                              BooksPage(
-                                aboutBooks: widget.aboutBooks,
+                              Column(
+                                children: [
+                                  widget.aboutBooks.ratingReviews.isNotEmpty
+                                      ? Text(
+                                          (allReviews /
+                                                  widget.aboutBooks
+                                                      .ratingReviews.length)
+                                              .toStringAsFixed(2),
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        )
+                                      : Text(
+                                          '0',
+                                          style: TextStyle(
+                                            fontSize: 40,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                  Text(
+                                    'out of 5',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  )
+                                ],
                               ),
-                              SizedBox(
-                                width: 10,
+                              const SizedBox(
+                                width: 2,
                               ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: List.generate(5, (index) {
+                                  int starValue = 5 -
+                                      index; // 5-star at top, 1-star at bottom
+                                  int starCount = ratingCount[starValue] ?? 0;
+                                  double iconSize = 12.0;
+                                  double percentage = totalReviews > 0
+                                      ? starCount / totalReviews
+                                      : 0.0;
+                                  return Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      ...List.generate(
+                                          starValue,
+                                          (index) => Icon(Iconsax.star1,
+                                              color: Colors.orange,
+                                              size: iconSize)),
+                                      LinearPercentIndicator(
+                                        barRadius: const Radius.circular(2),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .5,
+                                        lineHeight: 6.0,
+                                        percent: percentage,
+                                        progressColor: Colors.black45,
+                                        backgroundColor: Colors.grey[300],
+                                      ),
+                                    ],
+                                  );
+                                }),
+                              )
                             ],
-                          )),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Text(
+                                  '${widget.aboutBooks.ratingReviews.length} Ratings',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 12)),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(5, (index) {
+                                int averageRating = widget
+                                        .aboutBooks.ratingReviews.isNotEmpty
+                                    ? (allReviews /
+                                            widget.aboutBooks.ratingReviews
+                                                .length)
+                                        .floor()
+                                    : 0; // Default to 0 if there are no reviews
+
+                                if (index < averageRating) {
+                                  // filled
+                                  return Icon(
+                                    Iconsax.star1,
+                                    color: filledColor,
+                                    size: starSize,
+                                  );
+                                } else if (index <
+                                    (allReviews /
+                                        widget
+                                            .aboutBooks.ratingReviews.length)) {
+                                  // halffilled
+                                  return Icon(
+                                    Icons.star_half,
+                                    color: filledColor,
+                                    size: starSize,
+                                  );
+                                } else {
+                                  // unfilled
+                                  return Icon(
+                                    Iconsax.star1,
+                                    color: unfilledColor,
+                                    size: starSize,
+                                  );
+                                }
+                              })),
+                          Divider(
+                            color: Theme.of(context).disabledColor,
+                          ),
+                          widget.aboutBooks.ratingReviews.isNotEmpty
+                              ? Column(
+                                  children: widget.aboutBooks.ratingReviews
+                                      .map((reviews) {
+                                    return ReviewsWidget(
+                                        context: context,
+                                        reviewText: reviews.reviewText,
+                                        date: reviews.date,
+                                        reviewTitle: reviews.reviewTitle,
+                                        rating: reviews.reviewRating.toInt(),
+                                        reviewer: reviews.reviewer);
+                                  }).toList(),
+                                )
+                              : Center(
+                                  child: const Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Icon(
+                                        Iconsax.magic_star,
+                                        size: 70,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        'No Review yet for this book! All reviews from people appear here...',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                        ],
+                      ),
                     ],
                   ),
                 ],
@@ -408,8 +471,7 @@ class _AboutBookState extends State<AboutBook> {
     Provider.of<UsersAuthProvider>(context, listen: false)
         .addToBookCart(widget.aboutBooks);
     Users user =
-        Provider.of<UsersAuthProvider>(context, listen: false)
-            .userData!;
+        Provider.of<UsersAuthProvider>(context, listen: false).userData!;
     NotificationItems newNotification = NotificationItems(
       notificationImage: widget.aboutBooks.coverImage,
       notificationTitle: 'Book added to cart',
@@ -421,12 +483,11 @@ class _AboutBookState extends State<AboutBook> {
           "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
     );
     Provider.of<NotificationProvider>(context, listen: false)
-        .sendPersonalNotification(
-            user.emailAddress, newNotification);
-    
+        .sendPersonalNotification(user.emailAddress, newNotification);
+
     NotificationDropDownServices notificationId =
         NotificationDropDownServices();
-    
+
     NotificationDropDownServices.showNotification(
         id: notificationId.getNextId(),
         title: 'Book Added to cart',
