@@ -69,8 +69,27 @@ class _JournalListScreenState extends State<JournalListScreen> {
               Expanded(
                 child: filteredPosts.isEmpty
                     ? Center(
-                        child: Text(
-                            'No posts in ${_selectedCategory.toTitle()} category.'))
+                        child: Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Icon(
+                            Iconsax.archive,
+                            size: 80,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'No posts in ${_selectedCategory.toTitle()} category.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ))
                     : ListView.builder(
                         itemCount: filteredPosts.length,
                         itemBuilder: (context, index) {
@@ -198,9 +217,7 @@ class _JournalListScreenState extends State<JournalListScreen> {
                         ?.copyWith(fontStyle: FontStyle.italic),
                   ),
                   TextButton.icon(
-                    onPressed: () {
-                      // TODO: Implement navigation to Journal Detail Screen
-                    },
+                    onPressed: null,
                     icon: Icon(
                       Icons.comment,
                       size: 16,
