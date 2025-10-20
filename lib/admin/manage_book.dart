@@ -7,8 +7,8 @@ import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
-class BookManagement extends StatelessWidget {
-  const BookManagement({super.key});
+class ManageBook extends StatelessWidget {
+  const ManageBook({super.key});
   @override
   Widget build(BuildContext context) {
     // In a real app, you would fetch the list of ALL books here

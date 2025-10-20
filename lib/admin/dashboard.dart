@@ -84,7 +84,10 @@ class AdminDashboard extends StatelessWidget {
                           icon: Iconsax.book_saved,
                           color: Colors.orange,
                           count: magazineProvider.magazines.length,
-                          onTap: () {}),
+                          onTap: () {
+                            GoRouter.of(context).go(
+                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageMagazinePath}');
+                          }),
                     ],
                   ),
                   const SizedBox(height: 20),

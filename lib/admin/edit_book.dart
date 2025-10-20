@@ -1,11 +1,12 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -18,624 +19,460 @@ class EditBook extends StatefulWidget {
 }
 
 class _EditBookState extends State<EditBook> {
-  bool _showTitleInput = false;
-  bool _showAuthorInput = false;
-  bool _showAmountInput = false;
-  bool _showAboutInput = false;
-  bool _showWhoseInput = false;
+  final _formKey = GlobalKey<FormState>();
+  bool _isSaving = false;
 
-  bool _isSaving = false; // State for loading indicator
+  // Primary Book Details Controllers
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _authorController = TextEditingController();
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _aboutBookController = TextEditingController();
+  final TextEditingController _aboutAuthorController = TextEditingController();
 
-  final TextEditingController _editBookTitleController =
-      TextEditingController();
-  final TextEditingController _editBookAuthorController =
-      TextEditingController();
-  final TextEditingController _editBookAmountController =
-      TextEditingController();
-  final TextEditingController _editAboutBookController =
-      TextEditingController();
-  final TextEditingController _editWhoAuthorController =
-      TextEditingController();
+  // Dynamic Chapters Controllers
+  int _selectedChapterNum = 1;
+  late List<TextEditingController> _chapterTitleControllers = [
+    TextEditingController()
+  ];
 
   XFile? _bookImage;
   PlatformFile? _bookPdf;
 
-  late List<MapEntry<String, String>> _chapterEntries;
-  late List<TextEditingController> _chapterControllers;
-  late List<bool> _isChapterEditing;
-  // ----------------------------------------
-
   @override
   void initState() {
     super.initState();
-    _editBookTitleController.text = widget.aboutBooks.bookTitle;
-    _editBookAuthorController.text = widget.aboutBooks.author;
-    _editBookAmountController.text = widget.aboutBooks.amount.toString();
-    _editAboutBookController.text = widget.aboutBooks.aboutBook;
-    _editWhoAuthorController.text = widget.aboutBooks.aboutAuthor;
-
-    _chapterEntries = widget.aboutBooks.chapters.isNotEmpty
-        ? widget.aboutBooks.chapters.first.entries.toList()
-        : [];
-
-    final int chapterCount = _chapterEntries.length;
-
-    // 3. Initialize chapter-specific state
-    _chapterControllers = List.generate(chapterCount, (index) {
-      String chapterTitle = _chapterEntries[index].value;
-      return TextEditingController(text: chapterTitle);
-    });
-
-    _isChapterEditing = List.generate(chapterCount, (_) => false);
+    _loadBookData(widget.aboutBooks);
   }
 
-  @override
-  void dispose() {
-    _editBookTitleController.dispose();
-    _editBookAuthorController.dispose();
-    _editBookAmountController.dispose();
-    _editAboutBookController.dispose();
-    _editWhoAuthorController.dispose();
+  // Parses the complex List<Map<String, String>> chapters structure
+  void _loadBookData(AboutBooks book) {
+    // Basic Details
+    _titleController.text = book.bookTitle;
+    _authorController.text = book.author;
+    _amountController.text = book.amount.toString();
+    _aboutBookController.text = book.aboutBook;
+    _aboutAuthorController.text = book.aboutAuthor;
 
-    for (var controller in _chapterControllers) {
-      controller.dispose();
-    }
+    // Chapters Initialization
+    final List<String> chapterTitles = [];
+    int maxChapterNumber = 0;
 
-    super.dispose();
-  }
-
-  Future<void> _pickProfileImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage =
-        await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _bookImage = pickedImage;
+    // Extract titles and find the highest chapter number to set the size of the dynamic list
+    for (var chapterMap in book.chapters) {
+      chapterMap.forEach((key, value) {
+        // Example key: "chapter 5"
+        final parts = key.split(' ');
+        if (parts.length == 2 && parts[0] == 'chapter') {
+          final chapterNumber = int.tryParse(parts[1]) ?? 0;
+          if (chapterNumber > maxChapterNumber) {
+            maxChapterNumber = chapterNumber;
+          }
+          // Pad the list with nulls or empty strings to ensure the title lands at the correct index (chapterNumber - 1)
+          while (chapterTitles.length < chapterNumber) {
+            chapterTitles.add(''); // Placeholder for skipped chapters
+          }
+          if (chapterTitles.length == chapterNumber) {
+            chapterTitles[chapterNumber - 1] = value;
+          }
+        }
       });
     }
+
+    // Set the initial number of chapters (at least 1)
+    _selectedChapterNum = maxChapterNumber > 0 ? maxChapterNumber : 1;
+
+    // Initialize list of controllers with extracted chapter titles
+    _chapterTitleControllers = List.generate(_selectedChapterNum, (i) {
+      if (i < chapterTitles.length) {
+        return TextEditingController(text: chapterTitles[i]);
+      }
+      return TextEditingController();
+    });
+
+    // If no chapters were found, ensure at least one empty controller is ready
+    if (maxChapterNumber == 0) {
+      _chapterTitleControllers = [TextEditingController()];
+    }
   }
 
-  Future<void> _pickPdfFile() async {
+  void _updateChapterControllers(int newCount) {
+    setState(() {
+      final oldCount = _selectedChapterNum;
+      _selectedChapterNum = newCount;
+
+      // Ensure that existing controllers are preserved, and new ones are added
+      _chapterTitleControllers = List.generate(newCount, (index) {
+        if (index < oldCount) {
+          return _chapterTitleControllers[index];
+        }
+        return TextEditingController();
+      });
+    });
+  }
+
+  Future<void> _pickCoverImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _bookImage = pickedFile;
+    });
+  }
+
+  Future<void> _pickBookFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
     );
-
-    if (result != null && result.files.isNotEmpty) {
+    if (result != null) {
       setState(() {
         _bookPdf = result.files.first;
       });
     }
   }
 
-  void _deleteChapter(int index) {
-    _chapterControllers[index].dispose();
+  void _submitChanges() async {
+    if (!_formKey.currentState!.validate()) {
+      return showMessage('Please fill all required fields', context);
+    }
 
-    setState(() {
-      _chapterEntries.removeAt(index);
-      _chapterControllers.removeAt(index);
-      _isChapterEditing.removeAt(index);
-    });
-  }
-
-  Future<void> _saveChanges() async {
-    if (_isSaving) return; // Prevent double click
-
-    setState(() {
-      _isSaving = true;
-    });
-
-    // 1. Reconstruct the chapters Map<String, String>
-    // The keys (_chapterEntries.map((e) => e.key)) hold the 'chapter 1', 'chapter 2', etc.
-    // The values (_chapterControllers.map((c) => c.text)) hold the edited titles.
-    Map<String, String> updatedChapterMap = Map.fromIterables(
-      _chapterEntries.map((e) => e.key),
-      _chapterControllers.map((c) => c.text),
-    );
-
-    // 2. Create the final List<Map<String, String>> structure
-    List<Map<String, String>> updatedChaptersList = [updatedChapterMap];
-
-    // 3. Create the new AboutBooks object using the current (edited or original) values
-    final updatedBook = AboutBooks(
-      bookId: widget.aboutBooks.bookId,
-      bookTitle: _editBookTitleController.text,
-      author: _editBookAuthorController.text,
-      aboutBook: _editAboutBookController.text,
-      aboutAuthor: _editWhoAuthorController.text,
-      amount: double.tryParse(_editBookAmountController.text) ??
-          widget.aboutBooks.amount.toDouble(),
-      ratingReviews: widget.aboutBooks.ratingReviews,
-      coverImage: _bookImage?.path ?? widget.aboutBooks.coverImage,
-      pdfLink: _bookPdf?.name ?? widget.aboutBooks.pdfLink,
-      chapters: updatedChaptersList,
-      chapterNum: updatedChapterMap.length,
-    );
-
-    AdminActivity newActivity = AdminActivity(
-      id: Uuid().v4(),
-      action: 'Book Edited',
-      details: 'Title: ${updatedBook.bookTitle}, Author: ${updatedBook.author}',
-      timestamp: DateTime.now(),
-      icon: Iconsax.edit,
-    );
+    setState(() => _isSaving = true);
 
     try {
+      // 1. Reconstruct Chapters List in the required List<Map<String, String>> format
+      final List<Map<String, String>> chapters = [];
+      int actualChapterCount = 0;
+
+      for (int i = 0; i < _selectedChapterNum; i++) {
+        final title = _chapterTitleControllers[i].text.trim();
+
+        // Only include chapters with non-empty titles for clean data
+        if (title.isNotEmpty) {
+          actualChapterCount++;
+          chapters.add({'chapter ${i + 1}': title});
+        }
+      }
+
+      // If the entire chapter list is empty, add a placeholder map to match the original structure,
+      // though typically a book should have at least one chapter.
+      if (chapters.isEmpty) {
+        // This is a safety measure; usually the length of the list determines chapterNum.
+      }
+
+      // 2. Handle File Updates (Mocked)
+      // In a real app, you would upload _bookImage and _bookPdf to storage
+      final String finalCoverImagePath =
+          _bookImage?.path ?? widget.aboutBooks.coverImage;
+      final String finalPdfLink = _bookPdf?.path ?? widget.aboutBooks.pdfLink;
+
+      // 3. Create the Updated Book Model
+      final AboutBooks updatedBook = AboutBooks(
+        bookId: widget.aboutBooks.bookId, // CRITICAL: Keep the original ID
+        bookTitle: _titleController.text,
+        author: _authorController.text,
+        amount: double.parse(_amountController.text),
+        aboutBook: _aboutBookController.text,
+        aboutAuthor: _aboutAuthorController.text,
+        coverImage: finalCoverImagePath,
+        pdfLink: finalPdfLink,
+        // Use the reconstructed list and its actual length
+        chapters: chapters,
+        chapterNum: actualChapterCount,
+        ratingReviews:
+            widget.aboutBooks.ratingReviews, // Preserve existing reviews
+      );
+      AdminActivity newActivity = AdminActivity(
+        id: Uuid().v4(),
+        action: 'Book Edited',
+        details:
+            'Title: ${updatedBook.bookTitle}, Author: ${updatedBook.author}',
+        timestamp: DateTime.now(),
+        icon: Iconsax.edit,
+      );
+
+      NotificationItems newNotification = NotificationItems(
+      notificationImage: updatedBook.coverImage,
+      notificationTitle: "${updatedBook.bookTitle} Book Updated",
+      notificationMessage: 'The book ${updatedBook.bookTitle} has been updated successfully. You can check it out now!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
+
+      // 4. Call Service Provider and Log Activity
       final bookProvider = Provider.of<BookProvider>(context, listen: false);
       await bookProvider.updateBook(updatedBook);
-      await Provider.of<AdminActivityService>(context, listen: false).logActivity(
-          newActivity.action, newActivity.details, newActivity.icon);
-      showMessage('Success updating book', context);
-      GoRouter.of(context).pop();
+      await Provider.of<NotificationProvider>(context, listen: false)
+            .sendGeneralNotification(newNotification);
+      NotificationDropDownServices.showNotification(
+          id: notificationId.getNextId(),
+          title: "${updatedBook.bookTitle} Book Updated",
+          body: 'The book ${updatedBook.bookTitle} has been updated successfully.');
+      await Provider.of<AdminActivityService>(context, listen: false)
+          .logActivity(
+              newActivity.action, newActivity.details, newActivity.icon);
+      showMessage('Book content updated successfully!', context);
+      context.pop(); // Go back after successful submission
     } catch (e) {
-      showMessage('Error updating book: $e', context);
+      showMessage('An error occurred during save: ${e.toString()}', context);
     } finally {
-      setState(() {
-        _isSaving = false;
-      });
+      setState(() => _isSaving = false);
     }
+  }
+
+  Widget _buildChapterInput(int index) {
+    if (index >= _chapterTitleControllers.length) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Chapter Number Display
+          Container(
+            width: 50,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              'Ch. ${index + 1}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).primaryColor),
+            ),
+          ),
+          const SizedBox(width: 10),
+          // Chapter Title Input
+          Expanded(
+            child: CustomTextInput(
+              isIcon: false,
+              controller: _chapterTitleControllers[index],
+              label: 'Chapter Title / Topic',
+              validator: (value) {
+                // Only require validation if the user starts typing
+                if (value!.isEmpty && index < _selectedChapterNum - 1) {
+                  return 'Required';
+                }
+                return null;
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Logic for dynamic PDF status display
-    String pdfStatusText;
-    IconData pdfIcon;
-    Color pdfIconColor;
-
-    if (_bookPdf != null) {
-      pdfStatusText = 'New PDF Selected: ${_bookPdf!.name}';
-      pdfIcon = Iconsax.document_upload;
-      pdfIconColor = Colors.green;
-    } else {
-      pdfStatusText =
-          'Current PDF: ${widget.aboutBooks.pdfLink.split('/').last}';
-      pdfIcon = Iconsax.document_1;
-      pdfIconColor = Theme.of(context).primaryColor;
-    }
+    final theme = Theme.of(context);
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-          leading: IconButton(
-              onPressed: () {
-                GoRouter.of(context).pop();
-              },
-              icon: const Icon(
-                Iconsax.arrow_left_2,
-                size: 17,
-              )),
-          title: Text(
-            'Edit Book',
-            style: TextStyle(
-              fontFamily: 'Playfair',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              GoRouter.of(context).pop();
+            },
+            icon: const Icon(
+              Iconsax.arrow_left_2,
+              size: 17,
+            )),
+        title: Text(
+          'Editing Book: ${widget.aboutBooks.bookTitle}',
+          style: TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: SingleChildScrollView(
-            child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // --- 1. Basic Book Details ---
+              const SectionTitle(title: 'Basic Book Details'),
+              CustomTextInput(
+                controller: _titleController,
+                label: 'Book Title',
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              CustomTextInput(
+                controller: _authorController,
+                label: 'Author Name',
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              CustomTextInput(
+                controller: _amountController,
+                label: '(#) Price (e.g., 1000.00)',
+                isNumber: true,
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+
+              // --- 2. About Book & Author ---
+              const SectionTitle(title: 'Book Descriptions'),
+              CustomTextInput(
+                controller: _aboutBookController,
+                label: 'About Book',
+                maxLine: 27,
+                maxLength: 5000,
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              CustomTextInput(
+                controller: _aboutAuthorController,
+                label: 'About Author (Bio)',
+                isIcon: false,
+                maxLine: 15,
+                maxLength: 2000,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+
+              // --- 3. Book Chapters (Dynamic Sections) ---
+              const SectionTitle(title: 'Book Chapters'),
+              Row(
                 children: [
-                  Center(
-                    child: Container(
-                      width: 130,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(widget.aboutBooks.coverImage),
-                          )),
+                  const Text('Number of Chapters:',
+                      style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 10),
+                  DropdownButton<int>(
+                    value: _selectedChapterNum,
+                    items: List.generate(20, (index) => index + 1)
+                        .map((e) =>
+                            DropdownMenuItem<int>(value: e, child: Text('$e')))
+                        .toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        _updateChapterControllers(val);
+                      }
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+
+              // Dynamic Chapter TextFields
+              ...List.generate(
+                  _selectedChapterNum, (index) => _buildChapterInput(index)),
+
+              // --- 4. File Update Options (Optional) ---
+              const SectionTitle(title: 'Update Cover Image / File (Optional)'),
+              _buildFilePicker(
+                context,
+                title: 'Current Cover: ${widget.aboutBooks.coverImage}',
+                file: _bookImage?.name ?? 'Tap to select new image',
+                onPressed: _pickCoverImage,
+                icon: Iconsax.image,
+              ),
+              const SizedBox(height: 10),
+              _buildFilePicker(
+                context,
+                title: 'Current PDF: ${widget.aboutBooks.pdfLink}',
+                file: _bookPdf?.name ?? 'Tap to select new PDF file',
+                onPressed: _pickBookFile,
+                icon: Iconsax.document_upload,
+              ),
+
+              const SizedBox(height: 30),
+
+              // --- 5. Submit Button ---
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: _isSaving ? null : _submitChanges,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Center(
-                    child: TextButton(
-                        onPressed: () => _pickProfileImage(),
-                        child: Text(
-                          'Change Book Image',
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        )),
-                  ),
-                  const SizedBox(height: 30),
-
-                  // --- Dynamic PDF Display Section ---
-                  const Text("Book PDF File",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      )),
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: _pickPdfFile,
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Icon(pdfIcon, color: pdfIconColor),
-                          Text(
-                            pdfStatusText,
-                            style: TextStyle(
-                                fontWeight: _bookPdf != null
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: pdfIconColor,
-                                fontSize: 14),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          TextButton(
-                            onPressed: _pickPdfFile,
-                            child: Text(
-                              _bookPdf != null ? 'Replace File' : 'Change File',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  // --- End Dynamic PDF Display Section ---
-
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Edit Book Title",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _showTitleInput = !_showTitleInput;
-                              });
-                            },
-                            child: Icon(
-                              Iconsax.edit_2,
-                              size: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _showTitleInput == true
-                          ? CustomTextInput(
-                              isTitleNotNecessary: true,
-                              showEnter: false,
-                              label: widget.aboutBooks.bookTitle,
-                              controller: _editBookTitleController,
-                              icon: Icons.title,
-                              validator: () {})
-                          : Text(
-                              _editBookTitleController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w100, fontSize: 14),
-                              textAlign: TextAlign.justify,
-                            ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Edit Book Author",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _showAuthorInput = !_showAuthorInput;
-                              });
-                            },
-                            child: Icon(
-                              Iconsax.edit_2,
-                              size: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _showAuthorInput == true
-                          ? CustomTextInput(
-                              isTitleNotNecessary: true,
-                              label: widget.aboutBooks.author,
-                              showEnter: false,
-                              controller: _editBookAuthorController,
-                              icon: Icons.title,
-                              validator: () {})
-                          : Text(
-                              _editBookAuthorController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w100, fontSize: 14),
-                              textAlign: TextAlign.justify,
-                            ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Edit Book Amount",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _showAmountInput = !_showAmountInput;
-                              });
-                            },
-                            child: Icon(
-                              Iconsax.edit_2,
-                              size: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _showAmountInput == true
-                          ? CustomTextInput(
-                              isNumber: true,
-                              showEnter: false,
-                              isIcon: false,
-                              label: '₦ ${widget.aboutBooks.amount.toString()}',
-                              controller: _editBookAmountController,
-                              isTitleNotNecessary: true,
-                              maxLine: 1,
-                              validator: () {},
+                      _isSaving
+                          ? SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: LoadingAnimationWidget.halfTriangleDot(
+                                  color: Colors.white, size: 20),
                             )
-                          : Text(
-                              '₦ ${_editBookAmountController.text}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w100, fontSize: 14),
-                              textAlign: TextAlign.justify,
-                            ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Edit What's it about?",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _showAboutInput = !_showAboutInput;
-                              });
-                            },
-                            child: Icon(
-                              Iconsax.edit_2,
-                              size: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _showAboutInput == true
-                          ? CustomTextInput(
-                              isIcon: false,
-                              showEnter: false,
-                              label: widget.aboutBooks.aboutBook,
-                              controller: _editAboutBookController,
-                              isTitleNotNecessary: true,
-                              validator: () {},
-                            )
-                          : Text(
-                              _editAboutBookController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w100, fontSize: 14),
-                              textAlign: TextAlign.justify,
-                            ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                          : const Icon(Iconsax.save_2, color: Colors.white),
+                      const SizedBox(width: 10),
                       Text(
-                        'Have ${_chapterEntries.length} Chapters',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-
-                      // --- CHAPTER EDITING/DELETING LOGIC ---
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: _chapterEntries.length,
-                        itemBuilder: (context, index) {
-                          MapEntry<String, String> chapterEntry =
-                              _chapterEntries[index];
-                          String chapterNumber = chapterEntry.key;
-                          String currentTitle = _chapterControllers[index].text;
-
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      chapterNumber,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    Row(
-                                      children: [
-                                        // Delete Button
-                                        InkWell(
-                                          onTap: () => _deleteChapter(index),
-                                          child: Icon(Iconsax.trash,
-                                              size: 20, color: Colors.red),
-                                        ),
-                                        SizedBox(width: 15),
-                                        // Edit Button
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              _isChapterEditing[index] =
-                                                  !_isChapterEditing[index];
-                                            });
-                                          },
-                                          child: Icon(Iconsax.edit_2, size: 20),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                _isChapterEditing[index]
-                                    ? CustomTextInput(
-                                        isTitleNotNecessary: true,
-                                        label: chapterEntry.value,
-                                        showEnter: false,
-                                        isIcon: false,
-                                        controller: _chapterControllers[index],
-                                        validator: () {},
-                                      )
-                                    : Text(
-                                        currentTitle,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w100,
-                                            fontSize: 14),
-                                        textAlign: TextAlign.justify,
-                                      ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Edit who is the author",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                              )),
-                          InkWell(
-                            onTap: () {
-                              setState(() {
-                                _showWhoseInput = !_showWhoseInput;
-                              });
-                            },
-                            child: Icon(
-                              Iconsax.edit_2,
-                              size: 20,
-                            ),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      _showWhoseInput == true
-                          ? CustomTextInput(
-                              isIcon: false,
-                              showEnter: false,
-                              label: widget.aboutBooks.aboutAuthor,
-                              controller: _editWhoAuthorController,
-                              isTitleNotNecessary: true,
-                              validator: () {},
-                            )
-                          : Text(
-                              _editWhoAuthorController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w100, fontSize: 14),
-                              textAlign: TextAlign.justify,
-                            ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            elevation: WidgetStatePropertyAll(0),
-                            backgroundColor: WidgetStatePropertyAll(
-                                Theme.of(context).primaryColor)),
-                        onPressed: _saveChanges,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 15.0),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                _isSaving
-                                    ? SizedBox(
-                                        width: 20,
-                                        height: 20,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2,
-                                          valueColor:
-                                              AlwaysStoppedAnimation<Color>(
-                                                  Colors.white),
-                                        ),
-                                      )
-                                    : Icon(Iconsax.save_2, color: Colors.white),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  _isSaving
-                                      ? 'Saving Changes...'
-                                      : 'Save Book Content',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ),
+                        _isSaving ? 'Saving Changes...' : 'Save Book Content',
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
                       ),
                     ],
                   ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilePicker(
+    BuildContext context, {
+    required String title,
+    required String file,
+    required VoidCallback onPressed,
+    required IconData icon,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Theme.of(context).primaryColor),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(height: 5),
+                  Text(
+                    file,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: file.contains('Tap to select')
+                            ? Colors.red.shade400
+                            : Colors.green.shade600,
+                        fontStyle: FontStyle.italic),
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
               ),
-            )
+            ),
+            const Icon(Iconsax.arrow_right_3),
           ],
-        )));
+        ),
+      ),
+    );
   }
 }

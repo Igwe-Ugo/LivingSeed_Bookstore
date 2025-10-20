@@ -1,5 +1,6 @@
 [
     {
+        "bibleStudyId": "1",
         "title": "The Kingdom Lifestyle",
         "coverImage": "assets/images/kingdom_lifestyle.JPG",
         "amount": 1200,
@@ -86,6 +87,7 @@
         ]
     },
     {
+        "bibleStudyId": "2",
         "title": "Understanding the concept and conditions for discipleship",
         "coverImage": "assets/images/concepts_discipleship.JPG",
         "amount": 1200,

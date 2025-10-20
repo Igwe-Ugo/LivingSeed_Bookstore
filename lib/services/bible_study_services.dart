@@ -101,6 +101,16 @@ class BibleStudyProvider extends ChangeNotifier {
     return true;
   }
 
+  void updateBibleStudy(BibleStudyMaterial updatedBook) {
+    int index =
+        _bibleStudies.indexWhere((book) => book.title == updatedBook.title);
+    if (index != -1) {
+      _bibleStudies[index] = updatedBook;
+      _saveBibleStudyToLocal();
+      notifyListeners();
+    }
+  }
+
   void deleteBiblestudy(String title) {
     if (_bibleStudies != null) {
       _bibleStudies.removeWhere((item) => item.title == title);

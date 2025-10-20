@@ -242,6 +242,7 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
     }
 
     BibleStudyMaterial newUpload = BibleStudyMaterial(
+      bibleStudyId: _uuid.v4(),
       coverImage: _coverImage!.path.toString(),
       title: _titleController.text,
       subTitle: _subtitleController.text,
@@ -259,10 +260,29 @@ class _UploadBibleStudyState extends State<UploadBibleStudy> {
       timestamp: DateTime.now(),
       icon: Iconsax.message,
     );
+    // notifying the populace about the update
+      NotificationItems newNotification = NotificationItems(
+      notificationImage: newUpload.coverImage,
+      notificationTitle: "${newUpload.title} Bible Study Uploaded",
+      notificationMessage: 'A new Bible Study material titled ${newUpload.title} has been uploaded successfully. You can check it out now!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
 
     bool success = await Provider.of<BibleStudyProvider>(context, listen: false)
         .uploadBibleStudy(newUpload);
     if (success) {
+      await Provider.of<NotificationProvider>(context, listen: false)
+            .sendGeneralNotification(newNotification);
+      NotificationDropDownServices.showNotification(
+          id: notificationId.getNextId(),
+          title: "${newUpload.title} biblestudy Updated",
+          body: 'The biblestudy ${newUpload.title} has been uploaded successfully.');
       showMessage('Bible Study uploaded successfully!', context);
       Provider.of<AdminActivityService>(context, listen: false)
                         .logActivity(newActivity.action, newActivity.details,

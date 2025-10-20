@@ -84,6 +84,16 @@ class MagazineProvider extends ChangeNotifier {
     return true;
   }
 
+  Future<void> updateMagazine(MagazineModel updatedMagazine) async {
+    int index = _magazines.indexWhere(
+        (mag) => mag.magazineTitle == updatedMagazine.magazineTitle);
+    if (index != -1) {
+      _magazines[index] = updatedMagazine;
+      await _saveMagazinesToLocal();
+      notifyListeners();
+    }
+  }
+
   void deleteMagazine(String title) {
     if (_magazines != null) {
       _magazines.removeWhere((item) => item.magazineTitle == title);

@@ -1,20 +1,24 @@
 import 'dart:convert';
 
 class MagazineModel {
+  final String magazineId;
   final String magazineTitle;
   final String issue;
   final String coverImage;
   final String publisher;
   final double price;
+  final String pdfLink;
   final String subTitle;
   final EditorsDesk editorsDesk;
   final List<Section> contents;
   final BibleStudyMagazine bibleStudy;
 
   MagazineModel({
+    required this.magazineId,
     required this.magazineTitle,
     required this.issue,
     required this.price,
+    required this.pdfLink,
     required this.coverImage,
     required this.publisher,
     required this.editorsDesk,
@@ -25,9 +29,11 @@ class MagazineModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'magazineId': magazineId,
       'magazineTitle': magazineTitle,
       'issue': issue,
       'price': price,
+      'pdfLink': pdfLink,
       'coverImage': coverImage,
       'publisher': publisher,
       'subTitle': subTitle,
@@ -44,7 +50,9 @@ class MagazineModel {
 
   factory MagazineModel.fromJson(Map<String, dynamic> json) {
     return MagazineModel(
+      magazineId: json['magazineId'],
         magazineTitle: json['magazineTitle'],
+        pdfLink: json['pdfLink'],
         issue: json['issue'],
         coverImage: json['coverImage'],
         publisher: json['publisher'],

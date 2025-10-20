@@ -1,10 +1,12 @@
 [
     {
+        "magazineId": "mag001",
         "magazineTitle": "Serving God after the due order",
         "issue": "October 2008",
         "coverImage": "assets/images/magazine.jpeg",
         "publisher": "Peace house publications",
         "price": 150,
+        "pdfLink": "assets/pdfs/Tempered Steel_ How God_Shapes_A_Man's_Heart_through_Adversity_Steve_Farrar.pdf",
         "subTitle": "Sanctify them through thy truth: thy word is truth. - John 17:17",
         "editorsDesk": {
           "title": "Editorial",

@@ -25,6 +25,7 @@ class Chapter {
 }
 
 class BibleStudyMaterial {
+  final String bibleStudyId;
   final String title;
   final double amount;
   final String subTitle;
@@ -35,6 +36,7 @@ class BibleStudyMaterial {
 
   BibleStudyMaterial(
       {required this.title,
+      required this.bibleStudyId,
       required this.chapterNum,
       required this.amount,
       required this.coverImage,
@@ -44,17 +46,21 @@ class BibleStudyMaterial {
 
   factory BibleStudyMaterial.fromJson(Map<String, dynamic> json) {
     return BibleStudyMaterial(
+        bibleStudyId: json['bibleStudyId'],
         subTitle: json['subTitle'],
         coverImage: json['coverImage'],
         title: json['title'],
         chapterNum: json['chapterNum'],
         amount: (json['amount'] as num).toDouble(),
         pdfLink: json['pdfLink'],
-        contents: (json['contents'] as List).map((item) => Chapter.fromJson(item)).toList());
+        contents: (json['contents'] as List)
+            .map((item) => Chapter.fromJson(item))
+            .toList());
   }
 
   Map<String, dynamic> toJson() {
     return {
+      "bibleStudyId": bibleStudyId,
       "coverImage": coverImage,
       "title": title,
       "subTitle": subTitle,

@@ -3,7 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:livingseed_media/models/widget.dart';
+import 'package:livingseed_media/services/widget.dart';
+import 'package:provider/provider.dart';
 import '../../common/widget.dart';
+import 'package:uuid/uuid.dart';
 
 class UploadMagazineScreen extends StatefulWidget {
   const UploadMagazineScreen({super.key});
@@ -13,104 +17,236 @@ class UploadMagazineScreen extends StatefulWidget {
 }
 
 class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
-  int selectedChapterNum = 1;
   final _formKey = GlobalKey<FormState>();
+  final Uuid _uuid = const Uuid();
+  XFile? _coverImage;
+  PlatformFile? _magazineFile;
+
+  // Primary Magazine Details
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _authorController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _aboutAuthorController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  List<TextEditingController> _magazineContentController = [
+  final TextEditingController _issueController = TextEditingController();
+  final TextEditingController _subTitleController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
+
+  // Editors Desk
+  final TextEditingController _editorsDeskTitleController =
+      TextEditingController();
+  final TextEditingController _editorsDeskEditorController =
+      TextEditingController();
+  final TextEditingController _editorsDeskPageController =
+      TextEditingController();
+
+  // Bible Study
+  final TextEditingController _bsTitleController = TextEditingController();
+  final TextEditingController _bsKeyVersesController =
+      TextEditingController(); // Comma separated
+
+  // Contents/Sections
+  int selectedChapterNum = 1;
+  // List of controllers for all chapter fields (Title, Author, Page)
+  List<TextEditingController> _chapterTitleControllers = [
+    TextEditingController()
+  ];
+  List<TextEditingController> _chapterAuthorControllers = [
+    TextEditingController()
+  ];
+  List<TextEditingController> _chapterPageControllers = [
     TextEditingController()
   ];
 
-  XFile? _coverImage;
-  PlatformFile? _bookFile;
+  @override
+  void initState() {
+    super.initState();
 
-  void updateTextFields(int count) {
+    _loadMagazineData();
+  }
+
+  void _loadMagazineData([MagazineModel? magazine]) {
+    if (magazine == null) return;
+
+    _titleController.text = magazine.magazineTitle;
+    _issueController.text = magazine.issue;
+    _subTitleController.text = magazine.subTitle;
+    _priceController.text = magazine.price.toString();
+
+    _editorsDeskTitleController.text = magazine.editorsDesk.title;
+    _editorsDeskEditorController.text = magazine.editorsDesk.editor;
+    _editorsDeskPageController.text =
+        magazine.editorsDesk.pageNumber.toString();
+
+    _bsTitleController.text = magazine.bibleStudy.title;
+    _bsKeyVersesController.text = magazine.bibleStudy.keyVerses.join(', ');
+
+    updateChapterControllers(magazine.contents.length);
+    for (int i = 0; i < magazine.contents.length; i++) {
+      _chapterTitleControllers[i].text = magazine.contents[i].chapterTitle;
+      _chapterAuthorControllers[i].text = magazine.contents[i].chapterAuthor;
+      _chapterPageControllers[i].text =
+          magazine.contents[i].pageNumber.toString();
+    }
+  }
+
+  void updateChapterControllers(int count) {
     setState(() {
       selectedChapterNum = count;
-      _magazineContentController =
-          List.generate(count, (index) => TextEditingController());
+      _chapterTitleControllers = List.generate(
+          count,
+          (index) => index < _chapterTitleControllers.length
+              ? _chapterTitleControllers[index]
+              : TextEditingController());
+      _chapterAuthorControllers = List.generate(
+          count,
+          (index) => index < _chapterAuthorControllers.length
+              ? _chapterAuthorControllers[index]
+              : TextEditingController());
+      _chapterPageControllers = List.generate(
+          count,
+          (index) => index < _chapterPageControllers.length
+              ? _chapterPageControllers[index]
+              : TextEditingController());
     });
   }
 
-  void _uploadBookToJson() async {
+  // --- Upload Logic ---
+  void _submitMagazine() async {
     if (!_formKey.currentState!.validate()) {
       return showMessage('Please fill all required fields', context);
     }
 
-    // Validate file paths
-    if (_coverImage == null) {
-      // Check against state updated by callback
-      return showMessage('Please select a cover image', context);
-    }
-    if (_bookFile == null) {
-      // Check against state updated by callback
-      return showMessage('Please select the PDF book file', context);
-    }
+    try {
+      // 1. Construct Nested Models
+      final EditorsDesk editorsDesk = EditorsDesk(
+        title: _editorsDeskTitleController.text,
+        editor: _editorsDeskEditorController.text,
+        pageNumber: int.parse(_editorsDeskPageController.text),
+      );
 
-    // Process chapters
-    List<Map<String, String>> content = [];
-    for (int i = 0; i < _magazineContentController.length; i++) {
-      String text = _magazineContentController[i].text.trim();
-      if (text.isNotEmpty) {
-        content.add({"Content ${i + 1}": text});
+      final List<Section> contents = [];
+      for (int i = 0; i < selectedChapterNum; i++) {
+        contents.add(Section(
+          chapterNumber: i + 1,
+          chapterTitle: _chapterTitleControllers[i].text,
+          chapterAuthor: _chapterAuthorControllers[i].text,
+          pageNumber: int.parse(_chapterPageControllers[i].text),
+        ));
       }
-    }
-    /* MagazineModel newUpload = MagazineModel(
+
+      final BibleStudyMagazine bibleStudy = BibleStudyMagazine(
+        title: _bsTitleController.text,
+        keyVerses: _bsKeyVersesController.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList(),
+      );
+
+      // In a real app, you would upload _coverImage and _magazineFile to a storage service (like Firebase Storage) here
+      // and update coverImagePath and add a new 'magazineFilePath' field to the model.
+
+      // 3. Create Magazine Model
+      final MagazineModel newUpload = MagazineModel(
+        magazineId: _uuid.v4(),
         magazineTitle: _titleController.text,
-        issue: issue,
-        price: double.tryParse(_amountController.text) ?? 0.0,
-        coverImage: _coverImage!.path.toString(),
-        publisher: _aboutAuthorController.text,
+        issue: _issueController.text,
+        subTitle: _subTitleController.text,
+        price: double.parse(_priceController.text),
+        coverImage: _coverImage?.path ?? '',
         editorsDesk: editorsDesk,
         contents: contents,
         bibleStudy: bibleStudy,
-        subTitle: subTitle
-      ); */
+        publisher: 'Living Seed Publications',
+        pdfLink: _magazineFile?.name ?? '',
+      );
+      AdminActivity newActivity = AdminActivity(
+      id: _uuid.v4(),
+      action: 'Book Uploaded',
+      details: 'Title: ${newUpload.magazineTitle}, Author: ${newUpload.editorsDesk.editor}',
+      timestamp: DateTime.now(),
+      icon: Iconsax.arrow_up_1,
+    );
+      NotificationItems newNotification = NotificationItems(
+      notificationImage: newUpload.coverImage,
+      notificationTitle: "${newUpload.magazineTitle} Book Uploaded",
+      notificationMessage: 'A new Book titled ${newUpload.magazineTitle} has been uploaded successfully. You can check it out now!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
 
-    /* bool success = await Provider.of<MagazineProvider>(context, listen: false)
-        .uploadMagazine(newUpload);
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
 
-    if (success) {
+      // 4. Call Service Provider
+      final magazineProvider =
+          Provider.of<MagazineProvider>(context, listen: false);
+      await magazineProvider.uploadMagazine(newUpload);
+    await Provider.of<AdminActivityService>(context, listen: false)
+        .logActivity(newActivity.action, newActivity.details, newActivity.icon);
+    await Provider.of<NotificationProvider>(context, listen: false)
+            .sendGeneralNotification(newNotification);
+      NotificationDropDownServices.showNotification(
+          id: notificationId.getNextId(),
+          title: "${newUpload.magazineTitle} magazine Uploaded",
+          body: 'A new magazine titled ${newUpload.magazineTitle} has been uploaded successfully.');
       showMessage('Magazine uploaded successfully!', context);
-    } else {
-      showMessage('Magazine already exists, please upload a new magazine', context);
-    } */
+
+      context.pop(); // Go back after successful submission
+    } catch (e) {
+      showMessage('An error occurred: ${e.toString()}', context);
+    }
   }
 
   Widget _buildChapterInput(int index) {
-    return CustomTextInput(
-      label: 'Content ${index + 1} title',
-      controller: _magazineContentController[index],
-      isIcon: false,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please add content for chapter ${index + 1}';
-        }
-        return null;
-      },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Section ${index + 1}',
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: CustomTextInput(
+                  controller: _chapterPageControllers[index],
+                  label: 'Page #',
+                  isIcon: false,
+                  showEnter: false,
+                  isNumber: true,
+                  validator: (value) => value!.isEmpty ? 'Required' : null,
+                ),
+              ),
+              Expanded(
+                child: CustomTextInput(
+                  label: 'Title',
+                  isIcon: false,
+                  controller: _chapterTitleControllers[index],
+                  validator: (value) => value!.isEmpty ? 'Required' : null,
+                ),
+              ),
+              const SizedBox(width: 10),
+            ],
+          ),
+          CustomTextInput(
+            isIcon: false,
+            controller: _chapterAuthorControllers[index],
+            label: 'Author',
+            validator: (value) => value!.isEmpty ? 'Required' : null,
+          ),
+        ],
+      ),
     );
-  }
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _authorController.dispose();
-    _descriptionController.dispose();
-    _aboutAuthorController.dispose();
-    _amountController.dispose();
-    for (var controller in _magazineContentController) {
-      controller.dispose();
-    }
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bookFileName = _bookFile?.path ?? _bookFile?.name;
+    final magazineFileName = _magazineFile?.path ?? _magazineFile?.name;
 
     return Scaffold(
       appBar: AppBar(
@@ -124,7 +260,7 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
           ),
         ),
         title: const Text(
-          'Upload Magazine',
+          'Upload New Magazine',
           style: TextStyle(
             fontFamily: 'Playfair',
             fontSize: 20,
@@ -133,13 +269,12 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- 1. File Uploads (Cover Image & PDF) ---
               ImagePickerDropZone(
                 title: 'Upload Magazine Cover (Image)',
                 icon: Iconsax.image,
@@ -151,100 +286,100 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
                 },
               ),
 
-              // Book PDF Picker - USING REUSABLE WIDGET
               PdfFilePickerDropZone(
                 title: 'Upload Magazine File (PDF)',
                 icon: Iconsax.document_upload,
                 color: theme.colorScheme.tertiary,
                 onFilePicked: (file) {
                   setState(() {
-                    _bookFile = file as PlatformFile;
+                    _magazineFile = file as PlatformFile;
                   });
                 },
-                initialFileName: bookFileName,
+                initialFileName: magazineFileName,
               ),
-
               const SizedBox(height: 20),
-
-              // --- 2. Text Inputs ---
+              // --- 1. Basic Magazine Details ---
+              const SectionTitle(title: 'Basic Magazine Details'),
               CustomTextInput(
-                label: 'Book title',
+                isIcon: false,
                 controller: _titleController,
-                icon: Iconsax.book,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please add a title for this article';
-                  }
-                  return null;
-                },
+                label: 'Magazine Title',
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               CustomTextInput(
-                label: 'Author Name',
-                controller: _authorController,
-                icon: Iconsax.user_tag,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please add the name of the author of this book';
-                  }
-                  return null;
-                },
+                isIcon: false,
+                controller: _issueController,
+                label: 'Issue',
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               CustomTextInput(
-                label: 'Amount (\$)',
-                controller: _authorController,
-                icon: Iconsax.dollar_circle,
+                isIcon: false,
+                controller: _subTitleController,
+                label: 'Subtitle/Tagline',
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+              CustomTextInput(
+                controller: _priceController,
+                label: 'Price',
+                isIcon: false,
                 isNumber: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please add the amount for this book';
-                  }
-                  return null;
-                },
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+
+              // --- 2. Editors Desk ---
+              const SectionTitle(title: 'Editors Desk'),
+              CustomTextInput(
+                controller: _editorsDeskTitleController,
+                isIcon: false,
+                label: 'Editors Desk Title',
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               CustomTextInput(
-                label: "Book Description",
-                controller: _descriptionController,
+                controller: _editorsDeskEditorController,
                 isIcon: false,
-                maxLine: 10,
-                maxLength: 700,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please add a description for this book';
-                  }
-                  return null;
-                },
+                label: 'Editor Name',
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
               CustomTextInput(
-                label: "About Author",
-                controller: _aboutAuthorController,
+                controller: _editorsDeskPageController,
                 isIcon: false,
-                maxLine: 10,
-                maxLength: 1000,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please add about the author of this book';
-                  }
-                  return null;
-                },
+                label: 'Page Number',
+                isNumber: true,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
-              const SizedBox(height: 20),
-              Text(
-                'Book Chapters Content',
-                style: theme.textTheme.titleMedium,
+
+              // --- 3. Bible Study Details ---
+              const SectionTitle(title: 'Bible Study Section'),
+              CustomTextInput(
+                controller: _bsTitleController,
+                label: 'Bible Study Title',
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
+              CustomTextInput(
+                controller: _bsKeyVersesController,
+                label: 'Key Verses',
+                isIcon: false,
+                validator: (value) => value!.isEmpty ? 'Required' : null,
+              ),
+
+              // --- 4. Magazine Contents/Sections ---
+              const SectionTitle(title: 'Magazine Contents/Sections'),
+              // Chapter Count Selector
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Number of Chapters: $selectedChapterNum'),
+                  const Text('Number of Sections:',
+                      style: TextStyle(fontSize: 16)),
+                  const SizedBox(width: 10),
                   DropdownButton<int>(
                     value: selectedChapterNum,
-                    items: List.generate(20, (i) => i + 1)
+                    items: List.generate(15, (index) => index + 1)
                         .map((e) =>
-                            DropdownMenuItem(value: e, child: Text('$e')))
+                            DropdownMenuItem<int>(value: e, child: Text('$e')))
                         .toList(),
                     onChanged: (val) {
                       if (val != null) {
-                        updateTextFields(val);
+                        updateChapterControllers(val);
                       }
                     },
                   ),
@@ -257,16 +392,15 @@ class _UploadMagazineScreenState extends State<UploadMagazineScreen> {
                   selectedChapterNum, (index) => _buildChapterInput(index)),
 
               const SizedBox(height: 30),
-
-              // --- 4. Submit Button ---
+              // --- 6. Submit Button ---
               SizedBox(
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton.icon(
-                  onPressed: _uploadBookToJson,
-                  icon: const Icon(Iconsax.send_sqaure_2, color: Colors.white),
+                  onPressed: _submitMagazine,
+                  icon: Icon(Iconsax.send_sqaure_2, color: Colors.white),
                   label: Text(
-                    'Upload Book',
+                    'Upload Magazine',
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: Colors.white,

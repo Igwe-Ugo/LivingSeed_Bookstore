@@ -103,11 +103,30 @@ class _EditJournalState extends State<EditJournal> {
       icon: Iconsax.pen_add,
     );
 
+    // notifying the populace about the update
+      NotificationItems newNotification = NotificationItems(
+      notificationImage: newArticle.imageUrl,
+      notificationTitle: "${newArticle.title} journal Updated",
+      notificationMessage: 'The Journal ${newArticle.title} has been updated successfully. You can check it out now!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
+
     await Provider.of<JournalProvider>(context, listen: false)
         .updateJournal(newArticle);
     await Provider.of<AdminActivityService>(context, listen: false)
         .logActivity(newActivity.action, newActivity.details, newActivity.icon);
-
+    await Provider.of<NotificationProvider>(context, listen: false)
+            .sendGeneralNotification(newNotification);
+      NotificationDropDownServices.showNotification(
+          id: notificationId.getNextId(),
+          title: "${newArticle.title} journal Updated",
+          body: 'The journal ${newArticle.title} has been updated successfully.');
     showMessage('Article uploaded successfully!', context);
     GoRouter.of(context).pop();
   }

@@ -86,12 +86,30 @@ class _UploadBookScreenState extends State<UploadBookScreen> {
       details: 'Title: ${newUpload.bookTitle}, Author: ${newUpload.author}',
       timestamp: DateTime.now(),
       icon: Iconsax.arrow_up_1,
-    ); 
+    );
+      NotificationItems newNotification = NotificationItems(
+      notificationImage: newUpload.coverImage,
+      notificationTitle: "${newUpload.bookTitle} Book Uploaded",
+      notificationMessage: 'A new Book titled ${newUpload.bookTitle} has been uploaded successfully. You can check it out now!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+
+    NotificationDropDownServices notificationId =
+        NotificationDropDownServices();
 
     bool success = await Provider.of<BookProvider>(context, listen: false)
         .uploadBook(newUpload);
 
     if (success) {
+      await Provider.of<NotificationProvider>(context, listen: false)
+            .sendGeneralNotification(newNotification);
+      NotificationDropDownServices.showNotification(
+          id: notificationId.getNextId(),
+          title: "${newUpload.bookTitle} book Uploaded",
+          body: 'The book ${newUpload.bookTitle} has been uploaded successfully.');
       showMessage('Book uploaded successfully!', context);
       Provider.of<AdminActivityService>(context, listen: false)
           .logActivity(newActivity.action, newActivity.details, newActivity.icon);

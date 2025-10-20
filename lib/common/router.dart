@@ -104,6 +104,8 @@ class LivingSeedMediaRouter {
   static const String editJournalPath = 'edit_journal';
   static const String manageBibleStudyPath = 'manage_biblestudy';
   static const String editBibleStudyPath = 'edit_biblestudy';
+  static const String manageMagazinePath = 'manage_magazine';
+  static const String editMagazinePath = 'edit_magazine';
 
   LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
@@ -346,7 +348,7 @@ class LivingSeedMediaRouter {
                               GoRoute(
                                   path: manageBooksPath,
                                   builder: (context, state) =>
-                                      const BookManagement(),
+                                      const ManageBook(),
                                   routes: [
                                     GoRoute(
                                       path: editBookPath,
@@ -376,13 +378,35 @@ class LivingSeedMediaRouter {
                                         final bibleStudy =
                                             state.extra as BibleStudyMaterial?;
                                         if (bibleStudy != null) {
-                                          return EditBibleStudy(
+                                          return EditBiblestudy(
                                             bibleStudy: bibleStudy,
                                           );
                                         } else {
                                           return const Center(
                                               child: Text(
                                                   "No bible study data available to edit"));
+                                        }
+                                      },
+                                    )
+                                  ]),
+                              GoRoute(
+                                  path: manageMagazinePath,
+                                  builder: (context, state) =>
+                                      const ManageMagazine(),
+                                  routes: [
+                                    GoRoute(
+                                      path: editMagazinePath,
+                                      builder: (context, state) {
+                                        final magazine =
+                                            state.extra as MagazineModel?;
+                                        if (magazine != null) {
+                                          return EditMagazine(
+                                            magazine: magazine,
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text(
+                                                  "No magazine data available to edit"));
                                         }
                                       },
                                     )
