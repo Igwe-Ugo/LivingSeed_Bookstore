@@ -131,25 +131,16 @@ class Notifications extends StatelessWidget {
                     delegate: _buildSliverDelegate(
                       context,
                       TabBar(
-                        indicatorSize: TabBarIndicatorSize.tab,
+                        indicatorSize: TabBarIndicatorSize.label,
                         dividerColor: Colors.transparent,
+                        indicatorColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17.0,
+                            fontFamily: 'Playfair',
+                            color: Theme.of(context).primaryColor),
                         unselectedLabelStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17.0,
-                          fontFamily: 'Playfair',
-                        ),
-                        unselectedLabelColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey
-                                : Colors.black26,
-                        indicatorColor:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey
-                                : Colors.black,
-                        indicator: const BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                          color: Colors.white,
-                        ),
+                            fontSize: 15.0, fontWeight: FontWeight.w400),
                         tabs: [
                           Tab(
                             child: Text(
