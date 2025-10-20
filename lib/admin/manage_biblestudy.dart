@@ -126,8 +126,29 @@ class BiblestudyManagement extends StatelessWidget {
                 timestamp: DateTime.now(),
                 icon: Icons.cancel_sharp,
               );
+              NotificationItems newNotification = NotificationItems(
+                notificationImage: bibleStudy.coverImage,
+                notificationTitle: "${bibleStudy.title} Bible study Deleted",
+                notificationMessage:
+                    'The Bible Study titled ${bibleStudy.title} has been deleted successfully. It is not longer available!',
+                notificationDate:
+                    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                notificationTime:
+                    "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+              );
+
+              NotificationDropDownServices notificationId =
+                  NotificationDropDownServices();
+
               Provider.of<BibleStudyProvider>(context, listen: false)
                   .deleteBiblestudy(bibleStudy.title);
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .sendGeneralNotification(newNotification);
+              NotificationDropDownServices.showNotification(
+                  id: notificationId.getNextId(),
+                  title: "${bibleStudy.title} deleted",
+                  body:
+                      'The bible study titled ${bibleStudy.title} has been deleted successfully.');
               Provider.of<AdminActivityService>(context, listen: false)
                   .logActivity(newActivity.action, newActivity.details,
                       newActivity.icon);

@@ -185,11 +185,30 @@ class AdminDashboard extends StatelessWidget {
                   const SizedBox(height: 10),
 
                   if (recentActivities.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20.0),
-                      child: Center(
-                        child: Text('No activities logged yet.',
-                            style: TextStyle(color: Colors.grey)),
+                    Center(
+                      child: Column(
+                        children: const [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Icon(
+                            Iconsax.activity,
+                            size: 80,
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'No Activities logged yet.',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 40,
+                          ),
+                        ],
                       ),
                     )
                   else

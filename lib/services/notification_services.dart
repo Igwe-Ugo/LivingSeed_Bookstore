@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationProvider extends ChangeNotifier {
-    List<NotificationItems> _generalNotifications = [];
+  List<NotificationItems> _generalNotifications = [];
   Map<String, List<NotificationItems>> _personalNotifications = {};
 
   List<NotificationItems> get generalNotifications => _generalNotifications;
@@ -275,7 +275,8 @@ class NotificationProvider extends ChangeNotifier {
           (n) => n.notificationTitle == newNotification.notificationTitle)) {
         return false;
       }
-      _generalNotifications.add(newNotification);
+      // Insert the notifications at the front of the list
+      _generalNotifications.insert(0, newNotification);
       await _saveNotificationsToLocal();
       notifyListeners();
       return true;
@@ -289,7 +290,8 @@ class NotificationProvider extends ChangeNotifier {
       String email, NotificationItems newNotification) async {
     try {
       _personalNotifications.putIfAbsent(email, () => []);
-      _personalNotifications[email]!.add(newNotification);
+      // Insert the notifications at the front of the list
+      _personalNotifications[email]!.insert(0, newNotification);
       await _saveNotificationsToLocal();
       notifyListeners();
       return true;
@@ -334,12 +336,12 @@ class NotificationProvider extends ChangeNotifier {
 }
 
 class NotificationDropDownServices {
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
+  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
   static int _counter = 0;
-  
+
   // initialize the notification plugin
   static Future<void> initNotificationsDropDown() async {
-    
     // 1. MOBILE SETTINGS
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings(
@@ -350,7 +352,7 @@ class NotificationDropDownServices {
     // 2. DESKTOP SETTINGS (Crucial for fixing the Linux error)
     // You must provide an app name for desktop initializations.
     // The details required here are minimal, but the object must exist.
-    
+
     final InitializationSettings initializationSettings =
         InitializationSettings(
       android: initializationSettingsAndroid,
@@ -360,8 +362,9 @@ class NotificationDropDownServices {
         defaultActionName: 'Open notification',
       ),
       // Adding macOS and Windows for robustness if you target those later
-      macOS: initializationSettingsIOS, 
-      windows: null, // Windows initialization is often configured lazily or not needed for simple dropdowns
+      macOS: initializationSettingsIOS,
+      windows:
+          null, // Windows initialization is often configured lazily or not needed for simple dropdowns
     );
 
     // Note: We don't need to check the platform here; the plugin handles

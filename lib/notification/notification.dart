@@ -1,6 +1,7 @@
 // notifications_screen.dart
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
@@ -18,8 +19,31 @@ class Notifications extends StatelessWidget {
         allNotifications.where((n) => !n.isRead || n.isRead).toList();
 
     if (userSpecificNotifications.isEmpty) {
-      return const Center(
-        child: Text('No new notifications.'),
+      return Center(
+        child: Column(
+          children: const [
+            SizedBox(
+              height: 40,
+            ),
+            Icon(
+              Iconsax.message_notif,
+              size: 80,
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              'No New Notifications',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+          ],
+        ),
       );
     }
 
@@ -238,7 +262,7 @@ class NotificationItemCard extends StatelessWidget {
             border: Border.all(
               color: notification.isRead
                   ? Colors.transparent
-                  : Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  : Theme.of(context).primaryColor.withOpacity(0.5),
             ),
           ),
           padding: const EdgeInsets.all(15),

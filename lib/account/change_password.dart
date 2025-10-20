@@ -117,6 +117,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                           label: 'Old password',
                           controller: _oldPasswordController,
                           icon: Iconsax.password_check,
+                          textColor:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your old password';
@@ -130,6 +134,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                           label: 'New password',
                           controller: _newPasswordController,
                           icon: Iconsax.password_check,
+                          textColor:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter a new password';
@@ -146,6 +154,10 @@ class _ChangePasswordState extends State<ChangePassword> {
                           label: 'Confirm password',
                           controller: _confirmNewPasswordController,
                           icon: Iconsax.password_check,
+                          textColor:
+                              Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white
+                                  : Colors.black,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please confirm your new password';

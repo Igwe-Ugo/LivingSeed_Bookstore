@@ -121,13 +121,34 @@ class ManageMagazine extends StatelessWidget {
             onPressed: () {
               AdminActivity newActivity = AdminActivity(
                 id: _uuid.v4(),
-                action: 'Book Deleted',
+                action: 'Magazine Deleted',
                 details: 'Title: ${magazine.magazineTitle}, Author: ',
                 timestamp: DateTime.now(),
                 icon: Icons.cancel_sharp,
               );
+              NotificationItems newNotification = NotificationItems(
+                notificationImage: magazine.coverImage,
+                notificationTitle: "${magazine.magazineTitle} Magazine Deleted",
+                notificationMessage:
+                    'The Magazine titled ${magazine.magazineTitle} has been deleted successfully. It is not longer available!',
+                notificationDate:
+                    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                notificationTime:
+                    "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+              );
+
+              NotificationDropDownServices notificationId =
+                  NotificationDropDownServices();
+
               Provider.of<BookProvider>(context, listen: false)
                   .deleteBook(magazine.magazineTitle);
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .sendGeneralNotification(newNotification);
+              NotificationDropDownServices.showNotification(
+                  id: notificationId.getNextId(),
+                  title: "${magazine.magazineTitle} deleted",
+                  body:
+                      'The Magazine titled ${magazine.magazineTitle} has been deleted successfully.');
               Provider.of<AdminActivityService>(context, listen: false)
                   .logActivity(newActivity.action, newActivity.details,
                       newActivity.icon);

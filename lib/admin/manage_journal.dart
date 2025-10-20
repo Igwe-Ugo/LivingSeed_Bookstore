@@ -116,6 +116,20 @@ class JournalManagement extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              NotificationItems newNotification = NotificationItems(
+                notificationImage: journal.imageUrl,
+                notificationTitle: "${journal.title} Journal Deleted",
+                notificationMessage:
+                    'The Journal titled ${journal.title} has been deleted successfully. It is not longer available!',
+                notificationDate:
+                    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                notificationTime:
+                    "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+              );
+
+              NotificationDropDownServices notificationId =
+                  NotificationDropDownServices();
+
               AdminActivity newActivity = AdminActivity(
                 id: _uuid.v4(),
                 action: 'Journal Deleted',
@@ -129,6 +143,13 @@ class JournalManagement extends StatelessWidget {
               Provider.of<AdminActivityService>(context, listen: false)
                   .logActivity(newActivity.action, newActivity.details,
                       newActivity.icon);
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .sendGeneralNotification(newNotification);
+              NotificationDropDownServices.showNotification(
+                  id: notificationId.getNextId(),
+                  title: "${journal.title} deleted",
+                  body:
+                      'The journal titled ${journal.title} has been deleted successfully.');
               showMessage('Simulated Deletion of "${journal.title}"', context);
               context.pop();
             },

@@ -104,10 +104,11 @@ class _EditJournalState extends State<EditJournal> {
     );
 
     // notifying the populace about the update
-      NotificationItems newNotification = NotificationItems(
+    NotificationItems newNotification = NotificationItems(
       notificationImage: newArticle.imageUrl,
       notificationTitle: "${newArticle.title} journal Updated",
-      notificationMessage: 'The Journal ${newArticle.title} has been updated successfully. You can check it out now!',
+      notificationMessage:
+          'The Journal ${newArticle.title} has been updated successfully. You can check it out now!',
       notificationDate:
           "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
       notificationTime:
@@ -122,11 +123,11 @@ class _EditJournalState extends State<EditJournal> {
     await Provider.of<AdminActivityService>(context, listen: false)
         .logActivity(newActivity.action, newActivity.details, newActivity.icon);
     await Provider.of<NotificationProvider>(context, listen: false)
-            .sendGeneralNotification(newNotification);
-      NotificationDropDownServices.showNotification(
-          id: notificationId.getNextId(),
-          title: "${newArticle.title} journal Updated",
-          body: 'The journal ${newArticle.title} has been updated successfully.');
+        .sendGeneralNotification(newNotification);
+    NotificationDropDownServices.showNotification(
+        id: notificationId.getNextId(),
+        title: "${newArticle.title} journal Updated",
+        body: 'The journal ${newArticle.title} has been updated successfully.');
     showMessage('Article uploaded successfully!', context);
     GoRouter.of(context).pop();
   }
@@ -185,7 +186,9 @@ class _EditJournalState extends State<EditJournal> {
                           borderRadius: BorderRadius.all(Radius.circular(7)),
                           image: DecorationImage(
                             fit: BoxFit.fill,
-                            image: AssetImage(widget.journals.imageUrl),
+                            image: _journalImage == null
+                                ? AssetImage(widget.journals.imageUrl)
+                                : AssetImage(_journalImage!.path.toString()),
                           )),
                     ),
                   ),

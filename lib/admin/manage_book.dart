@@ -126,8 +126,29 @@ class ManageBook extends StatelessWidget {
                 timestamp: DateTime.now(),
                 icon: Icons.cancel_sharp,
               );
+              NotificationItems newNotification = NotificationItems(
+                notificationImage: book.coverImage,
+                notificationTitle: "${book.bookTitle} Book Deleted",
+                notificationMessage:
+                    'The Book titled ${book.bookTitle} has been deleted successfully. It is not longer available!',
+                notificationDate:
+                    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+                notificationTime:
+                    "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+              );
+
+              NotificationDropDownServices notificationId =
+                  NotificationDropDownServices();
+
               Provider.of<BookProvider>(context, listen: false)
                   .deleteBook(book.bookTitle);
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .sendGeneralNotification(newNotification);
+              NotificationDropDownServices.showNotification(
+                  id: notificationId.getNextId(),
+                  title: "${book.bookTitle} deleted",
+                  body:
+                      'The book titled ${book.bookTitle} has been deleted successfully.');
               Provider.of<AdminActivityService>(context, listen: false)
                   .logActivity(newActivity.action, newActivity.details,
                       newActivity.icon);
