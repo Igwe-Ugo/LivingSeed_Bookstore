@@ -6,6 +6,7 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class AdminNotifications extends StatefulWidget {
   const AdminNotifications({super.key});
@@ -311,11 +312,8 @@ class _AdminNotificationsState extends State<AdminNotifications> {
                     width: 7,
                   ),
                   IconButton(
-                    onPressed: () {
-                      Provider.of<NotificationProvider>(context, listen: false)
-                          .deleteGeneralNotification(notificationTitle);
-                      showMessage('Notification Deleted!', context);
-                    },
+                    onPressed: () =>
+                        _showDeleteConfirmation(context, notificationData),
                     icon: Icon(
                       Iconsax.trash,
                       color: Colors.red,
@@ -331,6 +329,53 @@ class _AdminNotificationsState extends State<AdminNotifications> {
           thickness: 0.4,
         )
       ],
+    );
+  }
+
+  void _showDeleteConfirmation(
+      BuildContext context, NotificationItems notification) {
+    final Uuid _uuid = const Uuid();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Confirm Deletion',
+            style: TextStyle(
+                fontFamily: 'Playfair',
+                fontSize: 20,
+                fontWeight: FontWeight.w900)),
+        content: Text(
+            'Are you sure you want to delete "${notification.notificationTitle} Notification for the whole app?"',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+        actions: [
+          TextButton(
+            onPressed: () => context.pop(),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              AdminActivity newActivity = AdminActivity(
+                id: _uuid.v4(),
+                action: 'Notification Deleted',
+                details: 'Title: ${notification.notificationTitle}, by: Admin',
+                timestamp: DateTime.now(),
+                icon: Iconsax.trash,
+              );
+              Provider.of<AdminActivityService>(context, listen: false)
+                  .logActivity(newActivity.action, newActivity.details,
+                      newActivity.icon);
+              Provider.of<NotificationProvider>(context, listen: false)
+                  .deleteGeneralNotification(notification.notificationTitle);
+              showMessage('Notification Deleted!', context);
+              context.pop();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 }

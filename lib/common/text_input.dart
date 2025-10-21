@@ -12,6 +12,7 @@ class CustomTextInput extends StatefulWidget {
   bool obscureText;
   bool isTitleNotNecessary;
   bool isNumber;
+  bool isMultiline;
   Function? validator;
   int? maxLine;
   int? maxLength;
@@ -23,6 +24,7 @@ class CustomTextInput extends StatefulWidget {
       required this.controller,
       this.icon,
       this.maxLine,
+      this.isMultiline = false,
       this.showEnter = true,
       this.textColor,
       this.isEmail = false,
@@ -66,6 +68,12 @@ class _CustomTextInputState extends State<CustomTextInput> {
             ),
           ),
           child: TextFormField(
+            validator: (value) {
+              if (widget.validator != null) {
+                return widget.validator!(value);
+              }
+              return null;
+            },
             controller: widget.controller,
             obscureText: widget.isPassword ? widget.obscureText : false,
             maxLines: widget.maxLine,
@@ -76,7 +84,9 @@ class _CustomTextInputState extends State<CustomTextInput> {
                     ? TextInputType.phone
                     : widget.isNumber
                         ? TextInputType.number
-                        : TextInputType.text,
+                        : widget.isMultiline
+                            ? TextInputType.multiline
+                            : TextInputType.text,
             style: TextStyle(color: widget.textColor),
             decoration: InputDecoration(
               hoverColor: Theme.of(context).disabledColor.withOpacity(0.1),

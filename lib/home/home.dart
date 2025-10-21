@@ -199,7 +199,7 @@ class _HomeState extends State<Home> {
 
                 // PageView content (GIVE IT A FIXED HEIGHT NOW)
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   child: PageView(
                     controller: _pageController,
                     onPageChanged: (index) {
@@ -279,7 +279,7 @@ class _HomeState extends State<Home> {
 
                 SizedBox(
                   height: MediaQuery.of(context).size.height *
-                      0.48, // Give fixed height for the horizontal card section
+                      0.33, // Give fixed height for the horizontal card section
                   child: ListView.builder(
                     itemCount: journalPost.length,
                     // Changed Row + SingleChildScrollView to ListView.builder for proper behavior
@@ -324,8 +324,7 @@ class _HomeState extends State<Home> {
   }) {
     const double kMaxBlogCardWidth = 360.0;
     final cardWidth = (MediaQuery.of(context).size.width * 0.9)
-        .clamp(150.0, kMaxBlogCardWidth); // Max width constraint
-    // Helper function for the metadata rows (Author/Category)
+        .clamp(150.0, kMaxBlogCardWidth);
     Widget buildMetadataRow({required IconData icon, required String text}) {
       return Row(
         children: [

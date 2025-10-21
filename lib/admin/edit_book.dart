@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -138,7 +140,6 @@ class _EditBookState extends State<EditBook> {
     setState(() => _isSaving = true);
 
     try {
-      // 1. Reconstruct Chapters List in the required List<Map<String, String>> format
       final List<Map<String, String>> chapters = [];
       int actualChapterCount = 0;
 
@@ -164,7 +165,6 @@ class _EditBookState extends State<EditBook> {
           _bookImage?.path ?? widget.aboutBooks.coverImage;
       final String finalPdfLink = _bookPdf?.path ?? widget.aboutBooks.pdfLink;
 
-      // 3. Create the Updated Book Model
       final AboutBooks updatedBook = AboutBooks(
         bookId: widget.aboutBooks.bookId, // CRITICAL: Keep the original ID
         bookTitle: _titleController.text,
@@ -174,7 +174,6 @@ class _EditBookState extends State<EditBook> {
         aboutAuthor: _aboutAuthorController.text,
         coverImage: finalCoverImagePath,
         pdfLink: finalPdfLink,
-        // Use the reconstructed list and its actual length
         chapters: chapters,
         chapterNum: actualChapterCount,
         ratingReviews:
@@ -190,27 +189,29 @@ class _EditBookState extends State<EditBook> {
       );
 
       NotificationItems newNotification = NotificationItems(
-      notificationImage: updatedBook.coverImage,
-      notificationTitle: "${updatedBook.bookTitle} Book Updated",
-      notificationMessage: 'The book ${updatedBook.bookTitle} has been updated successfully. You can check it out now!',
-      notificationDate:
-          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
-      notificationTime:
-          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
-    );
+        notificationImage: updatedBook.coverImage,
+        notificationTitle: "${updatedBook.bookTitle} Book Updated",
+        notificationMessage:
+            'The book ${updatedBook.bookTitle} has been updated successfully. You can check it out now!',
+        notificationDate:
+            "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+        notificationTime:
+            "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+      );
 
-    NotificationDropDownServices notificationId =
-        NotificationDropDownServices();
+      NotificationDropDownServices notificationId =
+          NotificationDropDownServices();
 
       // 4. Call Service Provider and Log Activity
       final bookProvider = Provider.of<BookProvider>(context, listen: false);
       await bookProvider.updateBook(updatedBook);
       await Provider.of<NotificationProvider>(context, listen: false)
-            .sendGeneralNotification(newNotification);
+          .sendGeneralNotification(newNotification);
       NotificationDropDownServices.showNotification(
           id: notificationId.getNextId(),
           title: "${updatedBook.bookTitle} Book Updated",
-          body: 'The book ${updatedBook.bookTitle} has been updated successfully.');
+          body:
+              'The book ${updatedBook.bookTitle} has been updated successfully.');
       await Provider.of<AdminActivityService>(context, listen: false)
           .logActivity(
               newActivity.action, newActivity.details, newActivity.icon);
@@ -267,6 +268,91 @@ class _EditBookState extends State<EditBook> {
   }
 
   @override
+  void dispose() {
+    // Dispose all controllers to free resources
+    _titleController.dispose();
+    _authorController.dispose();
+    _amountController.dispose();
+    _aboutBookController.dispose();
+    _aboutAuthorController.dispose();
+    for (var controller in _chapterTitleControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  // NEW: Widget to display the currently selected image
+  Widget _buildCoverImageDisplay(BuildContext context) {
+    final theme = Theme.of(context);
+
+    Widget imageWidget;
+
+    if (_bookImage != null) {
+      // **FIX HERE:** Use Image.file() for the temporary path from ImagePicker
+      imageWidget = Image.file(
+        File(_bookImage!.path),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(child: Icon(Icons.broken_image, size: 50));
+        },
+      );
+    } else if (widget.aboutBooks.coverImage.isNotEmpty) {
+      if (widget.aboutBooks.coverImage.startsWith('assets/')) {
+        imageWidget =
+            Image.asset(widget.aboutBooks.coverImage, fit: BoxFit.cover);
+      } else {
+        imageWidget = Image.network(
+          widget.aboutBooks.coverImage,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Iconsax.danger,
+                      size: 40, color: theme.colorScheme.error),
+                  const Text('Error loading image URL'),
+                ],
+              ),
+            );
+          },
+        );
+      }
+    } else {
+      imageWidget = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.image, size: 40, color: theme.colorScheme.primary),
+          const SizedBox(height: 8),
+          const Text('No image set'),
+        ],
+      );
+    }
+
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.antiAlias, // Clip the image to the rounded border
+      child: imageWidget,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -298,7 +384,31 @@ class _EditBookState extends State<EditBook> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // --- 1. Basic Book Details ---
+              const Text(
+                'Book Cover Image',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const SizedBox(height: 10),
+              _buildCoverImageDisplay(context),
+              const SizedBox(height: 10),
+              // --- 1. File Update Options (Optional) ---
+              const SectionTitle(title: 'Update Cover Image / File (Optional)'),
+              _buildFilePicker(
+                context,
+                title: 'Current Cover: ${widget.aboutBooks.coverImage}',
+                file: _bookImage?.name ?? 'Tap to select new image',
+                onPressed: _pickCoverImage,
+                icon: Iconsax.image,
+              ),
+              const SizedBox(height: 10),
+              _buildFilePicker(
+                context,
+                title: 'Current PDF: ${widget.aboutBooks.pdfLink}',
+                file: _bookPdf?.name ?? 'Tap to select new PDF file',
+                onPressed: _pickBookFile,
+                icon: Iconsax.document_upload,
+              ),
+              // --- 2. Basic Book Details ---
               const SectionTitle(title: 'Basic Book Details'),
               CustomTextInput(
                 controller: _titleController,
@@ -320,7 +430,7 @@ class _EditBookState extends State<EditBook> {
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
 
-              // --- 2. About Book & Author ---
+              // --- 3. About Book & Author ---
               const SectionTitle(title: 'Book Descriptions'),
               CustomTextInput(
                 controller: _aboutBookController,
@@ -339,7 +449,7 @@ class _EditBookState extends State<EditBook> {
                 validator: (value) => value!.isEmpty ? 'Required' : null,
               ),
 
-              // --- 3. Book Chapters (Dynamic Sections) ---
+              // --- 4. Book Chapters (Dynamic Sections) ---
               const SectionTitle(title: 'Book Chapters'),
               Row(
                 children: [
@@ -365,25 +475,6 @@ class _EditBookState extends State<EditBook> {
               // Dynamic Chapter TextFields
               ...List.generate(
                   _selectedChapterNum, (index) => _buildChapterInput(index)),
-
-              // --- 4. File Update Options (Optional) ---
-              const SectionTitle(title: 'Update Cover Image / File (Optional)'),
-              _buildFilePicker(
-                context,
-                title: 'Current Cover: ${widget.aboutBooks.coverImage}',
-                file: _bookImage?.name ?? 'Tap to select new image',
-                onPressed: _pickCoverImage,
-                icon: Iconsax.image,
-              ),
-              const SizedBox(height: 10),
-              _buildFilePicker(
-                context,
-                title: 'Current PDF: ${widget.aboutBooks.pdfLink}',
-                file: _bookPdf?.name ?? 'Tap to select new PDF file',
-                onPressed: _pickBookFile,
-                icon: Iconsax.document_upload,
-              ),
-
               const SizedBox(height: 30),
 
               // --- 5. Submit Button ---
