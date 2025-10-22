@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:livingseed_media/models/widget.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AddEventProvider extends ChangeNotifier {
   List<UpcomingEventsModel> _events = [];
   UpcomingEventsModel? _selectedEvent; // Stores the selected event
+  Future<List<UpcomingEventsModel>>? eventFuture; // Cached future for reuse
 
   List<UpcomingEventsModel> get events => _events;
   UpcomingEventsModel? get selectedEvent => _selectedEvent;
@@ -19,10 +21,24 @@ class AddEventProvider extends ChangeNotifier {
 
   /// Initialize events by loading from assets & local storage
   Future<void> initializeEvents() async {
-    List<UpcomingEventsModel> localEvents = await _loadEventsFromLocal();
-
-    _events = [...localEvents]; // Prioritize local storage
+    eventFuture = _loadEvents();
     notifyListeners();
+  }
+
+  Future<List<UpcomingEventsModel>> _loadEvents() async {
+    try {
+      List<UpcomingEventsModel> assetEvents = await _loadEventsFromAssets();
+      List<UpcomingEventsModel> localEvents = await _loadEventsFromLocal();
+      Set<String> existingNames =
+          localEvents.map((event) => event.eventName).toSet();
+      assetEvents
+          .removeWhere((event) => existingNames.contains(event.eventName));
+      _events = [...assetEvents, ...localEvents];
+      return _events;
+    } catch (e) {
+      debugPrint('Error loading events: $e');
+      return [];
+    }
   }
 
   /// Add a new event
@@ -54,6 +70,26 @@ class AddEventProvider extends ChangeNotifier {
       debugPrint('Error loading events from local storage: $e');
     }
     return [];
+  }
+
+  Future<List<UpcomingEventsModel>> _loadEventsFromAssets() async {
+    try {
+      String jsonString =
+          await rootBundle.loadString('assets/json/events.json');
+      if (jsonString.isEmpty) {
+        debugPrint('Warning: events.json found but is empty.');
+        return [];
+      }
+      List<dynamic> jsonData = json.decode(jsonString);
+      return jsonData
+          .map((item) => UpcomingEventsModel.fromJson(item))
+          .toList();
+    } catch (e) {
+      debugPrint('Error loading events from assets: $e');
+      debugPrint(
+          'Check pubspec.yaml and ensure the path is correct: assets/json/events.json');
+      return [];
+    }
   }
 
   /// Save events to local storage

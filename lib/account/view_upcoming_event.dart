@@ -53,11 +53,24 @@ class ViewUpcomingEvents extends StatelessWidget {
                     Text(
                       upcomingEvents.eventName,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
                       style: TextStyle(
                         fontFamily: 'Playfair',
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 350,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: AssetImage(upcomingEvents.eventImageUrl))),
                     ),
                     SizedBox(
                       height: 20,
@@ -89,7 +102,7 @@ class ViewUpcomingEvents extends StatelessWidget {
                                   width: 7,
                                 ),
                                 Text(
-                                  upcomingEvents.from.toIso8601String(),
+                                  "${upcomingEvents.from.day.toString()}-${upcomingEvents.from.month.toString()}-${upcomingEvents.from.year.toString()} at ${upcomingEvents.from.hour.toString()}:${upcomingEvents.from.minute.toString().padLeft(2, '0')}",
                                   style: TextStyle(
                                     fontSize: 13,
                                   ),
@@ -111,7 +124,7 @@ class ViewUpcomingEvents extends StatelessWidget {
                                   width: 7,
                                 ),
                                 Text(
-                                  upcomingEvents.to.toIso8601String(),
+                                  "${upcomingEvents.to.day.toString()}-${upcomingEvents.to.month.toString()}-${upcomingEvents.to.year.toString()} at ${upcomingEvents.to.hour.toString()}:${upcomingEvents.to.minute.toString().padLeft(2, '0')}",
                                   style: TextStyle(
                                     fontSize: 13,
                                   ),

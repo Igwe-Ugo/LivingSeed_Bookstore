@@ -19,8 +19,8 @@ abstract class Styles {
       fontFamily: 'Satoshi',
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: myPrimarySwatch,
-      primaryColor: const Color.fromARGB(173, 216, 230, 1),
-      primaryColorDark: const Color.fromARGB(255, 45, 184, 61),
+      primaryColor: const Color(0xFF1E6C1E),
+      primaryColorDark: const Color(0xFF385e34),
       scaffoldBackgroundColor:
           isDarkTheme ? const Color(0xFF161618) : const Color(0xFFFFFFFF),
       indicatorColor:

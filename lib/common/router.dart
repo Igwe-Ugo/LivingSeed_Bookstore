@@ -73,6 +73,12 @@ class LivingSeedMediaRouter {
   static const String cartPath = 'cart';
   static const String changePasswordPath = 'change_password';
   static const String writeReviewPath = 'write_review';
+  static const String profilePath = 'profile';
+  static const String booksPurchasedPath = 'book_purchased';
+  static const String readBookPath = 'read_book';
+  static const String makePaymentPath = 'make_payment';
+  static const String upcomingEventsPath = 'upcoming_events';
+  static const String viewUpcomingEventsPath = 'view_upcoming_events';
 
   // transaction histories
   static const String transactionHistoryPath = 'transaction_history';
@@ -81,12 +87,6 @@ class LivingSeedMediaRouter {
   // notification pages
   static const String notificationPath = '/notifications';
   static const String anouncementsPath = 'announcements';
-  static const String profilePath = 'profile';
-  static const String booksPurchasedPath = 'book_purchased';
-  static const String readBookPath = 'read_book';
-  static const String makePaymentPath = 'make_payment';
-  static const String upcomingEventsPath = 'upcoming_events';
-  static const String viewUpcomingEventsPath = 'view_upcoming_events';
 
   //admin pages
   static const String uploadBookPath = 'upload_book';

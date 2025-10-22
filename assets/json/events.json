@@ -1,0 +1,33 @@
+[
+  {
+    "eventImageUrl": "assets/images/ncawe.jpg",
+    "eventName": "National Christian Art Workshop & Exhibition",
+    "eventVenue": "KM 21, Yandev-Aliade Road, Gboko, Benue State, Nigeria",
+    "eventDetails": "Join us for a dynamic three-day workshop covering painting, sculpture, and creative writing. All skill levels welcome.",
+    "from": "2025-11-02T16:00:00.000Z",
+    "to": "2025-11-02T18:00:00.000Z",
+    "background": 4293961159, 
+    "isAllDay": false
+  },
+  {
+    "eventImageUrl": "assets/images/mlr_2024_flier.jpeg",
+    "eventName": "Annual Leadership Conference",
+    "eventVenue": "City Convention Center",
+    "eventDetails": "Keynote speakers discuss faith and future.",
+    "from": "2025-12-10T09:00:00.000Z",
+    "to": "2025-12-10T17:00:00.000Z",
+    "background": 4294967295, 
+    "isAllDay": true
+  },
+  {
+    "eventImageUrl": "assets/images/bone_of_bones.jpeg",
+    "eventName": "Welcome Workshop & Orientation",
+    "eventVenue": "Online via Zoom",
+    "eventDetails": "A brief introductory session for new attendees to understand the event flow and objectives.",
+    "from": "2025-10-25T10:00:00.000Z",
+    "to": "2025-10-25T11:00:00.000Z",
+    "background": 4284141935,
+    "isAllDay": false
+  }
+]
+

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
@@ -17,6 +20,77 @@ class AdminAddEvent extends StatefulWidget {
 
 class _AdminAddEventState extends State<AdminAddEvent> {
   final Uuid _uuid = const Uuid();
+  XFile? _eventImage;
+
+  Widget _buildCoverImageDisplay(
+      BuildContext context, UpcomingEventsModel data) {
+    final theme = Theme.of(context);
+
+    Widget imageWidget;
+
+    if (_eventImage != null) {
+      // **FIX HERE:** Use Image.file() for the temporary path from ImagePicker
+      imageWidget = Image.file(
+        File(_eventImage!.path),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(child: Icon(Icons.broken_image, size: 50));
+        },
+      );
+    } else if (data.eventImageUrl.isNotEmpty) {
+      if (data.eventImageUrl.startsWith('assets/')) {
+        imageWidget = Image.asset(data.eventImageUrl, fit: BoxFit.cover);
+      } else {
+        imageWidget = Image.network(
+          data.eventImageUrl,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Iconsax.danger,
+                      size: 40, color: theme.colorScheme.error),
+                  const Text('Error loading image URL'),
+                ],
+              ),
+            );
+          },
+        );
+      }
+    } else {
+      imageWidget = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.image, size: 40, color: theme.colorScheme.primary),
+          const SizedBox(height: 8),
+          const Text('No image set'),
+        ],
+      );
+    }
+
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.antiAlias, // Clip the image to the rounded border
+      child: imageWidget,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +117,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              _showAddEvent(context);
+              _showAddEvent(context, eventProvider.selectedEvent!);
             },
             backgroundColor: Theme.of(context).primaryColor,
             child: Icon(
@@ -70,8 +144,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                         details.appointments!.isNotEmpty) {
                       // Select the first tapped event
                       eventProvider.selectEvent(details.appointments!.first);
-                      showEventDialog(
-                          context, eventProvider.selectedEvent!.eventName);
+                      showEventDialog(context, eventProvider.selectedEvent!);
                     } else {
                       eventProvider.selectEvent(null); // Hide tooltip
                     }
@@ -83,9 +156,11 @@ class _AdminAddEventState extends State<AdminAddEvent> {
     });
   }
 
-  Future<dynamic> _showAddEvent(BuildContext context) {
+  Future<dynamic> _showAddEvent(
+      BuildContext context, UpcomingEventsModel data) {
     bool isAllDay = true;
     final TextEditingController _addTitleController = TextEditingController();
+    final TextEditingController _addVenueController = TextEditingController();
     final TextEditingController _eventDetailsController =
         TextEditingController();
     DateTime selectedDateFrom = DateTime.now();
@@ -126,6 +201,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                                 selectedTimeFrom,
                                 selectedDateTo,
                                 selectedTimeTo,
+                                _addVenueController,
                                 _addTitleController,
                                 _eventDetailsController,
                                 context);
@@ -133,21 +209,50 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                           label: Text(
                             'Save',
                             style: TextStyle(
-                              color: Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 25),
+                    ImagePickerDropZone(
+                      title: 'Upload Book Cover (Image)',
+                      icon: Iconsax.image,
+                      color: Colors.green,
+                      onFilePicked: (file) {
+                        setState(() {
+                          _eventImage = file as XFile;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     CustomTextInput(
                       label: 'Title',
                       controller: _addTitleController,
                       isTitleNotNecessary: true,
                       isIcon: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please provide the title of the event';
+                        }
+                        return null;
+                      },
+                    ),
+                    CustomTextInput(
+                      label: 'Venue',
+                      controller: _addVenueController,
+                      isTitleNotNecessary: true,
+                      isIcon: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please provide the venue for the event';
+                        }
+                        return null;
+                      },
                     ),
                     CustomTextInput(
                       label: "Event details",
@@ -308,6 +413,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
       TimeOfDay selectedTimeFrom,
       DateTime selectedDateTo,
       TimeOfDay selectedTimeTo,
+      TextEditingController _addVenueController,
       TextEditingController _addTitleController,
       TextEditingController _eventDetailsController,
       BuildContext context) {
@@ -328,7 +434,9 @@ class _AdminAddEventState extends State<AdminAddEvent> {
     );
 
     UpcomingEventsModel upcomingEvents = UpcomingEventsModel(
+      eventImageUrl: _eventImage!.path,
       eventName: _addTitleController.text,
+      eventVenue: _addVenueController.text,
       eventDetails: _eventDetailsController.text,
       from: eventDateTimeFrom,
       to: eventDateTimeTo,
@@ -336,7 +444,9 @@ class _AdminAddEventState extends State<AdminAddEvent> {
     );
 
     UpcomingEventsModel upcomingEventsTrue = UpcomingEventsModel(
+      eventImageUrl: _eventImage!.path,
       eventName: _addTitleController.text,
+      eventVenue: _addVenueController.text,
       eventDetails: _eventDetailsController.text,
       from: eventDateTimeFrom,
       to: eventDateTimeFrom.add(Duration(hours: 1)),
@@ -366,7 +476,8 @@ class _AdminAddEventState extends State<AdminAddEvent> {
     Navigator.of(context).pop();
   }
 
-  Future<void> showEventDialog(BuildContext context, String eventName) {
+  Future<void> showEventDialog(
+      BuildContext context, UpcomingEventsModel upcomingEvents) {
     double _fontSize = 13.0;
     return showDialog(
       context: context,
@@ -383,7 +494,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
           child: Align(
             alignment: Alignment.center,
             child: Text(
-              eventName,
+              upcomingEvents.eventName,
               style: TextStyle(
                 fontSize: 15,
               ),
@@ -392,8 +503,12 @@ class _AdminAddEventState extends State<AdminAddEvent> {
         ),
         actions: [
           TextButton(
-            onPressed:
-                () {}, // Meant to navigate to the event's screen to be displayed.
+            onPressed: () {
+              GoRouter.of(context).go(
+                  '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.upcomingEventsPath}/${LivingSeedMediaRouter.viewUpcomingEventsPath}',
+                  extra: upcomingEvents);
+              context.pop();
+            },
             child: Text(
               'view event'.toUpperCase(),
               style: TextStyle(

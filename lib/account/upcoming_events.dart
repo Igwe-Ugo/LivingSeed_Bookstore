@@ -138,13 +138,13 @@ class EventsCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          upcomingEvents.from.toString(),
+                          "${upcomingEvents.from.day.toString()}-${upcomingEvents.from.month.toString()}-${upcomingEvents.from.year.toString()} at ${upcomingEvents.from.hour.toString()}:${upcomingEvents.from.minute.toString().padLeft(2, '0')}",
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w300),
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          upcomingEvents.to.toString(),
+                          "${upcomingEvents.to.day.toString()}-${upcomingEvents.to.month.toString()}-${upcomingEvents.to.year.toString()} at ${upcomingEvents.to.hour.toString()}:${upcomingEvents.to.minute.toString().padLeft(2, '0')}",
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w300),
                         ),

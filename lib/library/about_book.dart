@@ -354,7 +354,7 @@ class _AboutBookState extends State<AboutBook> {
                                         barRadius: const Radius.circular(2),
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                .5,
+                                                .48,
                                         lineHeight: 6.0,
                                         percent: percentage,
                                         progressColor: Colors.black45,

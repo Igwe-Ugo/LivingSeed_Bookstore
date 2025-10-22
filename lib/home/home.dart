@@ -1,9 +1,9 @@
 // ignore_for_file: unused_field
 
+import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-// Note: Assuming these imports exist in your project structure
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -18,15 +18,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  // Use 'late' keyword if these are expected to be initialized elsewhere
-  // final CarouselSliderController _carouselController = CarouselSliderController();
+  // final CarouselSliderController _carouselController = CarouselSliderController(); // Unused and commented out
   final PageController _pageController = PageController();
   int _currentPage = 0;
   bool _isPlaying = true;
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   void _showInfoDialog(AboutBooks book) {
-    double _fontSize = 13.0;
+    const double fontSize = 13.0;
     setState(() {
+      // Pause carousel when dialog is shown
       _isPlaying = false;
     });
 
@@ -38,27 +44,33 @@ class _HomeState extends State<Home> {
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: Text(
             book.bookTitle,
-            style: TextStyle(
+            style: const TextStyle(
                 fontFamily: 'Playfair',
                 fontSize: 17,
                 fontWeight: FontWeight.w900),
           ),
           content: SizedBox(
-            height: 170,
+            height: 170, // Fixed height for the content area
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   book.author,
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.w400),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  book.aboutBook,
-                  maxLines: 7,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                Expanded(
+                  // Use Expanded for the main text body
+                  child: Text(
+                    book.aboutBook,
+                    maxLines: 7,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w700),
+                  ),
                 ),
               ],
             ),
@@ -74,7 +86,7 @@ class _HomeState extends State<Home> {
               child: Text(
                 'See more'.toUpperCase(),
                 style: TextStyle(
-                    fontSize: _fontSize, color: Theme.of(context).primaryColor),
+                    fontSize: fontSize, color: Theme.of(context).primaryColor),
               ),
             ),
             TextButton(
@@ -82,13 +94,18 @@ class _HomeState extends State<Home> {
               child: Text(
                 'close'.toUpperCase(),
                 style: TextStyle(
-                    fontSize: _fontSize, color: Theme.of(context).primaryColor),
+                    fontSize: fontSize, color: Theme.of(context).primaryColor),
               ),
             ),
           ],
         );
       },
-    );
+    ).then((_) {
+      // Resume carousel after dialog is dismissed
+      setState(() {
+        _isPlaying = true;
+      });
+    });
   }
 
   void _goToPage(int index) {
@@ -104,9 +121,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    // NOTE: Removed the PageView's onPageChanged and replaced it with local state management.
-    return Consumer3<UsersAuthProvider, BookProvider, JournalProvider>(
-      builder: (context, userProvider, bookProvider, journalProvider, child) {
+    return Consumer4<UsersAuthProvider, BookProvider, JournalProvider,
+        AddEventProvider>(
+      builder: (context, userProvider, bookProvider, journalProvider,
+          eventProvider, child) {
         if (userProvider.userData == null) {
           return const Scaffold(
             body: Center(
@@ -125,13 +143,12 @@ class _HomeState extends State<Home> {
         Users user = userProvider.userData!;
         List<AboutBooks> books = bookProvider.allBooks;
         List<JournalPost> journalPost = journalProvider.allPosts;
+        List<UpcomingEventsModel> upcomingEvents = eventProvider.events;
 
         return Scaffold(
-          // WRAP THE BODY IN A SINGLECHILDSCROLLVIEW
           body: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start, // Align to start for better look
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // header
                 Padding(
@@ -140,7 +157,6 @@ class _HomeState extends State<Home> {
                     children: [
                       Row(
                         children: [
-                          // Using a placeholder for the asset image path
                           Image.asset('assets/icons/LSeed-Logo-1.png',
                               scale: 5),
                           const SizedBox(width: 5),
@@ -199,7 +215,7 @@ class _HomeState extends State<Home> {
 
                 // PageView content (GIVE IT A FIXED HEIGHT NOW)
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.25,
+                  height: MediaQuery.of(context).size.height * 0.36,
                   child: PageView(
                     controller: _pageController,
                     onPageChanged: (index) {
@@ -232,60 +248,63 @@ class _HomeState extends State<Home> {
 
                 const SizedBox(height: 20),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Text(
+                // --- Journal Section Header ---
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             'LIVING JOURNAL',
                             style: TextStyle(
                               color: Theme.of(context).primaryColor,
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
+                              fontFamily: 'Playfair',
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                          child: Text(
+                          const Text(
                             'Latest Posts',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}');
-                      },
-                      child: Text(
-                        'View More >',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Theme.of(context).primaryColor,
-                        ),
+                        ],
                       ),
-                    )
-                  ],
+                      TextButton(
+                        onPressed: () {
+                          GoRouter.of(context).go(
+                              '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}');
+                        },
+                        child: Text(
+                          'View More >',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 10),
 
+                // --- Journal Posts Horizontal List ---
                 SizedBox(
-                  height: MediaQuery.of(context).size.height *
-                      0.33, // Give fixed height for the horizontal card section
+                  height:
+                      MediaQuery.of(context).size.height * 0.52, // Fixed height
                   child: ListView.builder(
                     itemCount: journalPost.length,
-                    // Changed Row + SingleChildScrollView to ListView.builder for proper behavior
                     scrollDirection: Axis.horizontal,
+                    shrinkWrap: true, // Only for list inside a bounded parent
+                    physics: const ClampingScrollPhysics(),
                     itemBuilder: (context, index) {
                       final journal = journalPost[index];
+                      // buildBlogCard handles its own width constraint
                       return buildBlogCard(
                           context: context,
                           imageUrl: journal.imageUrl,
@@ -302,6 +321,45 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 const SizedBox(height: 20),
+
+                // --- Upcoming Meetings Header ---
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Text(
+                    'Upcoming Meetings',
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Playfair',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 5),
+
+                // --- Upcoming Events Horizontal List ---
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.71,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true, // Only for list inside a bounded parent
+                    physics: const ClampingScrollPhysics(),
+                    itemCount: upcomingEvents.length,
+                    itemBuilder: (context, index) {
+                      final events = upcomingEvents[index];
+                      // buildEventCard handles its own width constraint
+                      return buildEventCard(
+                          context,
+                          events.eventImageUrl,
+                          events.eventName,
+                          events.to,
+                          events.from,
+                          events.eventVenue,
+                          events);
+                    },
+                  ),
+                ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -310,9 +368,199 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget buildEventCard(
+      BuildContext context,
+      String imageUrl,
+      String eventTitle,
+      DateTime to,
+      DateTime from,
+      String eventVenue,
+      UpcomingEventsModel upcomingEvents) {
+    final cardWidth = MediaQuery.of(context).size.width * 0.95;
+
+    // --- Info Chip Widget ---
+    Widget _buildInfoChip(String dateText, String timeText) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          spacing: 6,
+          runSpacing: 4,
+          children: [
+            const Icon(Icons.calendar_today, color: Colors.white, size: 15),
+            Text(
+              dateText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+            const Icon(Icons.schedule, color: Colors.white, size: 15),
+            Text(
+              timeText,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // --- Metadata Row Widget ---
+    Widget _buildMetadataRow({required IconData icon, required String text}) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 22),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              text,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    // --- Event Image Widget ---
+    Widget _buildEventImage(String path) {
+      if (path.isEmpty) {
+        return Container(
+          height: 180,
+          color: Colors.grey.shade200,
+          child: const Center(child: Text('No Image')),
+        );
+      }
+
+      bool isFile = !path.startsWith('assets/');
+
+      return isFile
+          ? Image.file(
+              File(path),
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              colorBlendMode: BlendMode.darken,
+              color: Colors.black.withOpacity(0.3),
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 180,
+                color: Colors.red.shade100,
+                child: const Center(child: Text('File Error')),
+              ),
+            )
+          : Image.asset(
+              path,
+              height: 180,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              colorBlendMode: BlendMode.darken,
+              color: Colors.black.withOpacity(0.3),
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 180,
+                color: Colors.red.shade100,
+                child: const Center(child: Text('Asset Error')),
+              ),
+            );
+    }
+
+    // --- Main Card Layout ---
+    return SizedBox(
+      width: cardWidth, // Apply fixed width
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 4,
+        margin: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AspectRatio(
+              aspectRatio: 16 / 15,
+              child: _buildEventImage(imageUrl),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // --- Title ---
+                  Text(
+                    eventTitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                      fontFamily: 'Playfair',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // --- Info Chip ---
+                  _buildInfoChip(
+                    '${from.day}/${from.month} - ${to.day}/${to.month}',
+                    "${from.hour.toString().padLeft(2, '0')}:${from.minute.toString().padLeft(2, '0')} - "
+                        "${to.hour.toString().padLeft(2, '0')}:${to.minute.toString().padLeft(2, '0')}",
+                  ),
+
+                  const SizedBox(height: 15),
+
+                  // --- Venue Row ---
+                  _buildMetadataRow(
+                    icon: Icons.location_on,
+                    text: eventVenue,
+                  ),
+                  const SizedBox(height: 10),
+                  // Read More Link (Underlined)
+                  InkWell(
+                    onTap: () {
+                      GoRouter.of(context).go(
+                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.upcomingEventsPath}/${LivingSeedMediaRouter.viewUpcomingEventsPath}',
+                          extra: upcomingEvents);
+                    },
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Register',
+                          style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Container(
+                          height: 2,
+                          width: 55, // Width of the underline
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// A functional widget that builds the complete blog post card layout.
-  ///
-  /// It takes all content data as parameters, making it highly reusable.
   Widget buildBlogCard({
     required BuildContext context,
     required String imageUrl,
@@ -322,9 +570,9 @@ class _HomeState extends State<Home> {
     required JournalPost category,
     required VoidCallback onReadMore,
   }) {
-    const double kMaxBlogCardWidth = 360.0;
-    final cardWidth = (MediaQuery.of(context).size.width * 0.9)
-        .clamp(150.0, kMaxBlogCardWidth);
+    // Ensure the width is less than the screen width to accommodate margins
+    final cardWidth = (MediaQuery.of(context).size.width * 0.95);
+
     Widget buildMetadataRow({required IconData icon, required String text}) {
       return Row(
         children: [
@@ -333,7 +581,7 @@ class _HomeState extends State<Home> {
           Flexible(
             child: Text(
               text,
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -342,10 +590,8 @@ class _HomeState extends State<Home> {
     }
 
     return SizedBox(
-      // Wrap in a SizedBox to constrain the width for horizontal scrolling
       width: cardWidth,
       child: Card(
-        // Clip the card content to respect the border radius
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 4,
@@ -358,15 +604,12 @@ class _HomeState extends State<Home> {
               children: [
                 // Image Area
                 AspectRatio(
-                  aspectRatio: 16 / 9,
+                  aspectRatio: 16 / 11,
                   child: Image.asset(
-                    // Changed Image.network to Image.asset for local paths
                     imageUrl,
                     fit: BoxFit.cover,
-                    // Add a filter to darken the image and enhance drama, matching the original photo's mood
                     colorBlendMode: BlendMode.darken,
                     color: Colors.black.withOpacity(0.4),
-                    // Removed errorBuilder since we are using local assets now
                   ),
                 ),
 
@@ -374,12 +617,11 @@ class _HomeState extends State<Home> {
                 Positioned(
                   top: 0,
                   left: 0,
-                  bottom: 0, // Stretch vertically to the image height
+                  bottom: 0,
                   child: Container(
-                    width: 35, // Fixed width for the vertical banner
+                    width: 35,
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
-                      // Only round the top-left corner as the banner is part of the clipped Card
                       borderRadius:
                           const BorderRadius.only(topLeft: Radius.circular(10)),
                     ),
@@ -392,8 +634,7 @@ class _HomeState extends State<Home> {
                         const SizedBox(height: 12),
                         // Rotated Date Text
                         RotatedBox(
-                          quarterTurns:
-                              3, // Rotate 270 degrees (vertical text orientation)
+                          quarterTurns: 3,
                           child: Text(
                             '${date.date.day}-${date.date.month}-${date.date.year}'
                                 .toUpperCase(),
@@ -422,6 +663,7 @@ class _HomeState extends State<Home> {
                   Text(
                     title,
                     maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -487,8 +729,6 @@ class _HomeState extends State<Home> {
           ),
           const SizedBox(height: 15),
           CarouselSlider.builder(
-            // NOTE: If _carouselController is not used, remove it to avoid runtime errors
-            // carouselController: _carouselController,
             itemCount: books.length,
             options: CarouselOptions(
               height: 250,
@@ -567,22 +807,28 @@ class _HomeState extends State<Home> {
   Widget _buildDashboardCard(
       BuildContext context, String title, IconData icon, Color color,
       {required VoidCallback onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        child: Container(
-          width: MediaQuery.of(context).size.width / 4,
-          height: 120,
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 50, color: color),
-              const SizedBox(height: 10),
-              Text(title, style: const TextStyle(fontSize: 11)),
-            ],
+    // Using SizedBox to explicitly constrain the size of the Card (Good Practice)
+    return SizedBox(
+      width: MediaQuery.of(context).size.width / 4,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          elevation: 4,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Container(
+            height: 120, // Define height on the inner Container
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(icon, size: 50, color: color),
+                const SizedBox(height: 10),
+                Text(title,
+                    style: const TextStyle(fontSize: 11),
+                    textAlign: TextAlign.center),
+              ],
+            ),
           ),
         ),
       ),
