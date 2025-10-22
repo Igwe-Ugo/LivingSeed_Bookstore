@@ -31,15 +31,7 @@ class MagazinePage extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
-            Container(
-              height: 170,
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(7)),
-                  color: Theme.of(context).canvasColor,
-                  image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: AssetImage(aboutMagazine.coverImage))),
-            ),
+            ImageFileAuth(fileImage: aboutMagazine.coverImage, imageHeight: 170, imageWidth: double.infinity),
             Padding(
               padding: EdgeInsets.all(2.0),
               child: Column(

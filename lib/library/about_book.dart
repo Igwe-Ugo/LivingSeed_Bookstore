@@ -92,17 +92,10 @@ class _AboutBookState extends State<AboutBook> {
               child: Column(
                 children: [
                   Center(
-                    child: Container(
-                      width: 130,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(7)),
-                          image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(widget.aboutBooks.coverImage),
-                          )),
-                    ),
-                  ),
+                      child: ImageFileAuth(
+                          fileImage: widget.aboutBooks.coverImage,
+                          imageHeight: 200,
+                          imageWidth: 130)),
                   const SizedBox(height: 15),
                   ElevatedButton(
                     onPressed: () {
@@ -354,7 +347,7 @@ class _AboutBookState extends State<AboutBook> {
                                         barRadius: const Radius.circular(2),
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                .48,
+                                                .45,
                                         lineHeight: 6.0,
                                         percent: percentage,
                                         progressColor: Colors.black45,

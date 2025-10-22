@@ -119,16 +119,7 @@ class _JournalDetailScreenState extends State<JournalDetailScreen> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: Image.asset(
-            widget.post.imageUrl,
-            fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) => Container(
-              color: Colors.grey[600],
-              alignment: Alignment.center,
-              child: const Icon(Icons.image_not_supported,
-                  size: 60, color: Colors.white),
-            ),
-          ),
+          child: ImageFileAuth(fileImage: widget.post.imageUrl, imageHeight: 300, imageWidth: double.infinity)
         ),
 
         // Overlay Container with Metadata

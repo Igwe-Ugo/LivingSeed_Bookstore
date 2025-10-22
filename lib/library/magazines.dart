@@ -43,18 +43,7 @@ class Magazines extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: Container(
-                          height: 100,
-                          width: 80,
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(5)),
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: AssetImage(magazine.coverImage))),
-                        ),
+                        child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 100, imageWidth: 80),
                       ),
                       const SizedBox(
                         width: 16,

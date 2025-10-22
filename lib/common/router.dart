@@ -76,7 +76,6 @@ class LivingSeedMediaRouter {
   static const String profilePath = 'profile';
   static const String booksPurchasedPath = 'book_purchased';
   static const String readBookPath = 'read_book';
-  static const String makePaymentPath = 'make_payment';
   static const String upcomingEventsPath = 'upcoming_events';
   static const String viewUpcomingEventsPath = 'view_upcoming_events';
 
@@ -206,24 +205,24 @@ class LivingSeedMediaRouter {
                               );
                             } else {
                               return const Center(
-                                  child: Text("No book data available"));
+                                  child: Text("No Bible Study data available"));
                             }
                           },
                         ),
                         GoRoute(
-                            path: aboutBookPath,
-                            builder: (context, state) {
-                              final aboutBooks = state.extra as AboutBooks?;
-                              if (aboutBooks != null) {
-                                return AboutBook(
-                                  aboutBooks: aboutBooks,
-                                );
-                              } else {
-                                return const Center(
-                                    child: Text("No book data available"));
-                              }
-                            },
-                          ),
+                          path: aboutBookPath,
+                          builder: (context, state) {
+                            final aboutBooks = state.extra as AboutBooks?;
+                            if (aboutBooks != null) {
+                              return AboutBook(
+                                aboutBooks: aboutBooks,
+                              );
+                            } else {
+                              return const Center(
+                                  child: Text("No book data available"));
+                            }
+                          },
+                        ),
                         GoRoute(
                           path: aboutMagazinePath,
                           builder: (context, state) {

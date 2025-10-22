@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 
 class ViewUpcomingEvents extends StatelessWidget {
@@ -64,14 +65,10 @@ class ViewUpcomingEvents extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    Container(
-                      height: 350,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage(upcomingEvents.eventImageUrl))),
-                    ),
+                    ImageFileAuth(
+                        fileImage: upcomingEvents.eventImageUrl,
+                        imageHeight: 350,
+                        imageWidth: double.infinity),
                     SizedBox(
                       height: 20,
                     ),

@@ -105,11 +105,7 @@ class _CartState extends State<Cart> {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: ElevatedButton(
-                                    onPressed: () {
-                                      GoRouter.of(context).go(
-                                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.cartPath}/${LivingSeedMediaRouter.makePaymentPath}',
-                                          extra: snapshot.data!);
-                                    },
+                                    onPressed: () {},
                                     style: ElevatedButton.styleFrom(
                                       elevation: 0,
                                       backgroundColor:
@@ -269,18 +265,10 @@ SizedBox _cartItems(BuildContext context, CartItems items) {
             children: [
               Row(
                 children: [
-                  Container(
-                    height: 100,
-                    width: 70,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.1),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5)),
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image: AssetImage(items.coverImage))),
-                  ),
+                  ImageFileAuth(
+                      fileImage: items.coverImage,
+                      imageHeight: 100,
+                      imageWidth: 70),
                   const SizedBox(
                     width: 16,
                   ),

@@ -79,11 +79,7 @@ class MoreBooks extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
-                child: Image.asset(
-                  book.coverImage,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child: ImageFileAuth(fileImage: book.coverImage, imageHeight: 170, imageWidth: double.infinity),
               ),
             ),
             Padding(

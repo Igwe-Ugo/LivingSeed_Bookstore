@@ -256,18 +256,7 @@ Column _bookSearch(BuildContext context, AboutBooks book) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Image.asset(
-                      book.coverImage,
-                    ),
-                  ),
+                  child: ImageFileAuth(fileImage: book.coverImage, imageHeight: 100, imageWidth: 100),
                 ),
                 const SizedBox(
                   width: 16,
@@ -332,18 +321,7 @@ Widget _bibleStudySearch(BuildContext context, BibleStudyMaterial study) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Image.asset(
-                      study.coverImage,
-                    ),
-                  ),
+                  child: ImageFileAuth(fileImage: study.coverImage, imageHeight: 100, imageWidth: 100),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -400,18 +378,7 @@ Widget _magazineSearch(BuildContext context, MagazineModel magazine) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.withOpacity(0.1),
-                      borderRadius: const BorderRadius.all(Radius.circular(5)),
-                    ),
-                    child: Image.asset(
-                      magazine.coverImage,
-                    ),
-                  ),
+                  child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 100, imageWidth: 100),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

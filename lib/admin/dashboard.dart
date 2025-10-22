@@ -330,9 +330,6 @@ class AdminDashboard extends StatelessWidget {
         timeAgo,
         style: const TextStyle(fontSize: 10, color: Colors.grey),
       ),
-      onTap: () {
-        // You can potentially navigate to the edited book's page here
-      },
     );
   }
 }

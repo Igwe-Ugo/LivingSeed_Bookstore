@@ -68,6 +68,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
             ),
           ),
           child: TextFormField(
+            cursorColor: Theme.of(context).primaryColor,
             validator: (value) {
               if (widget.validator != null) {
                 return widget.validator!(value);

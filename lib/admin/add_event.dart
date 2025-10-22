@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
@@ -21,76 +19,6 @@ class AdminAddEvent extends StatefulWidget {
 class _AdminAddEventState extends State<AdminAddEvent> {
   final Uuid _uuid = const Uuid();
   XFile? _eventImage;
-
-  Widget _buildCoverImageDisplay(
-      BuildContext context, UpcomingEventsModel data) {
-    final theme = Theme.of(context);
-
-    Widget imageWidget;
-
-    if (_eventImage != null) {
-      // **FIX HERE:** Use Image.file() for the temporary path from ImagePicker
-      imageWidget = Image.file(
-        File(_eventImage!.path),
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return const Center(child: Icon(Icons.broken_image, size: 50));
-        },
-      );
-    } else if (data.eventImageUrl.isNotEmpty) {
-      if (data.eventImageUrl.startsWith('assets/')) {
-        imageWidget = Image.asset(data.eventImageUrl, fit: BoxFit.cover);
-      } else {
-        imageWidget = Image.network(
-          data.eventImageUrl,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Iconsax.danger,
-                      size: 40, color: theme.colorScheme.error),
-                  const Text('Error loading image URL'),
-                ],
-              ),
-            );
-          },
-        );
-      }
-    } else {
-      imageWidget = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Iconsax.image, size: 40, color: theme.colorScheme.primary),
-          const SizedBox(height: 8),
-          const Text('No image set'),
-        ],
-      );
-    }
-
-    return Container(
-      height: 200,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.primary.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      clipBehavior: Clip.antiAlias, // Clip the image to the rounded border
-      child: imageWidget,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

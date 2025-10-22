@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:livingseed_media/common/show_message.dart';
 
@@ -34,7 +36,6 @@ class _ImagePickerDropZoneState extends State<ImagePickerDropZone> {
       if (image != null) {
         setState(() {
           _pickedFile = image;
-          // Notify the parent component of the new file
           widget.onFilePicked(_pickedFile);
         });
       }
@@ -49,7 +50,9 @@ class _ImagePickerDropZoneState extends State<ImagePickerDropZone> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // Determine the name of the selected file for display
-    final fileName = _pickedFile?.path.isNotEmpty == true ? _pickedFile!.path : _pickedFile?.name;
+    final fileName = _pickedFile?.path.isNotEmpty == true
+        ? _pickedFile!.path
+        : _pickedFile?.name;
 
     return GestureDetector(
       onTap: _pickImage, // Calls the internal picking logic
@@ -70,15 +73,19 @@ class _ImagePickerDropZoneState extends State<ImagePickerDropZone> {
           children: [
             Icon(widget.icon,
                 size: 40,
-                color: _pickedFile != null ? widget.color : theme.disabledColor),
+                color:
+                    _pickedFile != null ? widget.color : theme.disabledColor),
             const SizedBox(height: 8),
             Text(
               _pickedFile != null
                   ? 'Selected: ${fileName?.split('/').last}' // Show only the filename
                   : widget.title,
               style: TextStyle(
-                color: _pickedFile != null ? widget.color : theme.textTheme.bodyLarge?.color,
-                fontWeight: _pickedFile != null ? FontWeight.bold : FontWeight.normal,
+                color: _pickedFile != null
+                    ? widget.color
+                    : theme.textTheme.bodyLarge?.color,
+                fontWeight:
+                    _pickedFile != null ? FontWeight.bold : FontWeight.normal,
               ),
               textAlign: TextAlign.center,
             ),
@@ -89,6 +96,84 @@ class _ImagePickerDropZoneState extends State<ImagePickerDropZone> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ImageFileAuth extends StatelessWidget {
+  final double imageHeight;
+  final double imageWidth;
+  final String fileImage;
+  const ImageFileAuth(
+      {super.key, required this.fileImage, required this.imageHeight, required this.imageWidth});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    Widget imageWidget;
+
+    if (fileImage != null) {
+      // **FIX HERE:** Use Image.file() for the temporary path from ImagePicker
+      imageWidget = Image.file(
+        File(fileImage),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Center(child: Icon(Icons.broken_image, size: 50));
+        },
+      );
+    } else if (fileImage.isNotEmpty) {
+      if (fileImage.startsWith('assets/')) {
+        imageWidget = Image.asset(fileImage, fit: BoxFit.cover);
+      } else {
+        imageWidget = Image.network(
+          fileImage,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Iconsax.danger,
+                      size: 40, color: theme.colorScheme.error),
+                  const Text('Error loading image URL'),
+                ],
+              ),
+            );
+          },
+        );
+      }
+    } else {
+      imageWidget = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Iconsax.image, size: 40, color: theme.colorScheme.primary),
+          const SizedBox(height: 8),
+          const Text('No image set'),
+        ],
+      );
+    }
+
+    return Container(
+      height: imageHeight,
+      width: imageWidth,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.primary.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.antiAlias, // Clip the image to the rounded border
+      child: imageWidget,
     );
   }
 }

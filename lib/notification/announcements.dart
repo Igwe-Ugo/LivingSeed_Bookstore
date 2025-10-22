@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 
 class Announcements extends StatelessWidget {
@@ -45,13 +46,10 @@ class Announcements extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              Container(
-                height: 400,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage(announcement.notificationImage))),
+              ImageFileAuth(
+                fileImage: announcement.notificationImage,
+                imageHeight: 400,
+                imageWidth: double.infinity,
               ),
               Padding(
                 padding:

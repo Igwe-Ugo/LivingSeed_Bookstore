@@ -55,21 +55,12 @@ class AboutBibleStudy extends StatelessWidget {
           child: Column(
             children: [
               Center(
-                child: Container(
-                  width: 130,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: AssetImage(aboutBiblestudy.coverImage),
-                      )),
-                ),
+                child: ImageFileAuth(fileImage: aboutBiblestudy.coverImage, imageHeight: 200, imageWidth: 130)
               ),
               const SizedBox(height: 15),
               ElevatedButton(
                 onPressed: () {
-                  _uploadBibleStudy(context);
+                  _addBibleStudyToCart(context);
                 },
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -200,7 +191,7 @@ class AboutBibleStudy extends StatelessWidget {
     )));
   }
 
-  void _uploadBibleStudy(BuildContext context) {
+  void _addBibleStudyToCart(BuildContext context) {
     Provider.of<UsersAuthProvider>(context, listen: false)
         .addToBibleStudyCart(aboutBiblestudy);
     Users user =

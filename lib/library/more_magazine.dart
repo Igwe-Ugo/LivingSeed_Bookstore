@@ -68,12 +68,7 @@ class MoreMagazine extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
-                child: Image.asset(
-                  height: 500,
-                  magazine.coverImage,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
+                child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 170, imageWidth: double.infinity),
               ),
             ),
             Padding(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:livingseed_media/common/widget.dart';
 import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/services/widget.dart';
 import 'package:provider/provider.dart';
@@ -53,21 +54,14 @@ class AboutMagazine extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Container(
-                        width: 130,
-                        height: 200,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(7)),
-                            image: DecorationImage(
-                              fit: BoxFit.fill,
-                              image: AssetImage(magazine.coverImage),
-                            )),
-                      ),
-                    ),
+                        child: ImageFileAuth(
+                            fileImage: magazine.coverImage,
+                            imageHeight: 200,
+                            imageWidth: 130)),
                     const SizedBox(height: 15),
                     ElevatedButton(
                       onPressed: () {
-                        _uploadMagazine(context);
+                        _addMagazineToCart(context);
                       },
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
@@ -222,29 +216,27 @@ class AboutMagazine extends StatelessWidget {
     );
   }
 
-  void _uploadMagazine(BuildContext context) {
+  void _addMagazineToCart(BuildContext context) {
     Provider.of<UsersAuthProvider>(context, listen: false)
-      .addToMagazineCart(magazine);
-                          Users user =
-      Provider.of<UsersAuthProvider>(context, listen: false)
-          .userData!;
-                          NotificationItems newNotification = NotificationItems(
-    notificationImage: magazine.coverImage,
-    notificationTitle: 'Magazine added to cart',
-    notificationMessage:
-        'A magazine with the name: ${magazine.magazineTitle} has been added to your cart item. You can view it in your cart session. You have done a great job by uplisting this in your purchases, do well to purchase!',
-    notificationDate:
-        "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
-    notificationTime:
-        "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
-                          );
-                          Provider.of<NotificationProvider>(context, listen: false)
-      .sendPersonalNotification(
-          user.emailAddress, newNotification);
-                          
+        .addToMagazineCart(magazine);
+    Users user =
+        Provider.of<UsersAuthProvider>(context, listen: false).userData!;
+    NotificationItems newNotification = NotificationItems(
+      notificationImage: magazine.coverImage,
+      notificationTitle: 'Magazine added to cart',
+      notificationMessage:
+          'A magazine with the name: ${magazine.magazineTitle} has been added to your cart item. You can view it in your cart session. You have done a great job by uplisting this in your purchases, do well to purchase!',
+      notificationDate:
+          "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}",
+      notificationTime:
+          "${DateTime.now().hour}:${DateTime.now().minute} ${DateTime.now().hour >= 12 ? 'PM' : 'AM'}",
+    );
+    Provider.of<NotificationProvider>(context, listen: false)
+        .sendPersonalNotification(user.emailAddress, newNotification);
+
     NotificationDropDownServices notificationId =
         NotificationDropDownServices();
-    
+
     NotificationDropDownServices.showNotification(
         id: notificationId.getNextId(),
         title: 'Magazine Added to cart',

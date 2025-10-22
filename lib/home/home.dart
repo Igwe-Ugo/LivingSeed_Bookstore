@@ -368,6 +368,46 @@ class _HomeState extends State<Home> {
     );
   }
 
+  Widget _buildEventImage(String path) {
+    if (path.isEmpty) {
+      return Container(
+        height: 180,
+        color: Colors.grey.shade200,
+        child: const Center(child: Text('No Image')),
+      );
+    }
+
+    bool isFile = !path.startsWith('assets/');
+
+    return isFile
+        ? Image.file(
+            File(path),
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            colorBlendMode: BlendMode.darken,
+            color: Colors.black.withOpacity(0.3),
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: 180,
+              color: Colors.red.shade100,
+              child: const Center(child: Text('File Error')),
+            ),
+          )
+        : Image.asset(
+            path,
+            height: 180,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            colorBlendMode: BlendMode.darken,
+            color: Colors.black.withOpacity(0.3),
+            errorBuilder: (context, error, stackTrace) => Container(
+              height: 180,
+              color: Colors.red.shade100,
+              child: const Center(child: Text('Asset Error')),
+            ),
+          );
+  }
+
   Widget buildEventCard(
       BuildContext context,
       String imageUrl,
@@ -434,47 +474,6 @@ class _HomeState extends State<Home> {
           ),
         ],
       );
-    }
-
-    // --- Event Image Widget ---
-    Widget _buildEventImage(String path) {
-      if (path.isEmpty) {
-        return Container(
-          height: 180,
-          color: Colors.grey.shade200,
-          child: const Center(child: Text('No Image')),
-        );
-      }
-
-      bool isFile = !path.startsWith('assets/');
-
-      return isFile
-          ? Image.file(
-              File(path),
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              colorBlendMode: BlendMode.darken,
-              color: Colors.black.withOpacity(0.3),
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 180,
-                color: Colors.red.shade100,
-                child: const Center(child: Text('File Error')),
-              ),
-            )
-          : Image.asset(
-              path,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              colorBlendMode: BlendMode.darken,
-              color: Colors.black.withOpacity(0.3),
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 180,
-                color: Colors.red.shade100,
-                child: const Center(child: Text('Asset Error')),
-              ),
-            );
     }
 
     // --- Main Card Layout ---
@@ -604,14 +603,7 @@ class _HomeState extends State<Home> {
               children: [
                 // Image Area
                 AspectRatio(
-                  aspectRatio: 16 / 11,
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    colorBlendMode: BlendMode.darken,
-                    color: Colors.black.withOpacity(0.4),
-                  ),
-                ),
+                    aspectRatio: 16 / 11, child: _buildEventImage(imageUrl)),
 
                 // Vertical Date Banner
                 Positioned(

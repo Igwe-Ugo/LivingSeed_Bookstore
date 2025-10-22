@@ -174,19 +174,7 @@ class _JournalListScreenState extends State<JournalListScreen> {
               if (post.imageUrl.isNotEmpty)
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.asset(
-                    post.imageUrl,
-                    fit: BoxFit.cover,
-                    height: 150,
-                    width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 150,
-                      color: Colors.grey[300],
-                      alignment: Alignment.center,
-                      child: const Text('Image Not Found',
-                          style: TextStyle(color: Colors.black54)),
-                    ),
-                  ),
+                  child: ImageFileAuth(fileImage: post.imageUrl, imageHeight: 150, imageWidth: double.infinity)
                 ),
               const SizedBox(height: 12),
               Text(
