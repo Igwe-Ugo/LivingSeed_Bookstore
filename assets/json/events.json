@@ -15,12 +15,12 @@
     "eventVenue": "City Convention Center",
     "eventDetails": "Keynote speakers discuss faith and future.",
     "from": "2025-12-10T09:00:00.000Z",
-    "to": "2025-12-10T17:00:00.000Z",
+    "to": "2025-12-12T17:00:00.000Z",
     "background": 4294967295, 
     "isAllDay": true
   },
   {
-    "eventImageUrl": "assets/images/bone_of_bones.jpeg",
+    "eventImageUrl": "assets/images/zoom.jpeg",
     "eventName": "Welcome Workshop & Orientation",
     "eventVenue": "Online via Zoom",
     "eventDetails": "A brief introductory session for new attendees to understand the event flow and objectives.",

@@ -105,6 +105,8 @@ class LivingSeedMediaRouter {
   static const String editBibleStudyPath = 'edit_biblestudy';
   static const String manageMagazinePath = 'manage_magazine';
   static const String editMagazinePath = 'edit_magazine';
+  static const String createEventPath = 'create_event';
+  static const String editEventPath = 'edit_event';
 
   LivingSeedMediaRouter._internal() {
     final routes = <RouteBase>[
@@ -414,6 +416,29 @@ class LivingSeedMediaRouter {
                                 path: addEventPath,
                                 builder: (context, state) =>
                                     const AdminAddEvent(),
+                                    routes: [
+                                      GoRoute(
+                                        path: createEventPath,
+                                        builder: (context, state) =>
+                                            const CreateEvent(),
+                                      ),
+                                      GoRoute(
+                                      path: editEventPath,
+                                      builder: (context, state) {
+                                        final upcomingEvents =
+                                            state.extra as UpcomingEventsModel?;
+                                        if (upcomingEvents != null) {
+                                          return EditEvent(
+                                            upcomingEvents: upcomingEvents,
+                                          );
+                                        } else {
+                                          return const Center(
+                                              child: Text(
+                                                  "No event data available to edit"));
+                                        }
+                                      },
+                                    )
+                                    ]
                               ),
                               GoRoute(
                                 path: addArticlePath,

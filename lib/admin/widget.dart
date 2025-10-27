@@ -15,3 +15,5 @@ export 'manage_biblestudy.dart';
 export 'edit_biblestudy.dart';
 export 'manage_magazine.dart';
 export 'edit_magazine.dart';
+export 'create_event.dart';
+export 'edit_event.dart';

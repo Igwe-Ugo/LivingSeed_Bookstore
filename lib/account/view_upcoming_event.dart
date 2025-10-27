@@ -11,46 +11,42 @@ class ViewUpcomingEvents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => context.pop(),
+          icon: const Icon(
+            Iconsax.arrow_left_2,
+            size: 17,
+          ),
+        ),
+        title: const Text(
+          'Upcoming Event',
+          style: TextStyle(
+            fontFamily: 'Playfair',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        GoRouter.of(context).pop();
-                      },
-                      icon: const Icon(
-                        Iconsax.arrow_left_2,
-                        size: 17,
-                      )),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Upcoming Event',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontFamily: 'Playfair',
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10),
                 child: Column(
                   children: [
+                    ImageFileAuth(
+                        fileImage: upcomingEvents.eventImageUrl,
+                        imageHeight: 350,
+                        imageWidth: double.infinity),
+                    SizedBox(
+                      height: 20,
+                    ),
                     Text(
                       upcomingEvents.eventName,
                       overflow: TextOverflow.ellipsis,
@@ -62,13 +58,6 @@ class ViewUpcomingEvents extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    ImageFileAuth(
-                        fileImage: upcomingEvents.eventImageUrl,
-                        imageHeight: 350,
-                        imageWidth: double.infinity),
                     SizedBox(
                       height: 20,
                     ),
@@ -154,6 +143,9 @@ class ViewUpcomingEvents extends StatelessWidget {
                                 )),
                               ),
                             ),
+                            const SizedBox(
+                              height: 20,
+                            ),
                           ],
                         ),
                       ),
@@ -161,6 +153,9 @@ class ViewUpcomingEvents extends StatelessWidget {
                   ],
                 ),
               ),
+              EventCountdown(
+                  nextEvent: upcomingEvents,
+                  primaryColor: Theme.of(context).primaryColor),
               SizedBox(
                 height: 40,
               ),
