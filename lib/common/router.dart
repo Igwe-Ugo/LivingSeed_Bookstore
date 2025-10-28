@@ -47,6 +47,8 @@ class LivingSeedMediaRouter {
   static const String signupPath = '/signup';
   static const String forgotPasswordPath = '/forgot_password';
   static const String signupVerificationPath = 'signup_verification';
+  static const String forgotPasswordVerificationPath =
+      'forgot_password_verification';
 
   // home pages
   static const String homePath = '/home';
@@ -138,9 +140,19 @@ class LivingSeedMediaRouter {
             ),
           ]),
       GoRoute(
-        path: forgotPasswordPath,
-        builder: (context, state) => const ForgotPassword(),
-      ),
+          path: forgotPasswordPath,
+          builder: (context, state) => const ForgotPassword(),
+          routes: [
+            GoRoute(
+              path: forgotPasswordVerificationPath,
+              builder: (context, state) {
+                final args = (state.extra as Map<String, dynamic>?) ?? {};
+                return ForgotPasswordVerification(
+                  email: args['email'] as String? ?? '',
+                );
+              },
+            ),
+          ]),
       StatefulShellRoute.indexedStack(
           parentNavigatorKey: parentNavigatorKey,
           builder: (context, state, navigationShell) {
@@ -413,16 +425,16 @@ class LivingSeedMediaRouter {
                                     const UploadMagazineScreen(),
                               ),
                               GoRoute(
-                                path: addEventPath,
-                                builder: (context, state) =>
-                                    const AdminAddEvent(),
-                                    routes: [
-                                      GoRoute(
-                                        path: createEventPath,
-                                        builder: (context, state) =>
-                                            const CreateEvent(),
-                                      ),
-                                      GoRoute(
+                                  path: addEventPath,
+                                  builder: (context, state) =>
+                                      const AdminAddEvent(),
+                                  routes: [
+                                    GoRoute(
+                                      path: createEventPath,
+                                      builder: (context, state) =>
+                                          const CreateEvent(),
+                                    ),
+                                    GoRoute(
                                       path: editEventPath,
                                       builder: (context, state) {
                                         final upcomingEvents =
@@ -438,8 +450,7 @@ class LivingSeedMediaRouter {
                                         }
                                       },
                                     )
-                                    ]
-                              ),
+                                  ]),
                               GoRoute(
                                 path: addArticlePath,
                                 builder: (context, state) =>

@@ -90,6 +90,7 @@ class _CustomTextInputState extends State<CustomTextInput> {
                             : TextInputType.text,
             style: TextStyle(color: widget.textColor),
             decoration: InputDecoration(
+              errorStyle: TextStyle(color: Colors.red),
               hoverColor: Theme.of(context).disabledColor.withOpacity(0.1),
               filled: true,
               fillColor: Theme.of(context).disabledColor.withOpacity(0.1),

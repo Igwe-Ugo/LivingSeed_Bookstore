@@ -1,26 +1,25 @@
+// ignore_for_file: await_only_futures
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:livingseed_media/common/widget.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../common/widget.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+class ResetPassword extends StatefulWidget {
+  const ResetPassword({super.key});
 
   @override
-  State<ForgotPassword> createState() => _ForgotPasswordState();
+  State<ResetPassword> createState() => _ResetPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
-  final emaillAddressController = TextEditingController();
-  final forgotPasswordKey = GlobalKey<FormState>();
+class _ResetPasswordState extends State<ResetPassword> {
+  final bool _obscureText = true;
+  final resetPasswordKey = GlobalKey<FormState>();
+  final newPasswordController = TextEditingController();
+  final confirmrPasswordController = TextEditingController();
+  String errorMessage = '';
   bool isLoading = false;
-
-  @override
-  void dispose() {
-    emaillAddressController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           child: Column(
             children: [
               Form(
-                key: forgotPasswordKey,
+                key: resetPasswordKey,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Column(
@@ -71,7 +70,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Recover Account',
+                          'Reset Password',
                           style: TextStyle(
                               fontFamily: 'Playfair',
                               fontSize: 30,
@@ -82,7 +81,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Recover account password so that you can access all the features.\n\nInput the email address you know is already registered with us. The email address will receive an OTP code',
+                          'Set a new password for your account so that you can access all the features.',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
@@ -103,19 +102,23 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                         child: Column(
                           children: [
                             CustomTextInput(
-                              label: 'Email Address',
-                              controller: emaillAddressController,
-                              icon: Icons.email_outlined,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return "Please provide user's email address";
-                                }
-                                return null;
-                              },
-                              isEmail: true,
-                              textColor: Colors.black,
-                              maxLine: 1,
-                            ),
+                                label: 'New password',
+                                controller: newPasswordController,
+                                icon: Iconsax.password_check,
+                                validator: () {},
+                                obscureText: _obscureText,
+                                textColor: Colors.black,
+                                maxLine: 1,
+                                isPassword: true),
+                            CustomTextInput(
+                                label: 'Confirm password',
+                                controller: confirmrPasswordController,
+                                icon: Iconsax.password_check,
+                                validator: () {},
+                                obscureText: _obscureText,
+                                textColor: Colors.black,
+                                maxLine: 1,
+                                isPassword: true),
                           ],
                         ),
                       ),
@@ -125,7 +128,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10.0),
                         child: ElevatedButton(
-                          onPressed: () => _recoverAccountPassword(),
+                          onPressed: () async {},
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
                             backgroundColor: Theme.of(context).primaryColor,
@@ -139,7 +142,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             child: Center(
                               child: isLoading == false
                                   ? Text(
-                                      'Send OTP',
+                                      'Reset Password',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w700,
                                         fontSize: 20.0,
@@ -164,28 +167,5 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         ),
       ),
     );
-  }
-
-  void _recoverAccountPassword() {
-    final emailRegExp = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]+\.[a-zA-Z]+$");
-
-    if (!forgotPasswordKey.currentState!.validate()) {
-      return showMessage('Please fill the email required field', context);
-    }
-    if (!emailRegExp.hasMatch(emaillAddressController.text)) {
-      return showMessage('Please put in a correct email Address', context);
-    }
-    setState(() {
-      isLoading = true;
-    });
-    GoRouter.of(context).go(
-        "${LivingSeedMediaRouter.forgotPasswordPath}/${LivingSeedMediaRouter.forgotPasswordVerificationPath}",
-        extra: {
-          'email': emaillAddressController.text,
-        });
-    setState(() {
-      isLoading = false;
-    });
   }
 }

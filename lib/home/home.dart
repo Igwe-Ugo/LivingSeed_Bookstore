@@ -296,7 +296,7 @@ class _HomeState extends State<Home> {
                 // --- Journal Posts Horizontal List ---
                 SizedBox(
                   height:
-                      MediaQuery.of(context).size.height * 0.52, // Fixed height
+                      MediaQuery.of(context).size.height * 0.51, // Fixed height
                   child: ListView.builder(
                     itemCount: journalPost.length,
                     scrollDirection: Axis.horizontal,
@@ -339,7 +339,7 @@ class _HomeState extends State<Home> {
 
                 // --- Upcoming Events Horizontal List ---
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.71,
+                  height: MediaQuery.of(context).size.height * 0.68,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true, // Only for list inside a bounded parent
@@ -465,7 +465,7 @@ class _HomeState extends State<Home> {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
-                fontSize: 15,
+                fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -500,7 +500,7 @@ class _HomeState extends State<Home> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.w800,
                       fontFamily: 'Playfair',
                     ),

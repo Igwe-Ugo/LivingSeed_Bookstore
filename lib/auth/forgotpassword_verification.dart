@@ -7,21 +7,21 @@ import 'package:livingseed_media/common/widget.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-class SignupVerification extends StatefulWidget {
-  final String fullname;
+class ForgotPasswordVerification extends StatefulWidget {
   final String email;
 
-  const SignupVerification({
+  const ForgotPasswordVerification({
     super.key,
     required this.email,
-    required this.fullname,
   });
 
   @override
-  State<SignupVerification> createState() => _SignupVerificationState();
+  State<ForgotPasswordVerification> createState() =>
+      _ForgotPasswordVerificationState();
 }
 
-class _SignupVerificationState extends State<SignupVerification> {
+class _ForgotPasswordVerificationState
+    extends State<ForgotPasswordVerification> {
   // Use a simple string to store the final 6-digit code submitted by OtpTextField
   String _enteredOtpCode = '';
   //final _formKey = GlobalKey<FormState>();
@@ -165,7 +165,7 @@ class _SignupVerificationState extends State<SignupVerification> {
                   size: 80, color: Colors.blueAccent),
               const SizedBox(height: 20),
               Text(
-                'User Verification',
+                'Account Recovery',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontFamily: 'Playfair',
@@ -174,7 +174,7 @@ class _SignupVerificationState extends State<SignupVerification> {
               ),
               SizedBox(height: 10),
               Text(
-                ' ${widget.fullname} is trying to verify account',
+                'User is trying to recover account',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
@@ -199,7 +199,7 @@ class _SignupVerificationState extends State<SignupVerification> {
                       )
                     : Icon(Iconsax.verify, color: Colors.white),
                 label: Text(
-                  isLoading ? 'Verifying...' : 'Verify & Complete Sign Up',
+                  isLoading ? 'recovering...' : 'Recover password & Sign In',
                   style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 17,

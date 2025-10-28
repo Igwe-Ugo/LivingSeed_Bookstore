@@ -148,7 +148,7 @@ class _SignInState extends State<SignIn> {
                           child: Text(
                             'Forgot password?',
                             style: TextStyle(
-                                color: Theme.of(context).primaryColorDark,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15),
                           ),
