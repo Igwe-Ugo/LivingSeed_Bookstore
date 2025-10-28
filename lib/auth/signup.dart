@@ -191,20 +191,35 @@ class _SignUpState extends State<SignUp> {
                       children: [
                         CustomTextInput(
                             label: 'Fullname',
-                            validator: () {},
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please input user's name";
+                              }
+                              return null;
+                            },
                             textColor: Colors.black,
                             controller: fullnameController,
                             icon: Icons.person_outline),
                         CustomTextInput(
                             label: 'Email',
-                            validator: () {},
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please input user's email address";
+                              }
+                              return null;
+                            },
                             textColor: Colors.black,
                             controller: emailController,
                             icon: Icons.email_outlined,
                             isEmail: true),
                         CustomTextInput(
                             label: 'Password',
-                            validator: () {},
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please input user's password";
+                              }
+                              return null;
+                            },
                             controller: passwordController,
                             icon: Iconsax.password_check,
                             maxLine: 1,
@@ -212,7 +227,12 @@ class _SignUpState extends State<SignUp> {
                             isPassword: true),
                         CustomTextInput(
                             label: 'Confirm Password',
-                            validator: () {},
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please input password for confirmation";
+                              }
+                              return null;
+                            },
                             maxLine: 1,
                             controller: confirmPasswordController,
                             icon: Iconsax.password_check,
@@ -221,7 +241,12 @@ class _SignUpState extends State<SignUp> {
                             isPassword: true),
                         CustomTextInput(
                             label: 'Telephone',
-                            validator: () {},
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please input user's mobile number";
+                              }
+                              return null;
+                            },
                             textColor: Colors.black,
                             controller: telephoneController,
                             icon: Icons.phone_android_outlined,

@@ -67,106 +67,12 @@ class ViewUpcomingEvents extends StatelessWidget {
                       style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
                     ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0, vertical: 15),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  'Event Begin Date: ',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  "${upcomingEvents.from.day.toString()}-${upcomingEvents.from.month.toString()}-${upcomingEvents.from.year.toString()} at ${upcomingEvents.from.hour.toString()}:${upcomingEvents.from.minute.toString().padLeft(2, '0')}",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  'Event Ends Date: ',
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                SizedBox(
-                                  width: 7,
-                                ),
-                                Text(
-                                  "${upcomingEvents.to.day.toString()}-${upcomingEvents.to.month.toString()}-${upcomingEvents.to.year.toString()} at ${upcomingEvents.to.hour.toString()}:${upcomingEvents.to.minute.toString().padLeft(2, '0')}",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                backgroundColor: Theme.of(context).primaryColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                minimumSize: const Size(10, 50),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 10.0),
-                                child: Center(
-                                    child: Text(
-                                  'Register here',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 20.0,
-                                    color: Colors.white,
-                                  ),
-                                )),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
               EventCountdown(
                   nextEvent: upcomingEvents,
                   primaryColor: Theme.of(context).primaryColor),
-              SizedBox(
-                height: 40,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Text(
-                  'Event is coming soon, do well to attend! Grace be with you.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
-                ),
-              ),
             ],
           ),
         ),

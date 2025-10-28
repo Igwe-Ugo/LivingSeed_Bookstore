@@ -113,13 +113,23 @@ class _SignInState extends State<SignIn> {
                                 controller: emailController,
                                 icon: Icons.email_outlined,
                                 textColor: Colors.black,
-                                validator: () {},
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please input user's email address";
+                                  }
+                                  return null;
+                                },
                                 isEmail: true),
                             CustomTextInput(
                                 label: 'Password',
                                 controller: passwordController,
                                 icon: Iconsax.password_check,
-                                validator: () {},
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Please add user's password";
+                                  }
+                                  return null;
+                                },
                                 textColor: Colors.black,
                                 obscureText: _obscureText,
                                 maxLine: 1,

@@ -56,8 +56,8 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                   todayHighlightColor: Theme.of(context).primaryColor,
                   todayTextStyle: TextStyle(
                       fontFamily: 'Playfair', fontWeight: FontWeight.bold),
-                  showDatePickerButton: true,
                   showTodayButton: true,
+                  showNavigationArrow: true,
                   headerHeight: 70,
                   dataSource: MeetingDataSource(eventProvider.events),
                   onTap: (CalendarTapDetails details) {

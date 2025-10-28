@@ -43,7 +43,7 @@ class _EventCountdownState extends State<EventCountdown> {
 
   void _calculateTimeRemaining() {
     final now = DateTime.now();
-    final targetTime = widget.nextEvent.from;
+    final targetTime = widget.nextEvent.to;
 
     // Check if the event is in the future
     if (targetTime.isAfter(now)) {
@@ -57,7 +57,7 @@ class _EventCountdownState extends State<EventCountdown> {
       });
       _timer?.cancel();
     }
-    if (!widget.nextEvent.from.isAfter(DateTime.now())) {
+    if (!widget.nextEvent.to.isAfter(DateTime.now())) {
       _timer?.cancel(); // Use the null-aware operator
     }
   }
@@ -140,10 +140,91 @@ class _EventCountdownState extends State<EventCountdown> {
     final seconds = _timeRemaining.inSeconds % 60;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 25),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Card(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Event Begin Date: ',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Text(
+                        "${widget.nextEvent.from.day.toString()}-${widget.nextEvent.from.month.toString()}-${widget.nextEvent.from.year.toString()} at ${widget.nextEvent.from.hour.toString()}:${widget.nextEvent.from.minute.toString().padLeft(2, '0')}",
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        'Event Ends Date: ',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(
+                        width: 7,
+                      ),
+                      Text(
+                        "${widget.nextEvent.to.day.toString()}-${widget.nextEvent.to.month.toString()}-${widget.nextEvent.to.year.toString()} at ${widget.nextEvent.to.hour.toString()}:${widget.nextEvent.to.minute.toString().padLeft(2, '0')}",
+                        style: TextStyle(
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Theme.of(context).primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: const Size(10, 50),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Center(
+                          child: Text(
+                        'Register here',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      )),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Text(
             widget.nextEvent.eventName, // Use event name for title
             style: TextStyle(
@@ -182,6 +263,17 @@ class _EventCountdownState extends State<EventCountdown> {
               const SizedBox(width: 10),
               _buildTimeSegment(seconds.toString().padLeft(2, '0'), 'Seconds'),
             ],
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Text(
+              'Event is coming soon, do well to attend! Grace be with you.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 13),
+            ),
           ),
         ],
       ),

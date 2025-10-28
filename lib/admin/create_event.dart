@@ -28,236 +28,230 @@ class _CreateEventState extends State<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    return StatefulBuilder(
-      // Ensures `setState` works inside modal
-      builder: (context, setState) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
-            child: Wrap(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10),
+        child: Wrap(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      icon: const Icon(Iconsax.arrow_left_2, size: 17),
+                IconButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: const Icon(Iconsax.arrow_left_2, size: 17),
+                ),
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    elevation: const WidgetStatePropertyAll(0),
+                    backgroundColor: WidgetStatePropertyAll(
+                      Theme.of(context).primaryColor,
                     ),
-                    ElevatedButton.icon(
-                      style: ButtonStyle(
-                        elevation: const WidgetStatePropertyAll(0),
-                        backgroundColor: WidgetStatePropertyAll(
-                          Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      onPressed: () {
-                        _addevents(
-                            selectedDateFrom,
-                            isAllDay,
-                            selectedTimeFrom,
-                            selectedDateTo,
-                            selectedTimeTo,
-                            _addVenueController,
-                            _addTitleController,
-                            _eventDetailsController,
-                            context);
-                      },
-                      label: Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 25),
-                ImagePickerDropZone(
-                  title: 'Upload Book Cover (Image)',
-                  icon: Iconsax.image,
-                  color: Colors.green,
-                  onFilePicked: (file) {
-                    setState(() {
-                      _eventImage = file as XFile;
-                    });
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CustomTextInput(
-                  label: 'Title',
-                  controller: _addTitleController,
-                  isTitleNotNecessary: true,
-                  isIcon: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please provide the title of the event';
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextInput(
-                  label: 'Venue',
-                  controller: _addVenueController,
-                  isTitleNotNecessary: true,
-                  isIcon: false,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please provide the venue for the event';
-                    }
-                    return null;
-                  },
-                ),
-                CustomTextInput(
-                  label: "Event details",
-                  controller: _eventDetailsController,
-                  isTitleNotNecessary: true,
-                  isIcon: false,
-                  maxLine: 10,
-                  maxLength: 700,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please provide details about the event';
-                    }
-                    return null;
-                  },
-                ),
-
-                // Toggle for All Day Event
-                ListTile(
-                  leading: const Icon(Iconsax.timer_start),
-                  title: const Text(
-                    'All day',
-                    style:
-                        TextStyle(fontSize: 13.0, fontWeight: FontWeight.w700),
                   ),
-                  trailing: Switch(
-                    activeColor: Colors.white,
-                    activeTrackColor: Theme.of(context).primaryColor,
-                    inactiveTrackColor: Colors.grey.withOpacity(0.3),
-                    inactiveThumbColor: Colors.white,
-                    value: isAllDay,
-                    trackOutlineColor: WidgetStateProperty.resolveWith(
-                      (states) => Colors.transparent,
+                  onPressed: () {
+                    _addevents(
+                        selectedDateFrom,
+                        isAllDay,
+                        selectedTimeFrom,
+                        selectedDateTo,
+                        selectedTimeTo,
+                        _addVenueController,
+                        _addTitleController,
+                        _eventDetailsController,
+                        context);
+                  },
+                  label: Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        isAllDay = value;
-                      });
-                    },
                   ),
                 ),
-
-                isAllDay == true
-                    ? Column(
-                        children: [
-                          ListTile(
-                            title: Text(
-                              "Date: ${selectedDateFrom.toLocal().day}-${selectedDateFrom.toLocal().month}-${selectedDateFrom.toLocal().year}",
-                            ),
-                            trailing: const Icon(Iconsax.calendar),
-                            onTap: () async {
-                              DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDateFrom,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2101),
-                              );
-                              if (picked != null) {
-                                setState(() => selectedDateFrom = picked);
-                              }
-                            },
-                          ),
-                          ListTile(
-                            title: Text(
-                                "Time : ${selectedTimeFrom.format(context)}"),
-                            trailing: const Icon(Iconsax.timer_1),
-                            onTap: () async {
-                              TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: selectedTimeFrom,
-                              );
-                              if (picked != null) {
-                                setState(() => selectedTimeFrom = picked);
-                              }
-                            },
-                          ),
-                        ],
-                      )
-                    : Column(
-                        children: [
-                          ListTile(
-                            title: Text(
-                              "Date From: ${selectedDateFrom.toLocal().day}-${selectedDateFrom.toLocal().month}-${selectedDateFrom.toLocal().year}",
-                            ),
-                            trailing: const Icon(Iconsax.calendar),
-                            onTap: () async {
-                              DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDateFrom,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2101),
-                              );
-                              if (picked != null) {
-                                setState(() => selectedDateFrom = picked);
-                              }
-                            },
-                          ),
-                          ListTile(
-                            title: Text(
-                                "Time from: ${selectedTimeFrom.format(context)}"),
-                            trailing: const Icon(Iconsax.timer_1),
-                            onTap: () async {
-                              TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: selectedTimeFrom,
-                              );
-                              if (picked != null) {
-                                setState(() => selectedTimeFrom = picked);
-                              }
-                            },
-                          ),
-                          const Divider(),
-                          ListTile(
-                            title: Text(
-                              "Date To: ${selectedDateTo.toLocal().day}-${selectedDateTo.toLocal().month}-${selectedDateTo.toLocal().year}",
-                            ),
-                            trailing: const Icon(Iconsax.calendar),
-                            onTap: () async {
-                              DateTime? picked = await showDatePicker(
-                                context: context,
-                                initialDate: selectedDateTo,
-                                firstDate: DateTime(2020),
-                                lastDate: DateTime(2101),
-                              );
-                              if (picked != null) {
-                                setState(() => selectedDateTo = picked);
-                              }
-                            },
-                          ),
-                          ListTile(
-                            title: Text(
-                                "Time to: ${selectedTimeTo.format(context)}"),
-                            trailing: const Icon(Iconsax.timer_1),
-                            onTap: () async {
-                              TimeOfDay? picked = await showTimePicker(
-                                context: context,
-                                initialTime: selectedTimeTo,
-                              );
-                              if (picked != null) {
-                                setState(() => selectedTimeTo = picked);
-                              }
-                            },
-                          ),
-                        ],
-                      )
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 25),
+            ImagePickerDropZone(
+              title: 'Upload Book Cover (Image)',
+              icon: Iconsax.image,
+              color: Colors.green,
+              onFilePicked: (file) {
+                setState(() {
+                  _eventImage = file as XFile;
+                });
+              },
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CustomTextInput(
+              label: 'Title',
+              controller: _addTitleController,
+              isTitleNotNecessary: true,
+              isIcon: false,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please provide the title of the event';
+                }
+                return null;
+              },
+            ),
+            CustomTextInput(
+              label: 'Venue',
+              controller: _addVenueController,
+              isTitleNotNecessary: true,
+              isIcon: false,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please provide the venue for the event';
+                }
+                return null;
+              },
+            ),
+            CustomTextInput(
+              label: "Event details",
+              controller: _eventDetailsController,
+              isTitleNotNecessary: true,
+              isIcon: false,
+              maxLine: 10,
+              maxLength: 700,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please provide details about the event';
+                }
+                return null;
+              },
+            ),
+
+            // Toggle for All Day Event
+            ListTile(
+              leading: const Icon(Iconsax.timer_start),
+              title: const Text(
+                'All day',
+                style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.w700),
+              ),
+              trailing: Switch(
+                activeColor: Colors.white,
+                activeTrackColor: Theme.of(context).primaryColor,
+                inactiveTrackColor: Colors.grey.withOpacity(0.3),
+                inactiveThumbColor: Colors.white,
+                value: isAllDay,
+                trackOutlineColor: WidgetStateProperty.resolveWith(
+                  (states) => Colors.transparent,
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    isAllDay = value;
+                  });
+                },
+              ),
+            ),
+
+            isAllDay == true
+                ? Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          "Date: ${selectedDateFrom.toLocal().day}-${selectedDateFrom.toLocal().month}-${selectedDateFrom.toLocal().year}",
+                        ),
+                        trailing: const Icon(Iconsax.calendar),
+                        onTap: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDateFrom,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2101),
+                          );
+                          if (picked != null) {
+                            setState(() => selectedDateFrom = picked);
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title:
+                            Text("Time : ${selectedTimeFrom.format(context)}"),
+                        trailing: const Icon(Iconsax.timer_1),
+                        onTap: () async {
+                          TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: selectedTimeFrom,
+                          );
+                          if (picked != null) {
+                            setState(() => selectedTimeFrom = picked);
+                          }
+                        },
+                      ),
+                    ],
+                  )
+                : Column(
+                    children: [
+                      ListTile(
+                        title: Text(
+                          "Date From: ${selectedDateFrom.toLocal().day}-${selectedDateFrom.toLocal().month}-${selectedDateFrom.toLocal().year}",
+                        ),
+                        trailing: const Icon(Iconsax.calendar),
+                        onTap: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDateFrom,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2101),
+                          );
+                          if (picked != null) {
+                            setState(() => selectedDateFrom = picked);
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title: Text(
+                            "Time from: ${selectedTimeFrom.format(context)}"),
+                        trailing: const Icon(Iconsax.timer_1),
+                        onTap: () async {
+                          TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: selectedTimeFrom,
+                          );
+                          if (picked != null) {
+                            setState(() => selectedTimeFrom = picked);
+                          }
+                        },
+                      ),
+                      const Divider(),
+                      ListTile(
+                        title: Text(
+                          "Date To: ${selectedDateTo.toLocal().day}-${selectedDateTo.toLocal().month}-${selectedDateTo.toLocal().year}",
+                        ),
+                        trailing: const Icon(Iconsax.calendar),
+                        onTap: () async {
+                          DateTime? picked = await showDatePicker(
+                            context: context,
+                            initialDate: selectedDateTo,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2101),
+                          );
+                          if (picked != null) {
+                            setState(() => selectedDateTo = picked);
+                          }
+                        },
+                      ),
+                      ListTile(
+                        title:
+                            Text("Time to: ${selectedTimeTo.format(context)}"),
+                        trailing: const Icon(Iconsax.timer_1),
+                        onTap: () async {
+                          TimeOfDay? picked = await showTimePicker(
+                            context: context,
+                            initialTime: selectedTimeTo,
+                          );
+                          if (picked != null) {
+                            setState(() => selectedTimeTo = picked);
+                          }
+                        },
+                      ),
+                    ],
+                  )
+          ],
+        ),
+      ),
     );
   }
 

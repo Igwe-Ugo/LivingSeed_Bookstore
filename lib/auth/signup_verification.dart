@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:livingseed_media/common/widget.dart'; // Assuming showMessage is here
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SignupVerification extends StatefulWidget {
   final String fullname;
@@ -93,11 +94,11 @@ class _SignupVerificationState extends State<SignupVerification> {
   // Helper widget using the requested OtpTextField
   Widget _buildOtpInput() {
     return OtpTextField(
-      numberOfFields: 6, // Changed to 6 as it's standard for OTP
-      borderColor: Theme.of(context).primaryColor, // Use theme color
+      numberOfFields: 6,
+      borderColor: Theme.of(context).primaryColor,
       showFieldAsBox: true,
-      fieldWidth: 40, // Set a standard width for better alignment
-      // Use InputDecoration to style the boxes nicely
+      fieldWidth: 40,
+      focusedBorderColor: Theme.of(context).primaryColor,
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -113,8 +114,7 @@ class _SignupVerificationState extends State<SignupVerification> {
         setState(() {
           _enteredOtpCode = verificationCode; // Store the 6-digit code
         });
-        // Removed the showDialog logic as the main button press handles verification
-      }, // end onSubmit
+      },
     );
   }
 
@@ -136,7 +136,6 @@ class _SignupVerificationState extends State<SignupVerification> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
           child: Column(
-            // Form is not strictly needed since OtpTextField doesn't use it
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Align(
@@ -150,12 +149,8 @@ class _SignupVerificationState extends State<SignupVerification> {
                         ),
                         minimumSize: WidgetStatePropertyAll(Size(7, 50)),
                         elevation: WidgetStatePropertyAll(0.0),
-                        iconColor: WidgetStatePropertyAll(
-                            Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black),
-                        backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).dividerColor.withOpacity(0.45))),
+                        iconColor: WidgetStatePropertyAll(Colors.black),
+                        backgroundColor: WidgetStatePropertyAll(Colors.white)),
                     onPressed: () => GoRouter.of(context)
                         .go(LivingSeedMediaRouter.landingPagePath),
                     label: Icon(
@@ -193,15 +188,15 @@ class _SignupVerificationState extends State<SignupVerification> {
               _buildOtpInput(),
               const SizedBox(height: 70),
               ElevatedButton.icon(
-                // Use _enteredOtpCode length check to enable/disable button
                 onPressed:
                     null, //isLoading || _enteredOtpCode.length != 6 ? null : _verifyOtpAndAuthenticate,
                 icon: isLoading
-                    ? const SizedBox(
+                    ? SizedBox(
                         height: 20,
                         width: 20,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2))
+                        child: LoadingAnimationWidget.halfTriangleDot(
+                            color: Colors.white, size: 20),
+                      )
                     : Icon(Iconsax.verify, color: Colors.white),
                 label: Text(
                   isLoading ? 'Verifying...' : 'Verify & Complete Sign Up',
@@ -212,13 +207,21 @@ class _SignupVerificationState extends State<SignupVerification> {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).primaryColor,
-                  minimumSize: const Size(double.infinity, 50),
+                  minimumSize: const Size(double.infinity, 60),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
               TextButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: Theme.of(context).primaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  minimumSize: const Size(double.infinity, 60),
+                ),
                 onPressed: isLoading
                     ? null
                     : () {
@@ -226,7 +229,14 @@ class _SignupVerificationState extends State<SignupVerification> {
                         showMessage(
                             'Resending code to ${widget.email}...', context);
                       },
-                child: const Text('Resend Code'),
+                child: Text(
+                  'Resend Code',
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 17.0,
+                      color: Colors.white,
+                      fontFamily: 'Playfair'),
+                ),
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.18),
             ],

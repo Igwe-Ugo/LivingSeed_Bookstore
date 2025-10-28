@@ -416,8 +416,6 @@ class _HomeState extends State<Home> {
       DateTime from,
       String eventVenue,
       UpcomingEventsModel upcomingEvents) {
-    final cardWidth = MediaQuery.of(context).size.width * 0.95;
-
     // --- Info Chip Widget ---
     Widget _buildInfoChip(String dateText, String timeText) {
       return Container(
@@ -478,7 +476,7 @@ class _HomeState extends State<Home> {
 
     // --- Main Card Layout ---
     return SizedBox(
-      width: cardWidth, // Apply fixed width
+      width: 350, // Apply fixed width
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -569,9 +567,6 @@ class _HomeState extends State<Home> {
     required JournalPost category,
     required VoidCallback onReadMore,
   }) {
-    // Ensure the width is less than the screen width to accommodate margins
-    final cardWidth = (MediaQuery.of(context).size.width * 0.95);
-
     Widget buildMetadataRow({required IconData icon, required String text}) {
       return Row(
         children: [
@@ -589,7 +584,7 @@ class _HomeState extends State<Home> {
     }
 
     return SizedBox(
-      width: cardWidth,
+      width: 350,
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
