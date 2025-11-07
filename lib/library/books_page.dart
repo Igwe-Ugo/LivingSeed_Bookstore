@@ -61,7 +61,7 @@ class _BooksPageState extends State<BooksPage> {
       onTap: () {
         if (widget.aboutBooks != null) {
           GoRouter.of(context).go(
-              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+              '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBookPath}',
               extra: widget.aboutBooks);
         }
       },
@@ -72,7 +72,10 @@ class _BooksPageState extends State<BooksPage> {
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
-            ImageFileAuth(fileImage: widget.aboutBooks.coverImage, imageHeight: 170, imageWidth: double.infinity),
+            ImageFileAuth(
+                fileImage: widget.aboutBooks.coverImage,
+                imageHeight: 170,
+                imageWidth: double.infinity),
             Padding(
               padding: EdgeInsets.all(2.0),
               child: Column(

@@ -57,7 +57,7 @@ class Notifications extends StatelessWidget {
           notification: notification,
           onTap: () {
             GoRouter.of(context).go(
-                '${LivingSeedMediaRouter.notificationPath}/${LivingSeedMediaRouter.anouncementsPath}',
+                '${LivingSeedRouter.notificationPath}/${LivingSeedRouter.anouncementsPath}',
                 extra: notification);
             if (!notification.isRead) {
               Provider.of<NotificationProvider>(context, listen: false)

@@ -67,7 +67,7 @@ class MoreBooks extends StatelessWidget {
   Widget _buildBookItem(BuildContext context, AboutBooks book) {
     return GestureDetector(
       onTap: () => GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+          '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBookPath}',
           extra: book),
       child: Card(
         elevation: 2,
@@ -79,7 +79,10 @@ class MoreBooks extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
-                child: ImageFileAuth(fileImage: book.coverImage, imageHeight: 170, imageWidth: double.infinity),
+                child: ImageFileAuth(
+                    fileImage: book.coverImage,
+                    imageHeight: 170,
+                    imageWidth: double.infinity),
               ),
             ),
             Padding(

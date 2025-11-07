@@ -12,65 +12,64 @@ class TransactionHistoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Correctly check if the transaction history is empty right at the start.
-    return Consumer<UsersAuthProvider>(
-      builder: (context, userProvider, child) {
-        final user = userProvider.userData;
-        final hasTransactions = user!.transactionHistory.isNotEmpty;
-        if (user == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            elevation: 0,
-            leading: IconButton(
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                },
-                icon: const Icon(
-                  Iconsax.arrow_left_2,
-                  size: 17,
-                )),
-            title: const Text(
-              'My Transaction History',
-              style: TextStyle(
-                fontFamily: 'Playfair',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+    return Consumer<UsersAuthProvider>(builder: (context, userProvider, child) {
+      final user = userProvider.userData;
+      final hasTransactions = user!.transactionHistory.isNotEmpty;
+      if (user == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+              onPressed: () {
+                GoRouter.of(context).pop();
+              },
+              icon: const Icon(
+                Iconsax.arrow_left_2,
+                size: 17,
+              )),
+          title: const Text(
+            'My Transaction History',
+            style: TextStyle(
+              fontFamily: 'Playfair',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          // Use a ternary operator on the body to decide which widget to display.
-          body: hasTransactions
-              ? ListView.builder(
-                  itemCount: user.transactionHistory.length,
-                  itemBuilder: (context, index) {
-                    // If we reach here, we know the list is not empty, so we safely build the item.
-                    return _transactionHistoryItems(
-                        context, user.transactionHistory[index], user, index);
-                  },
-                )
-              : const Center(
-                  // Display this only if hasTransactions is false.
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Iconsax.receipt,
-                        size: 70,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "No Recent Transactions to be reviewed",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ],
-                  ),
+        ),
+        // Use a ternary operator on the body to decide which widget to display.
+        body: hasTransactions
+            ? ListView.builder(
+                itemCount: user.transactionHistory.length,
+                itemBuilder: (context, index) {
+                  // If we reach here, we know the list is not empty, so we safely build the item.
+                  return _transactionHistoryItems(
+                      context, user.transactionHistory[index], user, index);
+                },
+              )
+            : const Center(
+                // Display this only if hasTransactions is false.
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Iconsax.receipt,
+                      size: 70,
+                      color: Colors.grey,
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "No Recent Transactions to be reviewed",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  ],
                 ),
-        );
-      }
-    );
+              ),
+      );
+    });
   }
 }
 
@@ -80,7 +79,7 @@ Widget _transactionHistoryItems(
   return GestureDetector(
     onTap: () {
       GoRouter.of(context).go(
-        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.transactionHistoryPath}/${LivingSeedMediaRouter.receiptPath}',
+        '${LivingSeedRouter.accountPath}/${LivingSeedRouter.transactionHistoryPath}/${LivingSeedRouter.receiptPath}',
       );
     },
     child: Card(

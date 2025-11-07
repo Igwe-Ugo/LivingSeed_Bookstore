@@ -65,7 +65,7 @@ class _SignInState extends State<SignIn> {
                                 backgroundColor:
                                     WidgetStatePropertyAll(Colors.white)),
                             onPressed: () => GoRouter.of(context)
-                                .go(LivingSeedMediaRouter.landingPagePath),
+                                .go(LivingSeedRouter.landingPagePath),
                             label: Icon(
                               Icons.arrow_back_ios_outlined,
                               size: 18,
@@ -144,7 +144,7 @@ class _SignInState extends State<SignIn> {
                         alignment: Alignment.centerRight,
                         child: TextButton(
                           onPressed: () => GoRouter.of(context)
-                              .go(LivingSeedMediaRouter.forgotPasswordPath),
+                              .go(LivingSeedRouter.forgotPasswordPath),
                           child: Text(
                             'Forgot password?',
                             style: TextStyle(
@@ -178,8 +178,7 @@ class _SignInState extends State<SignIn> {
                                   .signIn(emailController.text,
                                       passwordController.text);
                           if (authenticatedUser != null) {
-                            GoRouter.of(context)
-                                .go(LivingSeedMediaRouter.homePath);
+                            GoRouter.of(context).go(LivingSeedRouter.homePath);
                           } else {
                             setState(() {
                               errorMessage = 'Invalid EmailAddress or password';
@@ -278,7 +277,7 @@ class _SignInState extends State<SignIn> {
                           ),
                           TextButton(
                             onPressed: () => GoRouter.of(context)
-                                .go(LivingSeedMediaRouter.signupPath),
+                                .go(LivingSeedRouter.signupPath),
                             child: Text('Sign up',
                                 style: TextStyle(
                                   color: Theme.of(context).primaryColorDark,

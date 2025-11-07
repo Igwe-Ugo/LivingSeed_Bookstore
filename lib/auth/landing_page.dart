@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // Assuming LivingSeedMediaRouter is defined elsewhere
-import 'package:livingseed_media/common/widget.dart'; 
+import 'package:livingseed_media/common/widget.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -37,7 +37,7 @@ class LandingPage extends StatelessWidget {
               // --- 1. Visual Stack Section (Fixed Height for Stability) ---
               // This section takes up 50% of the screen height
               SizedBox(
-                height: size.height * 0.5, 
+                height: size.height * 0.5,
                 child: Center(
                   child: _buildBookStack(context),
                 ),
@@ -105,14 +105,14 @@ class LandingPage extends StatelessWidget {
         Text(
           'Living Seed Media',
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontSize: 36,
-                fontWeight: FontWeight.w900,
-                fontFamily: 'Playfair',
-                color: Colors.white,
-                shadows: [
-                  Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 4),
-                ],
-              ),
+            fontSize: 36,
+            fontWeight: FontWeight.w900,
+            fontFamily: 'Playfair',
+            color: Colors.white,
+            shadows: [
+              Shadow(color: Colors.black.withOpacity(0.5), blurRadius: 4),
+            ],
+          ),
         ),
         const SizedBox(height: 12),
 
@@ -133,10 +133,12 @@ class LandingPage extends StatelessWidget {
           width: double.infinity,
           height: 60,
           child: ElevatedButton(
-            onPressed: () => GoRouter.of(context).go(LivingSeedMediaRouter.signinPath),
+            onPressed: () =>
+                GoRouter.of(context).go(LivingSeedRouter.signinPath),
             style: ElevatedButton.styleFrom(
               elevation: 8,
-              backgroundColor: Theme.of(context).primaryColor, // Use theme primary color
+              backgroundColor:
+                  Theme.of(context).primaryColor, // Use theme primary color
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -144,10 +146,9 @@ class LandingPage extends StatelessWidget {
             child: Text(
               'Get Started',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontFamily: 'Playfair'
-                  ),
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontFamily: 'Playfair'),
             ),
           ),
         ),
@@ -179,7 +180,8 @@ class LandingPage extends StatelessWidget {
   }
 
   /// Helper widget for the circular media icons (Audio/Video).
-  Widget _buildMediaIcon(BuildContext context, String imagePath, double radius, Alignment alignment) {
+  Widget _buildMediaIcon(BuildContext context, String imagePath, double radius,
+      Alignment alignment) {
     return CircleAvatar(
       radius: radius,
       backgroundColor: Colors.white, // Background for contrast

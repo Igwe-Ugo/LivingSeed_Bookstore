@@ -48,7 +48,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreBooksPath}'),
+                        '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.moreBooksPath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,
@@ -99,7 +99,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreBibleStudyPath}'),
+                        '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.moreBibleStudyPath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,
@@ -150,7 +150,7 @@ class AllBooks extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.moreMagazinePath}'),
+                        '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.moreMagazinePath}'),
                     child: Text('More...',
                         style: TextStyle(
                             fontSize: _fontSize,

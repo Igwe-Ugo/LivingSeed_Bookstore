@@ -66,7 +66,7 @@ class AdminDashboard extends StatelessWidget {
                           count: bookProvider.allBooks.length,
                           onTap: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBooksPath}');
+                                '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageBooksPath}');
                           }),
                       _buildDashboardCard(
                           context: context,
@@ -76,7 +76,7 @@ class AdminDashboard extends StatelessWidget {
                           count: bibleStudyProvider.allBibleStudies.length,
                           onTap: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBibleStudyPath}');
+                                '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageBibleStudyPath}');
                           }),
                       _buildDashboardCard(
                           context: context,
@@ -86,7 +86,7 @@ class AdminDashboard extends StatelessWidget {
                           count: magazineProvider.magazines.length,
                           onTap: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageMagazinePath}');
+                                '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageMagazinePath}');
                           }),
                     ],
                   ),
@@ -116,7 +116,7 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Upload Book',
                         icon: Iconsax.document_upload,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.uploadBookPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.uploadBookPath}'),
                       ),
                       // Upload Bible Study
                       _buildActionButton(
@@ -124,7 +124,7 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Upload Bible Study',
                         icon: Iconsax.document_cloud,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.uploadBibleStudyPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.uploadBibleStudyPath}'),
                       ),
                       // Upload Magazine
                       _buildActionButton(
@@ -132,7 +132,7 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Upload Magazine',
                         icon: Iconsax.document_code,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.uploadMagazinePath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.uploadMagazinePath}'),
                       ),
                       // Manage Notifications
                       _buildActionButton(
@@ -140,7 +140,7 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Manage Notifications',
                         icon: Iconsax.notification,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageNotificationsPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageNotificationsPath}'),
                       ),
                       // Manage Users
                       _buildActionButton(
@@ -148,7 +148,7 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Manage Users',
                         icon: Iconsax.people,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageUsersPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageUsersPath}'),
                       ),
                       // Add Upcoming Event
                       _buildActionButton(
@@ -156,21 +156,21 @@ class AdminDashboard extends StatelessWidget {
                         title: 'Add Event',
                         icon: Iconsax.calendar,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addEventPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.addEventPath}'),
                       ),
                       _buildActionButton(
                         context,
                         title: 'Write Journal',
                         icon: Iconsax.pen_add,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addArticlePath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.addArticlePath}'),
                       ),
                       _buildActionButton(
                         context,
                         title: 'Edit Journal',
                         icon: Iconsax.edit_2,
                         onPressed: () => GoRouter.of(context).go(
-                            '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageJournalPath}'),
+                            '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageJournalPath}'),
                       ),
                     ],
                   ),

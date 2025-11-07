@@ -14,7 +14,8 @@ class ManageMagazine extends StatelessWidget {
     // In a real app, you would fetch the list of ALL books here
     // List<AboutBooks> allBooks = Provider.of<BookProvider>(context).allBooks;
 
-    return Consumer<MagazineProvider>(builder: (context, magazineProvider, child) {
+    return Consumer<MagazineProvider>(
+        builder: (context, magazineProvider, child) {
       final _magazine = magazineProvider.magazines;
       return Scaffold(
         appBar: AppBar(
@@ -67,8 +68,8 @@ class ManageMagazine extends StatelessWidget {
           ),
           title: Text(magazine.magazineTitle,
               style: const TextStyle(fontWeight: FontWeight.bold)),
-          subtitle:
-              Text('by ${magazine.publisher} | \#${magazine.price.toStringAsFixed(2)}'),
+          subtitle: Text(
+              'by ${magazine.publisher} | \#${magazine.price.toStringAsFixed(2)}'),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -78,7 +79,7 @@ class ManageMagazine extends StatelessWidget {
                 onPressed: () {
                   if (magazine != null) {
                     GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageMagazinePath}/${LivingSeedMediaRouter.editMagazinePath}',
+                        '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageMagazinePath}/${LivingSeedRouter.editMagazinePath}',
                         extra: magazine);
                   }
                 },
@@ -107,7 +108,8 @@ class ManageMagazine extends StatelessWidget {
                 fontFamily: 'Playfair',
                 fontSize: 20,
                 fontWeight: FontWeight.w900)),
-        content: Text('Are you sure you want to delete "${magazine.magazineTitle}"?',
+        content: Text(
+            'Are you sure you want to delete "${magazine.magazineTitle}"?',
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
         actions: [
           TextButton(
@@ -152,7 +154,8 @@ class ManageMagazine extends StatelessWidget {
               Provider.of<AdminActivityService>(context, listen: false)
                   .logActivity(newActivity.action, newActivity.details,
                       newActivity.icon);
-              showMessage('Simulated Deletion of "${magazine.magazineTitle}"', context);
+              showMessage(
+                  'Simulated Deletion of "${magazine.magazineTitle}"', context);
               context.pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

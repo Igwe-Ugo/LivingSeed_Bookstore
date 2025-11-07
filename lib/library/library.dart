@@ -81,13 +81,15 @@ class _LibraryState extends State<Library> {
     }
     books = await bookProv.booksFuture!;
 
-    BibleStudyProvider bibleProv = Provider.of<BibleStudyProvider>(context, listen: false);
+    BibleStudyProvider bibleProv =
+        Provider.of<BibleStudyProvider>(context, listen: false);
     if (bibleProv.bibleStudyFuture == null) {
       await bibleProv.initializeBibleStudy();
     }
     bibleStudy = await bibleProv.bibleStudyFuture!;
 
-    MagazineProvider magProv = Provider.of<MagazineProvider>(context, listen: false);
+    MagazineProvider magProv =
+        Provider.of<MagazineProvider>(context, listen: false);
     if (magProv.magazineFuture == null) {
       await magProv.initializeMagazines();
     }
@@ -246,7 +248,7 @@ Column _bookSearch(BuildContext context, AboutBooks book) {
     children: [
       InkWell(
         onTap: () => GoRouter.of(context).go(
-            '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+            '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBookPath}',
             extra: book),
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -256,7 +258,10 @@ Column _bookSearch(BuildContext context, AboutBooks book) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: ImageFileAuth(fileImage: book.coverImage, imageHeight: 100, imageWidth: 100),
+                  child: ImageFileAuth(
+                      fileImage: book.coverImage,
+                      imageHeight: 100,
+                      imageWidth: 100),
                 ),
                 const SizedBox(
                   width: 16,
@@ -310,7 +315,7 @@ Widget _bibleStudySearch(BuildContext context, BibleStudyMaterial study) {
     children: [
       InkWell(
         onTap: () => GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBibleStudyPath}',
+          '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBibleStudyPath}',
           extra: study,
         ),
         child: SizedBox(
@@ -321,7 +326,10 @@ Widget _bibleStudySearch(BuildContext context, BibleStudyMaterial study) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: ImageFileAuth(fileImage: study.coverImage, imageHeight: 100, imageWidth: 100),
+                  child: ImageFileAuth(
+                      fileImage: study.coverImage,
+                      imageHeight: 100,
+                      imageWidth: 100),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -367,7 +375,7 @@ Widget _magazineSearch(BuildContext context, MagazineModel magazine) {
     children: [
       InkWell(
         onTap: () => GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+          '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutMagazinePath}',
           extra: magazine,
         ),
         child: SizedBox(
@@ -378,7 +386,10 @@ Widget _magazineSearch(BuildContext context, MagazineModel magazine) {
               children: [
                 Align(
                   alignment: Alignment.topCenter,
-                  child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 100, imageWidth: 100),
+                  child: ImageFileAuth(
+                      fileImage: magazine.coverImage,
+                      imageHeight: 100,
+                      imageWidth: 100),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

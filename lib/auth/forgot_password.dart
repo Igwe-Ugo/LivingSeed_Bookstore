@@ -48,7 +48,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     children: [
                       GestureDetector(
                         onTap: () => GoRouter.of(context)
-                            .go(LivingSeedMediaRouter.signinPath),
+                            .go(LivingSeedRouter.signinPath),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
@@ -180,7 +180,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       isLoading = true;
     });
     GoRouter.of(context).go(
-        "${LivingSeedMediaRouter.forgotPasswordPath}/${LivingSeedMediaRouter.forgotPasswordVerificationPath}",
+        "${LivingSeedRouter.forgotPasswordPath}/${LivingSeedRouter.forgotPasswordVerificationPath}",
         extra: {
           'email': emaillAddressController.text,
         });

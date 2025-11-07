@@ -32,7 +32,7 @@ class Magazines extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => GoRouter.of(context).go(
-                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+                  '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutMagazinePath}',
                   extra: magazine),
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -43,7 +43,10 @@ class Magazines extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 100, imageWidth: 80),
+                        child: ImageFileAuth(
+                            fileImage: magazine.coverImage,
+                            imageHeight: 100,
+                            imageWidth: 80),
                       ),
                       const SizedBox(
                         width: 16,

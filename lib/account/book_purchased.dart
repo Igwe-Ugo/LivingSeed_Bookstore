@@ -13,63 +13,62 @@ class BookPurchased extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UsersAuthProvider>(
-      builder: (context, userProvider, child) {
-        final user = userProvider.userData;
-        if (user == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            elevation: 0,
-            leading: IconButton(
-              onPressed: () => GoRouter.of(context).pop(),
-              icon: const Icon(
-                Iconsax.arrow_left_2,
-                size: 17,
-              ),
-            ),
-            title: const Text(
-              'Books Purchased',
-              style: TextStyle(
-                fontFamily: 'Playfair',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+    return Consumer<UsersAuthProvider>(builder: (context, userProvider, child) {
+      final user = userProvider.userData;
+      if (user == null) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () => GoRouter.of(context).pop(),
+            icon: const Icon(
+              Iconsax.arrow_left_2,
+              size: 17,
             ),
           ),
-          body: user.bookPurchased.isNotEmpty
-              ? ListView.builder(
-                  itemCount: user.bookPurchased.length,
-                  itemBuilder: (context, index) {
-                    return _booksPurchasedItems(context, user.bookPurchased[index]);
-                  },
-                )
-              : Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(
-                        Icons.book_outlined,
-                        size: 100,
+          title: const Text(
+            'Books Purchased',
+            style: TextStyle(
+              fontFamily: 'Playfair',
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        body: user.bookPurchased.isNotEmpty
+            ? ListView.builder(
+                itemCount: user.bookPurchased.length,
+                itemBuilder: (context, index) {
+                  return _booksPurchasedItems(
+                      context, user.bookPurchased[index]);
+                },
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.book_outlined,
+                      size: 100,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'No books purchased!\nEvery purchased book appears here',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(height: 20),
-                      Text(
-                        'No books purchased!\nEvery purchased book appears here',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-        );
-      }
-    );
+              ),
+      );
+    });
   }
 }
 
@@ -84,7 +83,6 @@ Widget _booksPurchasedItems(
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
         onTap: () {
-
           //Navigate to the ReadBook page
           Navigator.push(
             context,
@@ -169,7 +167,7 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
     }
   }
 
-  void _toggleThumbnails(){
+  void _toggleThumbnails() {
     setState(() {
       _showThumbnails = !_showThumbnails;
     });
@@ -198,13 +196,14 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
           ),
           actions: [
             IconButton(
-                icon: const Icon(Icons.view_sidebar_outlined),
-                onPressed: () => _toggleThumbnails(),),
-                IconButton(
+              icon: const Icon(Icons.view_sidebar_outlined),
+              onPressed: () => _toggleThumbnails(),
+            ),
+            IconButton(
               onPressed: () {
                 if (widget.bookPurchased != null) {
                   GoRouter.of(context).go(
-                      '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.booksPurchasedPath}/${LivingSeedMediaRouter.writeReviewPath}',
+                      '${LivingSeedRouter.accountPath}/${LivingSeedRouter.booksPurchasedPath}/${LivingSeedRouter.writeReviewPath}',
                       extra: widget.bookPurchased);
                 }
               },
@@ -250,10 +249,10 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
           child: Stack(
             children: [
               SfPdfViewer.asset(
-                  widget.bookPurchased.readBookPath,
-                  key: _pdfViewerKey,
-                  controller: _pdfViewerController,
-                ),
+                widget.bookPurchased.readBookPath,
+                key: _pdfViewerKey,
+                controller: _pdfViewerController,
+              ),
 
               // sidebar with thumbnails
               AnimatedPositioned(
@@ -268,10 +267,21 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
                     children: [
                       // close button
                       AppBar(
-                        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                         elevation: 0,
-                        leading: IconButton(onPressed: _toggleThumbnails, icon: const Icon(Icons.close, color: Colors.white,)),
-                        title: const Text("Thumbnails", style: TextStyle(fontWeight: FontWeight.bold, fontFamily: "Playfair"),),
+                        leading: IconButton(
+                            onPressed: _toggleThumbnails,
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            )),
+                        title: const Text(
+                          "Thumbnails",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Playfair"),
+                        ),
                       ),
 
                       // thumbsnails list
@@ -294,7 +304,6 @@ class _PdfReaderScreenState extends State<PdfReaderScreen> {
               ),
             ],
           ),
-        )
-      );
+        ));
   }
 }

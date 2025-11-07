@@ -17,7 +17,7 @@ class BibleStudyPage extends StatelessWidget {
       onTap: () {
         if (bibleStudy != null) {
           GoRouter.of(context).go(
-              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBibleStudyPath}',
+              '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBibleStudyPath}',
               extra: bibleStudy);
         }
       },
@@ -28,7 +28,10 @@ class BibleStudyPage extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
-            ImageFileAuth(fileImage: bibleStudy.coverImage, imageHeight: 170, imageWidth: double.infinity),
+            ImageFileAuth(
+                fileImage: bibleStudy.coverImage,
+                imageHeight: 170,
+                imageWidth: double.infinity),
             Padding(
               padding: EdgeInsets.all(2.0),
               child: Column(

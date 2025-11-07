@@ -31,7 +31,7 @@ class _AudioMessagesState extends State<AudioMessages> {
 
     void navigateToAudioScreen(AudioMessage audio) {
       GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.mediaPath}/${LivingSeedMediaRouter.audioScreenPath}',
+          '${LivingSeedRouter.mediaPath}/${LivingSeedRouter.audioScreenPath}',
           extra: audio);
     }
 

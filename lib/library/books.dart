@@ -42,7 +42,7 @@ class Books extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => GoRouter.of(context).go(
-                  '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+                  '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBookPath}',
                   extra: aboutBooks),
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -53,7 +53,10 @@ class Books extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: ImageFileAuth(fileImage: aboutBooks.coverImage, imageHeight: 100, imageWidth: 80),
+                        child: ImageFileAuth(
+                            fileImage: aboutBooks.coverImage,
+                            imageHeight: 100,
+                            imageWidth: 80),
                       ),
                       const SizedBox(
                         width: 16,

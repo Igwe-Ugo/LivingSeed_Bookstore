@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 Navigator.of(context).pop();
                 GoRouter.of(context).go(
-                    '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBookPath}',
+                    '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBookPath}',
                     extra: book);
               },
               child: Text(
@@ -278,7 +278,7 @@ class _HomeState extends State<Home> {
                       TextButton(
                         onPressed: () {
                           GoRouter.of(context).go(
-                              '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}');
+                              '${LivingSeedRouter.homePath}/${LivingSeedRouter.journalPath}');
                         },
                         child: Text(
                           'View More >',
@@ -314,7 +314,7 @@ class _HomeState extends State<Home> {
                           category: journal,
                           onReadMore: () {
                             GoRouter.of(context).go(
-                                '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}/${LivingSeedMediaRouter.journalDetailsPath}',
+                                '${LivingSeedRouter.homePath}/${LivingSeedRouter.journalPath}/${LivingSeedRouter.journalDetailsPath}',
                                 extra: journal);
                           });
                     },
@@ -526,7 +526,7 @@ class _HomeState extends State<Home> {
                   InkWell(
                     onTap: () {
                       GoRouter.of(context).go(
-                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.upcomingEventsPath}/${LivingSeedMediaRouter.viewUpcomingEventsPath}',
+                          '${LivingSeedRouter.accountPath}/${LivingSeedRouter.upcomingEventsPath}/${LivingSeedRouter.viewUpcomingEventsPath}',
                           extra: upcomingEvents);
                     },
                     child: Column(

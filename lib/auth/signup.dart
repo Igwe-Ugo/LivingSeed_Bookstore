@@ -91,7 +91,7 @@ class _SignUpState extends State<SignUp> {
         showMessage('Account created. Please verify your email.', context);
         // NAVIGATE to OTP verification screen, passing ALL required data
         GoRouter.of(context).push(
-            '${LivingSeedMediaRouter.signupPath}/${LivingSeedMediaRouter.signupVerificationPath}',
+            '${LivingSeedRouter.signupPath}/${LivingSeedRouter.signupVerificationPath}',
             extra: {
               'email': newUser.emailAddress,
               'fullname': newUser.fullname,
@@ -148,7 +148,7 @@ class _SignUpState extends State<SignUp> {
                             backgroundColor: WidgetStatePropertyAll(
                                 Colors.white.withOpacity(0.95))),
                         onPressed: () => GoRouter.of(context)
-                            .go(LivingSeedMediaRouter.landingPagePath),
+                            .go(LivingSeedRouter.landingPagePath),
                         label: Icon(
                           Icons.arrow_back_ios_outlined,
                           size: 18,
@@ -356,7 +356,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       TextButton(
                         onPressed: () => GoRouter.of(context)
-                            .go(LivingSeedMediaRouter.signinPath),
+                            .go(LivingSeedRouter.signinPath),
                         child: Text('Sign In',
                             style: TextStyle(
                               color: Theme.of(context).primaryColorDark,

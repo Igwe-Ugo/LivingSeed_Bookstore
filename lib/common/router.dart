@@ -13,10 +13,9 @@ import 'package:livingseed_media/models/widget.dart';
 import 'package:livingseed_media/notification/widget.dart';
 import 'widget.dart';
 
-class LivingSeedMediaRouter {
-  static final LivingSeedMediaRouter _instance =
-      LivingSeedMediaRouter._internal();
-  static LivingSeedMediaRouter get instance => _instance;
+class LivingSeedRouter {
+  static final LivingSeedRouter _instance = LivingSeedRouter._internal();
+  static LivingSeedRouter get instance => _instance;
   static late final GoRouter router;
   static final GlobalKey<NavigatorState> parentNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -36,7 +35,7 @@ class LivingSeedMediaRouter {
   GoRouteInformationParser get routeInformationParser =>
       router.routeInformationParser;
 
-  factory LivingSeedMediaRouter() {
+  factory LivingSeedRouter() {
     return _instance;
   }
 
@@ -110,7 +109,7 @@ class LivingSeedMediaRouter {
   static const String createEventPath = 'create_event';
   static const String editEventPath = 'edit_event';
 
-  LivingSeedMediaRouter._internal() {
+  LivingSeedRouter._internal() {
     final routes = <RouteBase>[
       GoRoute(
         path: splashscreenPath,

@@ -252,7 +252,7 @@ class CustomUserTile extends StatelessWidget {
                 child: Text('View Details'),
                 onTap: () {
                   GoRouter.of(context).go(
-                      '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageUsersPath}/${LivingSeedMediaRouter.userProfilePath}',
+                      '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageUsersPath}/${LivingSeedRouter.userProfilePath}',
                       extra: user);
                 },
               ),

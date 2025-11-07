@@ -56,7 +56,7 @@ class MoreMagazine extends StatelessWidget {
   Widget _buildBookItem(BuildContext context, MagazineModel magazine) {
     return GestureDetector(
       onTap: () => GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+          '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutMagazinePath}',
           extra: magazine),
       child: Card(
         elevation: 2,
@@ -68,7 +68,10 @@ class MoreMagazine extends StatelessWidget {
               child: ClipRRect(
                 borderRadius:
                     const BorderRadius.vertical(top: Radius.circular(10)),
-                child: ImageFileAuth(fileImage: magazine.coverImage, imageHeight: 170, imageWidth: double.infinity),
+                child: ImageFileAuth(
+                    fileImage: magazine.coverImage,
+                    imageHeight: 170,
+                    imageWidth: double.infinity),
               ),
             ),
             Padding(

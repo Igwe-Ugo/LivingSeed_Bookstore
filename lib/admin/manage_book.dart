@@ -78,7 +78,7 @@ class ManageBook extends StatelessWidget {
                 onPressed: () {
                   if (book != null) {
                     GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBooksPath}/${LivingSeedMediaRouter.editBookPath}',
+                        '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageBooksPath}/${LivingSeedRouter.editBookPath}',
                         extra: book);
                   }
                 },

@@ -68,7 +68,7 @@ class MoreBibleStudy extends StatelessWidget {
   Widget _buildBookItem(BuildContext context, BibleStudyMaterial bibleStudy) {
     return GestureDetector(
       onTap: () => GoRouter.of(context).go(
-          '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBibleStudyPath}',
+          '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBibleStudyPath}',
           extra: bibleStudy),
       child: Card(
         elevation: 2,

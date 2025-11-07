@@ -27,8 +27,7 @@ abstract class Styles {
           isDarkTheme ? const Color(0xff0E1D36) : const Color(0xffCBDCF8),
       hintColor:
           isDarkTheme ? const Color(0xff280C0B) : const Color(0xFFFFFFFF),
-      highlightColor:
-          isDarkTheme ? const Color(0xff372901) : const Color(0xFFC5C6CC),
+      highlightColor: const Color(0xFF218EF3),
       hoverColor: isDarkTheme
           ? const Color(0xff3A3A3B)
           : const Color.fromARGB(255, 198, 199, 200),

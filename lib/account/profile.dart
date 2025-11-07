@@ -222,7 +222,7 @@ Future<void> showDeleteDialog(BuildContext context, String fullname) {
             Provider.of<UsersAuthProvider>(context, listen: false)
                 .deleteUser(fullname);
             Navigator.of(context).pop();
-            GoRouter.of(context).go(LivingSeedMediaRouter.signupPath);
+            GoRouter.of(context).go(LivingSeedRouter.signupPath);
             showMessage('Account has been deleted!', context);
           },
           child: Text(

@@ -35,6 +35,7 @@ dependencies:
   flutter_local_notifications: ^19.4.2
   flutter_otp_text_field: ^1.5.1+1
   printing: ^5.14.2
+  csc_picker: ^0.2.7
 
 dev_dependencies:
   flutter_test:
@@ -61,3 +62,6 @@ flutter:
       fonts:
         - asset: assets/fonts/PlayfairDisplay-Black.ttf
         - asset: assets/fonts/PlayfairDisplay-Black.ttf
+    - family: Pacifico
+      fonts:
+        - asset: assets/fonts/Pacifico-Regular.ttf

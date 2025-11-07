@@ -44,8 +44,8 @@ class BibleStudy extends StatelessWidget {
           children: [
             InkWell(
               onTap: () => GoRouter.of(context).go(
-              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutBibleStudyPath}',
-              extra: bibleStudy),
+                  '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutBibleStudyPath}',
+                  extra: bibleStudy),
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
@@ -55,7 +55,10 @@ class BibleStudy extends StatelessWidget {
                     children: [
                       Align(
                         alignment: Alignment.topCenter,
-                        child: ImageFileAuth(fileImage: bibleStudy.coverImage, imageHeight: 100, imageWidth: 80),
+                        child: ImageFileAuth(
+                            fileImage: bibleStudy.coverImage,
+                            imageHeight: 100,
+                            imageWidth: 80),
                       ),
                       const SizedBox(
                         width: 16,

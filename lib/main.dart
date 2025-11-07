@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  LivingSeedMediaRouter.instance;
+  LivingSeedRouter.instance;
   NotificationDropDownServices.initNotificationsDropDown();
   runApp(const LivingSeedMedia());
 }
@@ -82,7 +82,7 @@ class _LivingSeedMediaState extends State<LivingSeedMedia> {
             debugShowCheckedModeBanner: false,
             title: 'Living Seed Media',
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-            routerConfig: LivingSeedMediaRouter.router,
+            routerConfig: LivingSeedRouter.router,
           );
         },
       ),

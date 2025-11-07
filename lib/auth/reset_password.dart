@@ -47,7 +47,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     children: [
                       GestureDetector(
                         onTap: () => GoRouter.of(context)
-                            .go(LivingSeedMediaRouter.signinPath),
+                            .go(LivingSeedRouter.signinPath),
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Container(

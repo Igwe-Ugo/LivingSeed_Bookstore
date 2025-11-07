@@ -152,7 +152,7 @@ class _SignupVerificationState extends State<SignupVerification> {
                         iconColor: WidgetStatePropertyAll(Colors.black),
                         backgroundColor: WidgetStatePropertyAll(Colors.white)),
                     onPressed: () => GoRouter.of(context)
-                        .go(LivingSeedMediaRouter.landingPagePath),
+                        .go(LivingSeedRouter.landingPagePath),
                     label: Icon(
                       Icons.arrow_back_ios_outlined,
                       size: 18,

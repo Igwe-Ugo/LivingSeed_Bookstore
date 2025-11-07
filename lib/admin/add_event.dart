@@ -39,7 +39,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () => GoRouter.of(context).go(
-                '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addEventPath}/${LivingSeedMediaRouter.createEventPath}'),
+                '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.addEventPath}/${LivingSeedRouter.createEventPath}'),
             backgroundColor: Theme.of(context).primaryColor,
             child: Icon(
               Iconsax.add,
@@ -66,7 +66,7 @@ class _AdminAddEventState extends State<AdminAddEvent> {
                       // Select the first tapped event
                       eventProvider.selectEvent(details.appointments!.first);
                       GoRouter.of(context).go(
-                          '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.addEventPath}/${LivingSeedMediaRouter.editEventPath}',
+                          '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.addEventPath}/${LivingSeedRouter.editEventPath}',
                           extra: eventProvider.selectedEvent!);
                     } else {
                       eventProvider.selectEvent(null); // Hide tooltip

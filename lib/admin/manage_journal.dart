@@ -75,7 +75,7 @@ class JournalManagement extends StatelessWidget {
                 onPressed: () {
                   if (journal != null) {
                     GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageJournalPath}/${LivingSeedMediaRouter.editJournalPath}',
+                        '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageJournalPath}/${LivingSeedRouter.editJournalPath}',
                         extra: journal);
                   }
                 },

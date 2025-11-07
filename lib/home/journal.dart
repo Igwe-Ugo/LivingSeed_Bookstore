@@ -139,7 +139,7 @@ class _JournalListScreenState extends State<JournalListScreen> {
     return GestureDetector(
       onTap: () {
         GoRouter.of(context).go(
-            '${LivingSeedMediaRouter.homePath}/${LivingSeedMediaRouter.journalPath}/${LivingSeedMediaRouter.journalDetailsPath}',
+            '${LivingSeedRouter.homePath}/${LivingSeedRouter.journalPath}/${LivingSeedRouter.journalDetailsPath}',
             extra: post);
       },
       child: Card(
@@ -173,9 +173,11 @@ class _JournalListScreenState extends State<JournalListScreen> {
               // Image (Placeholder)
               if (post.imageUrl.isNotEmpty)
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: ImageFileAuth(fileImage: post.imageUrl, imageHeight: 150, imageWidth: double.infinity)
-                ),
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: ImageFileAuth(
+                        fileImage: post.imageUrl,
+                        imageHeight: 150,
+                        imageWidth: double.infinity)),
               const SizedBox(height: 12),
               Text(
                 post.title,

@@ -17,7 +17,7 @@ class MagazinePage extends StatelessWidget {
       onTap: () {
         if (aboutMagazine != null) {
           GoRouter.of(context).go(
-              '${LivingSeedMediaRouter.libraryPath}/${LivingSeedMediaRouter.aboutMagazinePath}',
+              '${LivingSeedRouter.libraryPath}/${LivingSeedRouter.aboutMagazinePath}',
               extra: aboutMagazine);
         } else {
           // Handle the case where aboutMagazine is null, if necessary
@@ -31,7 +31,10 @@ class MagazinePage extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(8))),
         child: Column(
           children: [
-            ImageFileAuth(fileImage: aboutMagazine.coverImage, imageHeight: 170, imageWidth: double.infinity),
+            ImageFileAuth(
+                fileImage: aboutMagazine.coverImage,
+                imageHeight: 170,
+                imageWidth: double.infinity),
             Padding(
               padding: EdgeInsets.all(2.0),
               child: Column(

@@ -76,7 +76,7 @@ class BiblestudyManagement extends StatelessWidget {
                 onPressed: () {
                   if (bibleStudy != null) {
                     GoRouter.of(context).go(
-                        '${LivingSeedMediaRouter.accountPath}/${LivingSeedMediaRouter.dashboardPath}/${LivingSeedMediaRouter.manageBibleStudyPath}/${LivingSeedMediaRouter.editBibleStudyPath}',
+                        '${LivingSeedRouter.accountPath}/${LivingSeedRouter.dashboardPath}/${LivingSeedRouter.manageBibleStudyPath}/${LivingSeedRouter.editBibleStudyPath}',
                         extra: bibleStudy);
                   }
                 },

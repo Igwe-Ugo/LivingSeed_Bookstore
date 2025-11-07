@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   _SplashScreenState() {
     Timer(const Duration(seconds: 5), () {
-      GoRouter.of(context).go(LivingSeedMediaRouter.landingPagePath);
+      GoRouter.of(context).go(LivingSeedRouter.landingPagePath);
     });
     Timer(const Duration(milliseconds: 5), () {
       setState(() {
